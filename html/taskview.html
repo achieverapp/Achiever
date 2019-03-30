@@ -1,0 +1,92 @@
+<!-- CptS 489, Spring 2019
+     Project: Task Tracker
+     File: app.html
+     This file is the start of our 489 project
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Import External stylesheets and libraries using 'CDN' (content delivery network) links: -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+        integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+
+</head>
+
+<style>
+    /* Include CSS here */
+</style>
+
+<body>
+    <nav class="nav bg-primary">
+        <a class="nav-link active text-white" href="#">Tasks</a>
+        <a class="nav-link text-white" href="#">Schedule</a>
+        <a class="nav-link text-white" href="#">Progress</a>
+        <a class="nav-link text-white" href="#">Achievements</a>
+    </nav>
+    <div id="tasks" class="container">
+        <br />
+        <h1>View and edit a task</h1>
+
+        <!-- Ghetto example of a task that is editable -->
+        <div class="card" id="Example task to edit">
+            <!-- <div class="container"> -->
+            <div class="card-header">
+                <span>
+                    <h2 class="far fa-square" style="display: inline">&nbsp;</h2>
+                    <h2 class="card-title" style="display: inline">Task title goes here</h2>
+                </span>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="form-inline">
+                        <span class="far fa-square"></span>
+                        <input class="form-control" type="text" value="This is an example subtask"
+                            style="border-color: white; width: 90%"></input>
+                    </div>
+                    <div class="form-inline">
+                        <span class="far fa-square"></span>
+                        <input class="form-control" type="text" value="This is another example subtask"
+                            style="border-color: white; width: 90%"></input>
+                    </div>
+                    <div class="form-inline">
+                        <span class="far fa-square"></span>
+                        <input class="form-control" type="text" style="border-color: white; width: 90%"></input>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer">
+                <span>
+                    <p class="">Due 5-4-2019</p>
+                </span>
+            </div>
+        </div>
+</body>
+
+<script>
+  //Begin SCRIPT section of document. Here we must use JavaScript comments. This is a single-line comment
+    /* And this is a
+       multi-line comment */
+  //Subsequent scripts will be embedded in their own script tags
+</script>
+
+</html>

@@ -1,0 +1,17 @@
+/* <!-- CSS definitions for app styles in here --> */
+
+.task-card {
+    margin: 2px;
+}
+
+.priority-high {
+    background-color: #ff9999;
+}
+
+.priority-med {
+    background-color: #ffdd99;
+}
+
+.priority-low {
+    background-color: #99ff99;
+}

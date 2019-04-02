@@ -22,8 +22,8 @@
 
   <link rel="stylesheet" href="../css/app.css">
 
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous">
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
     integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">
@@ -39,12 +39,7 @@
 </style>
 
 <body>
-  <nav class="nav bg-primary" style="">
-    <a class="nav-link active text-white" href="app.html">Tasks</a>
-    <a class="nav-link text-white" href="#">Schedule</a>
-    <a class="nav-link text-white" href="progress.html">Progress</a>
-    <a class="nav-link text-white" href="achievements.html">Achievements</a>
-  </nav>
+  <nav class="nav bg-primary" id="navbar"></nav>
   <div id="tasks" class="container">
     <br />
     <h1>List tasks here</h1>
@@ -83,15 +78,15 @@
 
       <li class="card priority-low task-card">
         <div class="container" style="">
-          <div class="card-content">
-            <h2 class="fa fa-check-square align-middle text-white" style="display: inline-block;">&nbsp;</h2>
-            <div class="align-middle" style="display: inline-block">
-              <h3 style="margin-bottom: 0px">Do a thing that needs to be done</h3>
-              <p style="font-size: 10pt; display: inline-block">due: 01/01/1970</p>
-              &nbsp;
-              <p style="font-size: 10pt; display: inline-block">category: work/school</p>
-            </div>
+          <!-- <div class="card-content"> -->
+          <h2 class="fa fa-check-square align-middle text-white" style="display: inline-block;">&nbsp;</h2>
+          <div class="align-middle" style="display: inline-block">
+            <h3 style="margin-bottom: 0px">Do a thing that needs to be done</h3>
+            <p style="font-size: 10pt; display: inline-block">due: 01/01/1970</p>
+            &nbsp;
+            <p style="font-size: 10pt; display: inline-block">category: work/school</p>
           </div>
+          <!-- </div> -->
           <!-- <input type="text" value="THis is an example subtask"></input> -->
         </div>
       </li>
@@ -101,10 +96,31 @@
 </body>
 
 <script>
+  function buildTaskCard(task) {
+    var taskCard =
+      "<li>" +
+      "<div class='container'>" +
+      "<h2 class='fa fa-check-square align-middle text-white' style='display: inline-block;'></h2>" +
+      "<div class='align-middle' style='display:inline-block'>" +
+      "<h3 style='margin-bottom: 0px'>" + task.title + "</h3>" +
+      "<" +
+      "</div>" +
+      "</div>" +
+      "</li>"
+  }
+
   //Begin SCRIPT section of document. Here we must use JavaScript comments. This is a single-line comment
   /* And this is a
      multi-line comment */
   //Subsequent scripts will be embedded in their own script tags
+  $(document).ready(function () {
+    $("#navbar").load("navbar.html");
+  })
+
+
+  $(".task-card").click(function () {
+
+  });
 </script>
 
 </html>

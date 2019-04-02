@@ -22,8 +22,8 @@
 
   <link rel="stylesheet" href="../css/app.css">
 
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous">
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
     integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">
@@ -38,12 +38,7 @@
 </style>
 
 <body>
-  <nav class="nav bg-primary" style="">
-    <a class="nav-link active text-white" href="app.html">Tasks</a>
-    <a class="nav-link text-white" href="#">Schedule</a>
-    <a class="nav-link text-white" href="progress.html">Progress</a>
-    <a class="nav-link text-white" href="achievements.html">Achievements</a>
-  </nav>
+  <nav class="nav bg-primary" id="navbar"></nav>
   <div id="tasks" class="container">
     <br />
     <h1>Username</h1>
@@ -108,6 +103,9 @@
 </body>
 
 <script>
+  $(document).ready(function () {
+    $("#navbar").load("navbar.html");
+  })
 </script>
 
 </html>

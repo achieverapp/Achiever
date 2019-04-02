@@ -21,8 +21,8 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="../css/app.css">
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous">
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
         integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">
@@ -38,25 +38,18 @@
 </style>
 
 <body>
-    <nav class="nav bg-primary">
-        <a class="nav-link active text-white" href="app.html">Tasks</a>
-        <a class="nav-link text-white" href="#">Schedule</a>
-        <a class="nav-link text-white" href="#">Progress</a>
-        <a class="nav-link text-white" href="achievements.html">Achievements</a>
-    </nav>
+    <nav class="nav bg-primary" id="navbar"></nav>
+
     <div id="tasks" class="container">
         <br />
         <h1>View and edit a task</h1>
 
-        <!-- Ghetto example of a task that is editable -->
         <div class="card task">
-            <!-- <div class="container"> -->
             <div class="card-header">
                 <span>
                     <h2 class="far fa-square" id="taskCheckBox" style="display: inline">&nbsp;</h2>
                     <input class="form-control task-title" id="taskHeader" type="text" value="Task title goes here"
                         style="border-color: white; width: 85%;"></input>
-                    <!-- Need to make a style to make the text look closer to an h2 -->
                 </span>
             </div>
             <div class="card-body">
@@ -86,19 +79,22 @@
                 </span>
             </div>
         </div>
+    </div>
 </body>
 
 <script>
+    //load the navbar when the page loads
     $(document).ready(function () {
-        $("#datepicker").datepicker();
+        $("#navbar").load("navbar.html");
     })
+
     // Event handler for when the enter key is pressed on one of the text input forms.
     // Adds a new empty row for the task to allow the user to input another task
     $(document.body).on("keydown", ".empty-task", function (e) {
         if (e.which == 13 && $(".empty-task").val() != "") { //if the enter key is pressed.
             console.log($(".empty-task").attr("id").match(/\d+/)[0]);
             var curId = parseInt($(".empty-task").attr("id").match(/\d+/)[0]) +
-            1; //regex to find only the number at the end of the id
+                1; //regex to find only the number at the end of the id
             $(".empty-task").removeClass("empty-task"); //first remove the empty-task class from the old task
 
             $(".task").children(".card-body").children(".subtask-list")

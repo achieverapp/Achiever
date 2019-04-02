@@ -18,12 +18,11 @@
 
 .task-title {
     font-size: x-large;
-    /*font-weight: bold;*/
     background-color: rgba(0,0,0,0);
     display: inline;
 }
 
 .task-textbox {
     border-color: rgba(0,0,0,0);
-    width: 90%
+    width: 90%    
 }

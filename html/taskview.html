@@ -21,14 +21,14 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-        crossorigin="anonymous"></script>
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">
+    </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-        crossorigin="anonymous"></script>
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous">
+    </script>
 
 </head>
 
@@ -48,7 +48,7 @@
         <h1>View and edit a task</h1>
 
         <!-- Ghetto example of a task that is editable -->
-        <div class="card" id="Example task to edit">
+        <div class="card task">
             <!-- <div class="container"> -->
             <div class="card-header">
                 <span>
@@ -57,36 +57,58 @@
                 </span>
             </div>
             <div class="card-body">
-                <form>
+                <form class="subtask-list">
                     <div class="form-inline">
-                        <span class="far fa-square"></span>
-                        <input class="form-control" type="text" value="This is an example subtask"
+                        <span class="far fa-square subtask-checkbox" id="checkbox1"></span>
+                        <input class="form-control" id="textbox1" type="text" value="This is an example subtask"
                             style="border-color: white; width: 90%"></input>
                     </div>
                     <div class="form-inline">
-                        <span class="far fa-square"></span>
-                        <input class="form-control" type="text" value="This is another example subtask"
+                        <span class="far fa-square subtask-checkbox" id="checkbox2"></span>
+                        <input class="form-control" id="textbox2" type="text" value="This is another example subtask"
                             style="border-color: white; width: 90%"></input>
                     </div>
                     <div class="form-inline">
-                        <span class="far fa-square"></span>
-                        <input class="form-control" type="text" style="border-color: white; width: 90%"></input>
+                        <span class="far fa-square subtask-checkbox" id="checkbox3"></span>
+                        <input class="form-control empty-task" id="textbox3" type="text"
+                            style="border-color: white; width: 90%"></input>
                     </div>
                 </form>
             </div>
             <div class="card-footer">
                 <span>
-                    <p class="">Due 5-4-2019</p>
+                    <p class="due-date">Due 5-4-2019</p>
                 </span>
             </div>
         </div>
 </body>
 
 <script>
-  //Begin SCRIPT section of document. Here we must use JavaScript comments. This is a single-line comment
-    /* And this is a
-       multi-line comment */
-  //Subsequent scripts will be embedded in their own script tags
+    // Event handler for when the enter key is pressed on one of the text input forms.
+    // Adds a new empty row for the task to allow the user to input another task
+    $(document.body).on("keydown", ".empty-task", function (e) {
+        if (e.which == 13 && $(".empty-task").val() != "") { //if the enter key is pressed.
+            console.log($(".empty-task").attr("id").match(/\d+/)[0]); 
+            var curId = parseInt($(".empty-task").attr("id").match(/\d+/)[0]) + 1; //regex to find only the number at the end of the id
+            $(".empty-task").removeClass("empty-task"); //first remove the empty-task class from the old task
+
+            $(".task").children(".card-body").children(".subtask-list")
+                .append( // add a new empty task to the end of the current list
+                    "<div class=\"form-inline\"><span class=\"far fa-square subtask-checkbox\" id=\"checkbox" +
+                    curId +
+                    "\"></span>" +
+                    "<input class=\"form-control empty-task\" id=\"textbox" + curId +
+                    "\"type=\"text\" style=\"border-color: white; width: 90%\"></input></div>"
+                );
+            return false;
+        }
+    });
+
+    //toggles the checkboxes when a user clicks them
+    $(document.body).on("click", ".subtask-checkbox", function (e) {
+        this.classList.toggle("fa-square");
+        this.classList.toggle("fa-check-square");
+    });
 </script>
 
 </html>

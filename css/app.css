@@ -27,3 +27,8 @@
     border-color: rgba(0,0,0,0);
     width: 90%
 }
+
+.nav-link {
+    font-size:16pt;
+    padding:16px;
+}

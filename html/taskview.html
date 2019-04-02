@@ -38,10 +38,10 @@
 </style>
 
 <body>
-    <nav class="nav bg-primary">
+    <nav class="nav bg-primary" style="">
         <a class="nav-link active text-white" href="app.html">Tasks</a>
         <a class="nav-link text-white" href="#">Schedule</a>
-        <a class="nav-link text-white" href="#">Progress</a>
+        <a class="nav-link text-white" href="progress.html">Progress</a>
         <a class="nav-link text-white" href="achievements.html">Achievements</a>
     </nav>
     <div id="tasks" class="container">
@@ -98,7 +98,7 @@
         if (e.which == 13 && $(".empty-task").val() != "") { //if the enter key is pressed.
             console.log($(".empty-task").attr("id").match(/\d+/)[0]);
             var curId = parseInt($(".empty-task").attr("id").match(/\d+/)[0]) +
-            1; //regex to find only the number at the end of the id
+                1; //regex to find only the number at the end of the id
             $(".empty-task").removeClass("empty-task"); //first remove the empty-task class from the old task
 
             $(".task").children(".card-body").children(".subtask-list")

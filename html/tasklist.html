@@ -1,0 +1,92 @@
+<!-- CptS 489, Spring 2019
+     Project: Task Tracker
+     File: app.html
+     This file is the start of our 489 project
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Import External stylesheets and libraries using 'CDN' (content delivery network) links: -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+    integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+  <link rel="stylesheet" href="../css/app.css">
+  <script src="../js/tasklist.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+    integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+    integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+    crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+  <nav class="nav bg-primary">
+    <a class="nav-link active text-white" href="app.html">Tasks</a>
+    <a class="nav-link text-white" href="#">Schedule</a>
+    <a class="nav-link text-white" href="#">Progress</a>
+    <a class="nav-link text-white" href="#">Achievements</a>
+  </nav>
+  <div id="tasks" class="container">
+    <br />
+
+    <div class="d-flex justify-content-between" style="overflow:auto; display:block">
+      <h1>Overdue Tasks:</h1>
+      <button class="btn btn-primary align-middle" type="submit"
+        style='margin-top:auto; margin-bottom:auto; font-size:16pt'>New Task</button>
+    </div>
+    <ul style="padding:0px; display:block">
+      <script>
+        var tasklist = [
+          { id: 0, title: "Do some school type homeworky stuff", due: "3/31/2019", priority: 2, category: "work" },
+        ];
+        tasklist.forEach(
+          function (task) {
+            document.write(BuildTaskCard(task));
+          });
+      </script>
+    </ul>
+
+    <div class="d-flex justify-content-between" style="overflow:auto">
+      <h1>My Tasks:</h1>
+      <button class="btn btn-primary align-middle" type="submit"
+        style='margin-top:auto; margin-bottom:auto; font-size:16pt'>New Task</button>
+    </div>
+
+
+    <ul style="padding:0px; display:block">
+
+      <script>
+        var tasklist = [
+          { id: 0, title: "Do some school type homeworky stuff", due: "4/1/2019", priority: 2, category: "work" },
+          { id: 1, title: "Do some chores n' stuff around the house", due: "4/1/2019", priority: 1, category: "home" },
+          { id: 2, title: "Do some fitess type things to get that beach bod", due: "4/1/2019", priority: 0, category: "wellness" },
+        ];
+        tasklist.forEach(
+          function (task) {
+            document.write(BuildTaskCard(task));
+          });
+      </script>
+
+    </ul>
+
+</body>
+
+
+
+</html>

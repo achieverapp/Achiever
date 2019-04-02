@@ -15,3 +15,13 @@
 .priority-low {
     background-color: #99ff99;
 }
+
+.nav {
+    z-index: 100;
+    box-shadow: 0 0 10px black
+}
+
+.nav-link {
+    font-size: 16pt;
+    padding: 16px;
+}

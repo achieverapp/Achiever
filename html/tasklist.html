@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="../css/app.css">
 
   <script src="../js/tasklist.js"></script>
+  <script src="../js/model.js"></script>
 
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"
     integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
@@ -51,7 +52,8 @@
     <div id="overdue-div">
       <div class='d-flex justify-content-between'>
         <h1>Overdue Tasks:</h1>
-        <button class='btn btn-primary' type='submit' style='margin-top:auto;margin-bottom:auto; font-size:16pt; display: none;'>NEW
+        <button class='btn btn-primary' type='submit'
+          style='margin-top:auto;margin-bottom:auto; font-size:16pt; display: none;'>NEW
           TASK</button>
       </div>
 
@@ -60,14 +62,15 @@
 
     <div class='d-flex justify-content-between'>
       <h1>Upcoming Tasks:</h1>
-      <button class='btn btn-primary' type='submit' style='margin-top:auto;margin-bottom:auto; font-size:16pt; display: none;'>NEW
+      <button class='btn btn-primary' type='submit'
+        style='margin-top:auto;margin-bottom:auto; font-size:16pt; display: none;'>NEW
         TASK</button>
     </div>
 
     <ul style="padding:0px" id="task-list"></ul>
 
-    <button class='btn btn-primary' id="btn-newtask" type='submit' 
-        style='font-size:16pt; position: absolute; bottom: 64px; right: 0px'>
+    <button class='btn btn-primary' id="btn-newtask" type='submit'
+      style='font-size:16pt; position: absolute; bottom: 64px; right: 0px'>
       NEW TASK
     </button>
   </div>
@@ -76,20 +79,16 @@
 
 <script>
   $(document).ready(function () {
+    console.log("document ready!");
     // load the navbar
     $("#navbar").load("navbar.html");
 
     // attach task data to body
-    var tasks = [
-      { id: 0, title: "Do some work stuff cuz deadlines n wutnot", due: "2019-04-10T23:59:59.999-07:00", category: "work", priority: 2 },
-      { id: 0, title: "Do some chore stuff cuz your house is a mess", due: "2019-03-10T23:59:59.999-07:00", category: "home", priority: 1 },
-      { id: 0, title: "Do some fitness stuff cuz summer beach-bod obvs", due: "2019-04-10T23:59:49.999-07:00", category: "wellness", priority: 0 },
-    ];
+    var tasks = getTaskList();
     $(document.body).data("tasks", tasks);
-  });
 
-  $(window).on('load', function () {
     // generate the task list
+    // TODO: move this code into its own function.
     var upcomingUL = document.getElementById("task-list");
     var overdueUL = document.getElementById("overdue-list");
     var tasks = $(document.body).data("tasks");
@@ -97,11 +96,9 @@
     tasks.forEach(task => {
       var due = new Date(task.due);
       var today = new Date();
-      
+
       if (today > due) {
         overdue.push(task);
-        console.log(task);
-        console.log(overdue);
         overdueUL.appendChild(buildTaskCard(task))
       }
       else {
@@ -109,14 +106,24 @@
       }
     });
     if (overdue.length == 0) {
-        console.log(overdue.length)
-        console.log(overdue);
-        $("#overdue-div").hide();
-      }
+      $("#overdue-div").hide();
+    }
   });
 
-  $("#btn-newtask").on("click", function() {
-    window.location.href='./taskview.html';
+  $("#btn-newtask").on("click", function () {
+    window.location.href = './taskview.html';
+  });
+
+  $(document).on("click", ".task-checkbox", function () {
+    taskCard = $(this).closest('.task-card');
+    id = Number(taskCard[0].id);
+    console.log(id);
+    task = getTask(id);
+    var now = new Date();
+    task.completed = now.toISOString();
+    updateTask(task);
+    console.log(JSON.stringify(task));
+    buildTaskList();
   });
 </script>
 

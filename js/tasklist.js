@@ -6,6 +6,40 @@ var priorityToClassMap = {
     2: "priority-high",
 };
 
+// generate the task list
+// TODO: move this code into its own function.
+function buildTaskList() {
+    var upcomingUL = document.getElementById("task-list");
+    var overdueUL = document.getElementById("overdue-list");
+    var tasks = getTaskList();
+    var overdue = [];
+
+    while (upcomingUL.firstChild) {
+        upcomingUL.removeChild(upcomingUL.firstChild);
+    }
+    while (overdueUL.firstChild) {
+        overdueUL.removeChild(overdueUL.firstChild);
+    }
+
+    tasks.forEach(task => {
+        if (task.completed == null) {
+            var due = new Date(task.due);
+            var today = new Date();
+            if (today > due) {
+                overdue.push(task);
+                overdueUL.appendChild(buildTaskCard(task))
+            }
+            else {
+                upcomingUL.appendChild(buildTaskCard(task));
+            }
+        }
+    });
+    if (overdue.length == 0) {
+        $("#overdue-div").hide();
+    }
+}
+
+
 function buildTaskCard(task) {
     var dueDate = new Date(task.due)
     var taskCardNode = document.createElement("li");
@@ -26,12 +60,5 @@ function buildTaskCard(task) {
 }
 
 function formatDateTime(date) {
-    var dateStr = "" + 
-        date.getMonth() + "/" + 
-        date.getDay() + "/" + 
-        date.getFullYear() + " - " + 
-        date.getHours() + ":" + 
-        date.getMinutes();
     return date.toLocaleString();
-    return dateStr;
 }

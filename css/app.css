@@ -1,7 +1,50 @@
 /* <!-- CSS definitions for app styles in here --> */
 
+/*////////////////////*/
+/* NAV STYLES */
+/*////////////////////*/
+
+.nav-link {
+    font-size: 16pt;
+    padding: 16px;
+}
+
+/*////////////////////*/
+/* TASK STYLES */
+/*////////////////////*/
+.task-title {
+    margin-bottom: 0px;
+}
+
+.task-due {
+    font-size: 10pt; 
+    display:inline-block; 
+    margin-right:16px;
+}
+
+.task-category {
+    font-size: 10pt; 
+    display:inline-block; 
+    margin-right:16px;
+}
+
+.task-checkbox {
+    display: inline-block;
+}
+
 .task-card {
     margin: 2px;
+}
+
+.task-title {
+    font-size: x-large;
+    background-color: rgba(0,0,0,0);
+    display: inline;
+}
+
+.task-textbox {
+    border-color: rgba(0,0,0,0);
+    width: 90%
 }
 
 .priority-high {
@@ -14,21 +57,4 @@
 
 .priority-low {
     background-color: #99ff99;
-}
-
-.task-title {
-    font-size: x-large;
-    /*font-weight: bold;*/
-    background-color: rgba(0,0,0,0);
-    display: inline;
-}
-
-.task-textbox {
-    border-color: rgba(0,0,0,0);
-    width: 90%
-}
-
-.nav-link {
-    font-size:16pt;
-    padding:16px;
 }

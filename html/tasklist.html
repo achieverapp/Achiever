@@ -41,12 +41,7 @@
 
 <body style="height:100%">
   <nav class="nav" id="navbar"></nav>
-  <!-- <nav class="nav bg-primary" style="">
-    <a class="nav-link active text-white" href="app.html">Tasks</a>
-    <a class="nav-link text-white" href="#">Schedule</a>
-    <a class="nav-link text-white" href="#">Progress</a>
-    <a class="nav-link text-white" href="#">Achievements</a>
-  </nav> -->
+
   <div id="tasks" class="container page-container">
 
     <div id="overdue-div">
@@ -69,6 +64,7 @@
 
     <ul style="padding:0px" id="task-list"></ul>
 
+    <!-- TODO: fix button so it stays fixed with scrolling -->
     <button class='btn btn-primary' id="btn-newtask" type='submit'
       style='font-size:16pt; position: absolute; bottom: 64px; right: 0px'>
       NEW TASK
@@ -87,27 +83,7 @@
     var tasks = getTaskList();
     $(document.body).data("tasks", tasks);
 
-    // generate the task list
-    // TODO: move this code into its own function.
-    var upcomingUL = document.getElementById("task-list");
-    var overdueUL = document.getElementById("overdue-list");
-    var tasks = $(document.body).data("tasks");
-    var overdue = [];
-    tasks.forEach(task => {
-      var due = new Date(task.due);
-      var today = new Date();
-
-      if (today > due) {
-        overdue.push(task);
-        overdueUL.appendChild(buildTaskCard(task))
-      }
-      else {
-        upcomingUL.appendChild(buildTaskCard(task));
-      }
-    });
-    if (overdue.length == 0) {
-      $("#overdue-div").hide();
-    }
+    buildTaskList();
   });
 
   $("#btn-newtask").on("click", function () {
@@ -117,7 +93,6 @@
   $(document).on("click", ".task-checkbox", function () {
     taskCard = $(this).closest('.task-card');
     id = Number(taskCard[0].id);
-    console.log(id);
     task = getTask(id);
     var now = new Date();
     task.completed = now.toISOString();

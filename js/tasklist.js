@@ -6,8 +6,6 @@ var priorityToClassMap = {
     2: "priority-high",
 };
 
-// generate the task list
-// TODO: move this code into its own function.
 function buildTaskList() {
     var upcomingUL = document.getElementById("task-list");
     var overdueUL = document.getElementById("overdue-list");

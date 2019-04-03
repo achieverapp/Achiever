@@ -30,6 +30,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
         integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous">
     </script>
+    <script src="../js/autosize.min.js"></script>
+
 
 </head>
 
@@ -44,17 +46,23 @@
             <div class="card-header">
                 <span class="task-textbox">
                     <h2 class="far fa-square" id="taskCheckBox" style="display: inline">&nbsp;</h2>
-                    <input class="form-control task-title border-0" id="taskHeader" type="text"
-                        value="Task title goes here"></input>
+                    <textarea class="form-control task-title border-0" id="taskHeader" type="text"
+                        rows="1">Task title goes here</textarea>
                 </span>
             </div>
-            <div class="card-body" style="padding-right: 0px">
-                <form class="subtask-list"></form>
+            <div class="card-body">
+                <form class="subtask-list">
+                    <div class="form-inline">
+                        <span class="far fa-square subtask-checkbox" id="checkboxa"></span>
+                        <textarea class="form-control task-textbox border-0" id="textboxa" type="text" rows="1"
+                            value="test"></textarea>
+                        <span class="far fa-trash-alt" id="trasha" style="float: right"></span>
+                    </div>
+                </form>
             </div>
             <div class="card-footer" style="display: flex; flex: 1">
                 <span>
-                    Due: <input type="date" id="datepicker"></input><input type="time" id="timepicker"></input>
-                    <span class="dropdown">
+                    <span class="dropdown" style="float: right">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="categryDropdown"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Category
@@ -65,7 +73,7 @@
                             <a class="dropdown-item category-dropdown" id="homeDropdown">Home</a>
                         </div>
                     </span>
-                    <span class="dropdown">
+                    <span class="dropdown" style="float: right">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="priorityDropdown"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Priority
@@ -75,6 +83,11 @@
                             <a class="dropdown-item priority-dropdown" id="priority-med">Medium</a>
                             <a class="dropdown-item priority-dropdown" id="priority-high">High</a>
                         </div>
+                    </span>
+                    <span>
+                        <label for="datepicker">Due: </label>
+                        <input type="date" class="form-control" id="datepicker"></input>
+                        <input type="time" class="form-control" style="display: inline-block" id="timepicker"></input>
                     </span>
                 </span>
             </div>
@@ -124,10 +137,10 @@
                     <span class=\"far fa-square subtask-checkbox\" id=\"checkbox" +
                     curId +
                     "\"></span>" +
-                    "<input class=\"form-control task-textbox border-0\" id=\"textbox" + curId +
-                    "\"type=\"text\" value=\"" + taskDesc + "\"></input>\
+                    "<textarea class=\"form-control task-textbox border-0\" id=\"textbox" + curId +
+                    "\"type=\"text\" value=\"" + taskDesc + "\" rows=\"1\"></textarea>\
                     <span class=\"far fa-trash-alt\" id=\"trash" + curId +
-                    "\" style=\"float: right; padding-right: 17px\"></span></div>"
+                    "\" style=\"float: right\"></span></div>"
                 );
             curId++; //increment the id for each new task that we will add
         });
@@ -139,9 +152,10 @@
                     <span class=\"far fa-square\" id=\"checkbox" +
                 curId +
                 "\"></span>" +
-                "<input class=\"form-control task-textbox border-0 empty-task\" id=\"textbox" + curId +
-                "\"type=\"text\" style=\"width: 95%\"></input></div>"
+                "<textarea class=\"form-control task-textbox border-0 empty-task\" id=\"textbox" + curId +
+                "\"type=\"text\" rows=\"1\"></textarea></div>"
             );
+        autosize($('textarea'));
     }
 
     // Event handler for when the enter key is pressed on one of the text input forms.
@@ -166,9 +180,10 @@
                     <span class=\"far fa-square\" id=\"checkbox" +
                     curId +
                     "\"></span>" +
-                    "<input class=\"form-control task-textbox border-0 empty-task\" id=\"textbox" + curId +
-                    "\"type=\"text\" style=\"width: 95%\"></input></div>"
+                    "<textarea class=\"form-control task-textbox border-0 empty-task\" id=\"textbox" + curId +
+                    "\"type=\"text\" rows=\"1\"></textarea></div>"
                 );
+            autosize($('.empty-task'));
             return false;
         }
     });
@@ -197,7 +212,7 @@
     // In the future there should be some form of confirmation to delete a subtask, (or maybe an undo button?)
     $(document.body).on("click", ".fa-trash-alt", function (e) {
         e.currentTarget.parentElement
-    .remove(); //traverses the tree and removes the parent html from the document.
+            .remove(); //traverses the tree and removes the parent html from the document.
     });
 </script>
 

@@ -63,14 +63,17 @@
 }
 
 .task-title {
-    font-size: x-large;
-    background-color: rgba(0,0,0,0);
-    display: inline;
+    font-size: 30px;
+    background-color: rgba(0,0,0,0);    
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .task-textbox {
     border-color: rgba(0,0,0,0);
-    width: 90%
+    width: 90%;
+    display: flex;
+    flex: 1
 }
 
 .priority-high {

@@ -42,19 +42,19 @@
 
         <div class="card task">
             <div class="card-header">
-                <span>
+                <span class="task-textbox">
                     <h2 class="far fa-square" id="taskCheckBox" style="display: inline">&nbsp;</h2>
                     <input class="form-control task-title border-0" id="taskHeader" type="text"
-                        value="Task title goes here" style="border-color: white; width: 85%;"></input>
+                        value="Task title goes here"></input>
                 </span>
             </div>
             <div class="card-body" style="padding-right: 0px">
                 <form class="subtask-list"></form>
             </div>
-            <div class="card-footer">
+            <div class="card-footer" style="display: flex; flex: 1">
                 <span>
                     Due: <input type="date" id="datepicker"></input><input type="time" id="timepicker"></input>
-                    <span class="dropdown" style="float: right; padding-left: 6px">
+                    <span class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="categryDropdown"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Category
@@ -65,7 +65,7 @@
                             <a class="dropdown-item category-dropdown" id="homeDropdown">Home</a>
                         </div>
                     </span>
-                    <span class="dropdown" style="float: right; padding-left: 6px">
+                    <span class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="priorityDropdown"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Priority
@@ -125,9 +125,9 @@
                     curId +
                     "\"></span>" +
                     "<input class=\"form-control task-textbox border-0\" id=\"textbox" + curId +
-                    "\"type=\"text\" style=\"width: 95%\" value=\"" + taskDesc + "\"></input>\
+                    "\"type=\"text\" value=\"" + taskDesc + "\"></input>\
                     <span class=\"far fa-trash-alt\" id=\"trash" + curId +
-                    "\" style=\"float: right\"></span></div>"
+                    "\" style=\"float: right; padding-right: 17px\"></span></div>"
                 );
             curId++; //increment the id for each new task that we will add
         });

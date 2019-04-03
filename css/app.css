@@ -50,6 +50,12 @@
 
 .task-checkbox {
     display: inline-block;
+    color: white;
+}
+
+.task-checkbox:hover {
+    color: #343A40;
+    cursor: pointer;
 }
 
 .task-card {

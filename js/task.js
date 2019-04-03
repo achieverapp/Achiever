@@ -10,3 +10,27 @@ export class Task {
         this.subtasks = [];
     }
 }
+
+function compareTaskByDateAscending(lhs, rhs) {
+    var lhsDate = new Date(lhs.due),
+        rhsDate = new Date(rhs.due);
+
+    
+    if(lhs.due === rhs.due) {
+        return lhs.priority - rhs.priority;
+    }
+    if(lhsDate > rhsDate) {
+        return 1;
+    }
+    if(lhsDate < rhsDate) {
+        return -1;
+    }
+    return 0;
+}
+
+function compareTaskByPriorityDescending(lhs, rhs) {
+    if(lhs.priority === rhs.priority) {
+        return compareTaskByDateAscending(lhs, rhs);
+    }
+    return lhs.priority - rhs.priority;
+}

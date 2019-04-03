@@ -18,6 +18,12 @@
 /* NAV STYLES */
 /*////////////////////*/
 
+.nav {
+    width:100%; 
+    z-index: 100; 
+    box-shadow: 2px 0px 2px grey;
+}
+
 .nav-link {
     font-size: 16pt;
     padding: 16px;

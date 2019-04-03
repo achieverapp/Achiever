@@ -46,7 +46,7 @@
     <a class="nav-link text-white" href="#">Progress</a>
     <a class="nav-link text-white" href="#">Achievements</a>
   </nav> -->
-  <div id="tasks" class="container" style="height: 100%; margin-top:0px; top: 0px; top: -64px; padding-top:64px; padding-right:0px; padding-left:0px; position: relative;">
+  <div id="tasks" class="container page-container">
 
     <div id="overdue-div">
       <div class='d-flex justify-content-between'>
@@ -66,7 +66,7 @@
 
     <ul style="padding:0px" id="task-list"></ul>
 
-    <button class='btn btn-primary' type='submit' style='font-size:16pt; position: absolute; bottom: 64px; right: 0px'>NEW
+    <button class='btn btn-primary' id="btn-newtask" type='submit' style='font-size:16pt; position: absolute; bottom: 64px; right: 0px'>NEW
         TASK</button>
   </div>
 
@@ -113,6 +113,10 @@
         console.log(overdue);
         $("#overdue-div").hide();
       }
+  });
+
+  $("#btn-newtask").on("click", function() {
+    window.location.href='./taskview.html';
   });
 </script>
 

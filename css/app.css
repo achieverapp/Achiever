@@ -1,6 +1,20 @@
 /* <!-- CSS definitions for app styles in here --> */
 
 /*////////////////////*/
+/* PAGE STYLES */
+/*////////////////////*/
+
+.page-container {
+    height: 100%; 
+    margin-top: 0px;
+    top: -64px; 
+    padding-top: 64px; 
+    padding-right: 0px; 
+    padding-left:0px; 
+    position: relative;
+}
+
+/*////////////////////*/
 /* NAV STYLES */
 /*////////////////////*/
 

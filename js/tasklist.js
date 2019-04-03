@@ -17,7 +17,7 @@ function buildTaskCard(task) {
         "<div class='container'>" +
         "<h2 class='fa fa-check-square align-middle task-checkbox'></h2>" +
         "<div class='align-middle' style='display:inline-block; padding-left:16px; max-width:90%'>" +
-        "<h3 class='task-title' style='display:block'>" + task.title + "</h3>" +
+        "<h3 class='task-card-title' style='display:block'>" + task.title + "</h3>" +
         "<p class='task-due'>Due:&nbsp;" + formatDateTime(dueDate) + "</p>" +
         "<p class='task-category'>Category:&nbsp;" + task.category + "</p>" +
         "</div>" +

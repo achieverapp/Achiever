@@ -49,31 +49,33 @@
                 </span>
             </div>
             <div class="card-body" style="padding-right: 0px">
-                <form class="subtask-list">
-                    <div class="form-inline">
-                        <span class="far fa-square subtask-checkbox" id="checkbox1"></span>
-                        <input class="form-control task-textbox border-0" id="textbox1" style="width: 95%" type="text"
-                            value="This is an example subtask"></input>
-                        <span class="far fa-trash-alt subtask-checkbox" id="trash1" style="float: right"></span>
-                    </div>
-                    <div class="form-inline">
-                        <span class="far fa-square subtask-checkbox" id="checkbox2"></span>
-                        <input class="form-control task-textbox border-0" id="textbox2" style="width: 95%" type="text"
-                            value="This is another example subtask"></input>
-                        <span class="far fa-trash-alt subtask-checkbox" id="trash2" style="float: right"></span>
-                    </div>
-                    <div class="form-inline" id="">
-                        <span class="far fa-square" id="checkbox3"></span>
-                        <input class="form-control task-textbox border-0 empty-task" id="textbox3" style="width: 95%"
-                            type="text"></input>
-                    </div>
-                </form>
+                <form class="subtask-list"></form>
             </div>
             <div class="card-footer">
                 <span>
-                    <p class="due-date">
-                        Due: <input type="date" id="datepicker"></input><input type="time" id="timepicker"></input>
-                    </p>
+                    Due: <input type="date" id="datepicker"></input><input type="time" id="timepicker"></input>
+                    <span class="dropdown" style="float: right; padding-left: 6px">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="categryDropdown"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Category
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item category-dropdown" id="fitnessDropdown">Fitness</a>
+                            <a class="dropdown-item category-dropdown" id="workSchoolDropdown">Work/School</a>
+                            <a class="dropdown-item category-dropdown" id="homeDropdown">Home</a>
+                        </div>
+                    </span>
+                    <span class="dropdown" style="float: right; padding-left: 6px">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="priorityDropdown"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Priority
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item priority-dropdown" id="priority-low">Low</a>
+                            <a class="dropdown-item priority-dropdown" id="priority-med">Medium</a>
+                            <a class="dropdown-item priority-dropdown" id="priority-high">High</a>
+                        </div>
+                    </span>
                 </span>
             </div>
         </div>
@@ -83,14 +85,70 @@
 <script>
     //load the navbar when the page loads
     $(document).ready(function () {
+        var demoTasks = ["This is an example subtask", "This is another example subtask",
+            "This is a test of dynamic adding of tasks", "Hello DROP TABLE"
+        ];
+
+        $(".dropdown").data("prevPriority", "btn-secondary"); //default style for priority dropdown
+        addSubTasks(demoTasks);
+
         $("#navbar").load("navbar.html");
     });
+
+    // Event handler for the category dropdown menu.
+    // When the user clicks a category, the dropdown will change its text to what they selected.
+    $(".category-dropdown").click(function (e) {
+        $("#categryDropdown").html(e.target.innerHTML);
+    });
+
+    // Event handler for the priority dropdown menu.
+    // When the user clicks a priority level, the dropdown will change its text and style to what they selected
+    $(".priority-dropdown").click(function (e) {
+        $("#priorityDropdown").html(e.target
+            .innerText) //set the title of the button to the dropdown that was selected.
+
+        $("#priorityDropdown").toggleClass($(".dropdown").data("prevPriority") + " " + e.target
+            .id); //set the style so it matches the priority
+        $(".dropdown").data("prevPriority", e.target.id); //save the previous style
+    });
+
+    // taks a tasks array that contains an array of subtask strings to add.
+    function addSubTasks(tasks) {
+        var curId = 1; //since this is at the start, we want our ids to start at 1.
+
+        // inserts each task in the array/object that is passed.
+        tasks.forEach(taskDesc => {
+            $(".task").children(".card-body").children(".subtask-list")
+                .append( // add a new empty task to the end of the current list
+                    "<div class=\"form-inline\">\
+                    <span class=\"far fa-square subtask-checkbox\" id=\"checkbox" +
+                    curId +
+                    "\"></span>" +
+                    "<input class=\"form-control task-textbox border-0\" id=\"textbox" + curId +
+                    "\"type=\"text\" style=\"width: 95%\" value=\"" + taskDesc + "\"></input>\
+                    <span class=\"far fa-trash-alt\" id=\"trash" + curId +
+                    "\" style=\"float: right\"></span></div>"
+                );
+            curId++; //increment the id for each new task that we will add
+        });
+
+        //add an empty task to the end of the list so that the user can add more.
+        $(".task").children(".card-body").children(".subtask-list")
+            .append( // add a new empty task to the end of the current list
+                "<div class=\"form-inline\">\
+                    <span class=\"far fa-square\" id=\"checkbox" +
+                curId +
+                "\"></span>" +
+                "<input class=\"form-control task-textbox border-0 empty-task\" id=\"textbox" + curId +
+                "\"type=\"text\" style=\"width: 95%\"></input></div>"
+            );
+    }
 
     // Event handler for when the enter key is pressed on one of the text input forms.
     // Adds a new empty row for the task to allow the user to input another task
     $(document.body).on("keydown", ".empty-task", function (e) {
         if (e.which == 13 && $(".empty-task").val() != "") { //if the enter key is pressed.
-            console.log($(".empty-task").attr("id").match(/\d+/)[0]);
+            // console.log($(".empty-task").attr("id").match(/\d+/)[0]);
 
             //regex to find only the number at the end of the id
             var curId = parseInt($(".empty-task").attr("id").match(/\d+/)[0]) + 1;
@@ -124,11 +182,10 @@
     // A nice feature might be that when we click the big checkbox
     //need to check a or uncheck all the subtasks
     $("#taskCheckBox").click(function () {
-        this.classList.toggle("fa-square");
+        this.classList.toggle("fa-square"); //toggle the checkbox on the title
         this.classList.toggle("fa-check-square");
 
-        console.log($("#taskCheckBox").hasClass("fa-check-square"));
-
+        //toggle all the subtasl checkboxes to what the title checkbox is
         if ($("#taskCheckBox").hasClass("fa-check-square")) {
             $(".subtask-checkbox.fa-square").toggleClass("fa-square fa-check-square");
         } else {
@@ -139,7 +196,8 @@
     // WHen you click on the delete button of a subtask, we need to remove it from the list.
     // In the future there should be some form of confirmation to delete a subtask, (or maybe an undo button?)
     $(document.body).on("click", ".fa-trash-alt", function (e) {
-        e.currentTarget.parentElement.remove();
+        e.currentTarget.parentElement
+    .remove(); //traverses the tree and removes the parent html from the document.
     });
 </script>
 

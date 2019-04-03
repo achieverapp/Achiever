@@ -5,7 +5,7 @@
 -->
 
 <!DOCTYPE html>
-<html>
+<html style="height:100%">
 
 <head>
   <base target="_top">
@@ -22,8 +22,10 @@
 
   <link rel="stylesheet" href="../css/app.css">
 
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+  <script src="../js/tasklist.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
     crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
     integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
@@ -34,59 +36,84 @@
 
 </head>
 
-<script>
-  var priorityToClassMap = {
-    0: "priority-low",
-    1: "priority-med",
-    2: "priority-high",
-  };
-  function buildTaskCard(task) {
-    var taskCard =
-      "<li class='card task-card " + priorityToClassMap[task.priority] + "' id='" + task.id + "'>" +
-      "<div class='container'>" +
-      "<h2 class='fa fa-check-square align-middle text-white' style='display: inline-block;'></h2>" +
-      "<div class='align-middle' style='display:inline-block; padding-left:16px; max-width:90%'>" +
-      "<h3 style='margin-bottom:0px;'>" + task.title + "</h3>" +
-      "<p style='font-size: 10pt; display:inline-block; margin-right:8px;'>Due:&nbsp;" + task.due + "</p>" +
-      "<p style='font-size: 10pt; display:inline-block; margin-right:8px;'>Category:&nbsp;" + task.category + "</p>" +
-      "</div>" +
-      "</div>" +
-      "</li>";
-    return taskCard;
-  }
-</script>
 
-<body>
-  <nav class="nav bg-primary" style="">
+
+<body style="height:100%">
+  <nav class="nav bg-primary" id="navbar"></nav>
+  <!-- <nav class="nav bg-primary" style="">
     <a class="nav-link active text-white" href="app.html">Tasks</a>
     <a class="nav-link text-white" href="#">Schedule</a>
     <a class="nav-link text-white" href="#">Progress</a>
     <a class="nav-link text-white" href="#">Achievements</a>
-  </nav>
-  <div id="tasks" class="container">
-    <br />
+  </nav> -->
+  <div id="tasks" class="container" style="height: 100%; margin-top:0px; top: 0px; top: -64px; padding-top:64px; padding-right:0px; padding-left:0px; position: relative;">
 
+    <div id="overdue-div">
+      <div class='d-flex justify-content-between'>
+        <h1>Overdue Tasks:</h1>
+        <button class='btn btn-primary' type='submit' style='margin-top:auto;margin-bottom:auto; font-size:16pt; display: none;'>NEW
+          TASK</button>
+      </div>
+
+      <ul style="padding:0px" id="overdue-list"></ul>
+    </div>
 
     <div class='d-flex justify-content-between'>
       <h1>Upcoming Tasks:</h1>
-      <button class='btn btn-primary' type='submit' style='margin-top:auto;margin-bottom:auto; font-size:16pt'>NEW
+      <button class='btn btn-primary' type='submit' style='margin-top:auto;margin-bottom:auto; font-size:16pt; display: none;'>NEW
         TASK</button>
     </div>
-    <ul style="padding:0px">
 
-      <script>
-        var tasks = [
-          { id: 0, title: "Do some work stuff cuz deadlines n wutnot", due: "04/15/2019", category: "work", priority: 2 },
-          { id: 0, title: "Do some chore stuff cuz your house is a mess", due: "04/15/2019", category: "home", priority: 1 },
-          { id: 0, title: "Do some fitness stuff cuz summer beach-bod obvs", due: "04/15/2019", category: "wellness", priority: 0 },
-        ];
-        tasks.forEach(task => {
-          document.write(buildTaskCard(task));
-        });
-      </script>
+    <ul style="padding:0px" id="task-list"></ul>
 
-    </ul>
+    <button class='btn btn-primary' type='submit' style='font-size:16pt; position: absolute; bottom: 64px; right: 0px'>NEW
+        TASK</button>
+  </div>
+
+  
 
 </body>
+
+<script>
+  $(document).ready(function () {
+    // load the navbar
+    $("#navbar").load("navbar.html");
+
+    // attach task data to body
+    var tasks = [
+      { id: 0, title: "Do some work stuff cuz deadlines n wutnot", due: "2019-04-10T23:59:59.999-07:00", category: "work", priority: 2 },
+      { id: 0, title: "Do some chore stuff cuz your house is a mess", due: "2019-03-10T23:59:59.999-07:00", category: "home", priority: 1 },
+      { id: 0, title: "Do some fitness stuff cuz summer beach-bod obvs", due: "2019-04-10T23:59:49.999-07:00", category: "wellness", priority: 0 },
+    ];
+    $(document.body).data("tasks", tasks);
+  });
+
+  $(window).on('load', function () {
+    // generate the task list
+    var upcomingUL = document.getElementById("task-list");
+    var overdueUL = document.getElementById("overdue-list");
+    var tasks = $(document.body).data("tasks");
+    var overdue = [];
+    tasks.forEach(task => {
+      var due = new Date(task.due);
+      var today = new Date();
+      
+      if (today > due) {
+        overdue.push(task);
+        console.log(task);
+        console.log(overdue);
+        overdueUL.appendChild(buildTaskCard(task))
+      }
+      else {
+        upcomingUL.appendChild(buildTaskCard(task));
+      }
+    });
+    if (overdue.length == 0) {
+        console.log(overdue.length)
+        console.log(overdue);
+        $("#overdue-div").hide();
+      }
+  });
+</script>
 
 </html>

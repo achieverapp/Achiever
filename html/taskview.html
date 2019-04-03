@@ -53,9 +53,29 @@
             </div>
             <div class="card-footer">
                 <span>
-                    <p class="due-date">
-                        Due: <input type="date" id="datepicker"></input><input type="time" id="timepicker"></input>
-                    </p>
+                    Due: <input type="date" id="datepicker"></input><input type="time" id="timepicker"></input>
+                    <span class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="categryDropdown"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Category
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item category-dropdown" id="fitnessDropdown">Fitness</a>
+                            <a class="dropdown-item category-dropdown" id="workSchoolDropdown">Work/School</a>
+                            <a class="dropdown-item category-dropdown" id="homeDropdown">Home</a>
+                        </div>
+                    </span>
+                    <span class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="priorityDropdown"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Priority
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item priority-dropdown" id="priority-low">Low</a>
+                            <a class="dropdown-item priority-dropdown" id="priority-med">Medium</a>
+                            <a class="dropdown-item priority-dropdown" id="priority-high">High</a>
+                        </div>
+                    </span>
                 </span>
             </div>
         </div>
@@ -65,17 +85,32 @@
 <script>
     //load the navbar when the page loads
     $(document).ready(function () {
-        var demoTasks = ["This is an example subtask", "This is another example subtask", "This is a test of dynamic adding of tasks", "Hello DROP TABLE"];
+        var demoTasks = ["This is an example subtask", "This is another example subtask",
+            "This is a test of dynamic adding of tasks", "Hello DROP TABLE"
+        ];
+
         addSubTasks(demoTasks);
+
+        $(".dropdown").data("prevPriority", "btn-secondary");
         $("#navbar").load("navbar.html");
     });
 
+    $(".category-dropdown").click(function (e) {
+        $("#categryDropdown").html(e.target.innerHTML);
+    });
+
+    $(".priority-dropdown").click(function (e) {        
+        $("#priorityDropdown").html(e.target.innerText) //set the title of the button to the dropdown that was selected.
+
+        $("#priorityDropdown").toggleClass($(".dropdown").data("prevPriority") + " " + e.target.id); //set the style so it matches the priority
+        $(".dropdown").data("prevPriority", e.target.id); //save the previous style
+    });
 
     // taks a tasks array that contains an array of subtask strings to add.
     function addSubTasks(tasks) {
         var curId = 1;
 
-        tasks.forEach(taskDesc => {            
+        tasks.forEach(taskDesc => {
 
             $(".task").children(".card-body").children(".subtask-list")
                 .append( // add a new empty task to the end of the current list
@@ -85,7 +120,8 @@
                     "\"></span>" +
                     "<input class=\"form-control task-textbox border-0\" id=\"textbox" + curId +
                     "\"type=\"text\" style=\"width: 95%\" value=\"" + taskDesc + "\"></input>\
-                    <span class=\"far fa-trash-alt subtask-checkbox\" id=\"trash" + curId + "\" style=\"float: right\"></span></div>"
+                    <span class=\"far fa-trash-alt subtask-checkbox\" id=\"trash" + curId +
+                    "\" style=\"float: right\"></span></div>"
                 );
             curId++;
         });

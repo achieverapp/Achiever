@@ -95,13 +95,17 @@
   $(document).ready(function () {
     console.log("document ready!");
     // load the navbar
-    $("#navbar").load("navbar.html");
+    $("#navbar").load("navbar.html", function() {
+      $("#nav-tasklist").addClass("nav-active");
+    });
 
     // attach task data to body
     var tasks = getTaskList();
     $(document.body).data("tasks", tasks);
 
     buildTaskList("sortByDueDate");
+    $("#nav-tasklist").addClass("nav-active");
+    console.log($("#nav-tasklist"));
   });
 
   $("#btn-newtask").on("click", function () {
@@ -131,6 +135,15 @@
     $(".sortby-dropdown").data("sortBy", e.target.id);
     buildTaskList(e.target.id);
   });
+
+  $(document).on("mouseover", ".task-checkbox", function(e) {
+    $(e.target).removeClass("check-incomplete").addClass("check-complete");
+  });
+
+  $(document).on("mouseleave", ".task-checkbox", function(e) {
+    $(e.target).removeClass("check-complete").addClass("check-incomplete");
+  });
+
 </script>
 
 </html>

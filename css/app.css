@@ -29,6 +29,10 @@
     padding: 16px;
 }
 
+.nav-active {
+    border-bottom: 4px solid white;
+}
+
 /*////////////////////*/
 /* TASK STYLES */
 /*////////////////////*/
@@ -51,7 +55,7 @@
 }
 
 .task-checkbox {
-    margin-right:8px; 
+    margin-right:8px;
     margin-top: 0px;
     margin-bottom: 0px;
     display: inline-block;
@@ -59,7 +63,7 @@
 }
 
 .task-checkbox:hover {
-    color: #343A40;
+    /* color: #343A40; */
     cursor: pointer;
 }
 
@@ -77,7 +81,7 @@
 }
 
 .task-card-content {
-    display:inline-block; 
+    display:inline-block;
     max-width:90%;
 }
 

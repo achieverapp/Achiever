@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="../css/app.css">
 
+    <script src="../js/model.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous">
         </script>
@@ -28,13 +30,66 @@
 
     <div id="tasks" class="container page-container">
 
+        <div class='d-flex justify-content-between'>
+            <h1 id="selectedDate">
+            </h1>
+            <button type="button" class="btn btn-secondary" id="prevDayBtn"
+                style='margin-top:auto; margin-bottom: auto;'>
+                <i class="fas fa-chevron-left"></i>&nbsp;
+                Prev Day
+            </button>
+            <button type="button" class="btn btn-secondary" id="nextDayBtn"
+                style='margin-top:auto; margin-bottom: auto;'>
+                Next Day&nbsp;
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#timeblockEditModal"
+                style='margin-top:auto; margin-bottom: auto;'>
+                Schedule Timeblock
+            </button>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="timeblockEditModal" tabindex="-1" role="dialog"
+            aria-labelledby="timeblockModalLabel" aria-hidden="true" style="margin: auto">
+            <div class="vertical-alignment-helper">
+                <div class="modal-dialog vertical-align-center" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="exampleModalLabel">Schedule A Task For A Time Block</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <span class="dropdown" style="float: right; width: 100%;">
+                                    <button class="btn btn-secondary dropdown-toggle task-dropdown" type="button"
+                                        id="taskDropdown" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false" style="width: 100%">
+                                        Select a task...
+                                    </button>
+                                    <div class="dropdown-menu" id="taskDropdownMenu"
+                                        aria-labelledby="dropdownMenuButton"></div>
+                                </span>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
+                            <button type="button" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <table style="width: 100%;" cellpadding="2">
             <colgroup width="5%" valign="middle" span="1" align="center"></colgroup>
             <colgroup width="95%" valign="middle" span="1" align="center"></colgroup>
             <tbody>
-                <tr bgcolor="#00FF00">
-                    <th>Hour</th>
-                    <th>Tasks</th>
+                <tr bgcolor="#4dc3ff">
+                    <th><h4>Hour</h4></th>
+                    <th><h4>Tasks</h4></th>
                 </tr>
             </tbody>
         </table>
@@ -47,8 +102,15 @@
     $(document).ready(function () {
         $("#navbar").load("navbar.html");
         generateTableRows(); //generates tables for the whole 24 hour day
+        loadModalDropdown();
+
+        var today = new Date();
+        $("#selectedDate").html(today.toDateString() + ":");
     });
 
+
+    // Function to generate rows for a table to make it look like a calendar.
+    // The table will have 24 hours (12AM-11PM) and be broken down into sections of 15 minutes.
     function generateTableRows() {
         var rowHTML = "";
         var time;
@@ -57,18 +119,49 @@
             time = (i % 12);
             if (time == 0)
                 time = 12;
-            if(i>=12)
-                meridian="PM"
+            if (i >= 12)
+                meridian = "PM"
 
             rowHTML +=
                 "<tr>" +
                 "<td rowspan=\"4\" scope=\"row\"><span>" + time + ":00" + meridian + "</span></td>" +
-                "<td>&nbsp;</td>" +
+                "<td class=\"empty-task-time\" id=\"time:" + i + ":00" + "\">&nbsp;</td>" +
                 "</tr>" +
-                "<tr><td>&nbsp;</td></tr>" +
-                "<tr><td>&nbsp;</td></tr>" +
-                "<tr><td>&nbsp;</td></tr>";
+                "<tr><td class=\"empty-task-time\" id=\"time:" + i + ":15" + "\">&nbsp;</td></tr>" +
+                "<tr><td class=\"empty-task-time\" id=\"time:" + i + ":30" + "\">&nbsp;</td></tr>" +
+                "<tr><td class=\"empty-task-time\" id=\"time:" + i + ":45" + "\">&nbsp;</td></tr>";
         }
         $("tbody").append(rowHTML);
     }
+
+    //event handler for when the user clicks on an empty time slot to add a task to.
+    $(document.body).on("click", ".empty-task-time", function (e) {
+        var id = e.target.id;
+        var temp = id.split(':');
+        var hour24 = temp[1];
+        var quarter = temp[2];
+
+        //TODO: input data to the modal related to what the user clicked on.
+
+        $("#timeblockEditModal").modal("show"); //open the modal
+    });
+
+    // Event handler for when the time block editor is opened.
+    function loadModalDropdown() {
+        var tasks = getTaskList();
+        var taskSelectHTML = "";
+
+        tasks.forEach(task => {
+            taskSelectHTML += "<a class='dropdown-item task-dropdown-item' id='task:" + task.id + "'>" + task.title + "</a>";
+            console.log(task);
+        });
+        $("#taskDropdownMenu").html(taskSelectHTML);
+    };
+
+    // Event handler for when a task from the dropdown is clicked. 
+    // Updates the text of the dropdown to be the contents of the item that was clicked.
+    $(document.body).on("click", ".task-dropdown-item", function (e) {
+        $("#taskDropdown").html(e.target.innerHTML);
+    });
+
 </script>

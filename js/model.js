@@ -1,3 +1,9 @@
+/*
+    model.js
+
+    This file is meant to be used to emulate a RESTFUL api call that is made to a separate server to demo the app for milestone1.
+*/
+
 var tasks = [
     {
         id: 2,

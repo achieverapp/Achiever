@@ -58,7 +58,7 @@ function buildTaskCard(task) {
     taskCardNode.classList.add(priorityToClassMap[task.priority]);
     taskCardNode.innerHTML =
         "<div class='task-card-container'>" +
-        "<h2 class='fa fa-check-square align-middle task-checkbox'></h2>" +
+        "<h2 class='fas fa-check-square align-middle task-checkbox task-incomplete'></h2>" +
         "<div class='align-middle task-card-content'>" +
         "<h3 class='task-card-title' style='display:block'>" + task.title + "</h3>" +
         "<p class='task-due'>Due:&nbsp;" + formatDateTime(dueDate) + "</p>" +
@@ -75,7 +75,7 @@ function formatDateTime(date) {
 function compareTaskByDateAscending(lhs, rhs) {
     var lhsDate = new Date(lhs.due),
         rhsDate = new Date(rhs.due);
-    
+
     if(lhs.due === rhs.due) {
         return lhs.priority - rhs.priority;
     }

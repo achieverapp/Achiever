@@ -83,7 +83,7 @@
             </div>
         </div>
 
-        <table style="width: 100%;" cellpadding="2">
+        <table style="width: 100%; margin-bottom: 64px;" cellpadding="2">
             <colgroup width="5%" valign="middle" span="1" align="center"></colgroup>
             <colgroup width="95%" valign="middle" span="1" align="center"></colgroup>
             <tbody>
@@ -100,7 +100,9 @@
 <script>
     //load the navbar when the page loads
     $(document).ready(function () {
-        $("#navbar").load("navbar.html");
+        $("#navbar").load("navbar.html", function() {
+            $("#nav-schedule").addClass("nav-active");
+        });
         generateTableRows(); //generates tables for the whole 24 hour day
         loadModalDropdown();
 
@@ -158,7 +160,7 @@
         $("#taskDropdownMenu").html(taskSelectHTML);
     };
 
-    // Event handler for when a task from the dropdown is clicked. 
+    // Event handler for when a task from the dropdown is clicked.
     // Updates the text of the dropdown to be the contents of the item that was clicked.
     $(document.body).on("click", ".task-dropdown-item", function (e) {
         $("#taskDropdown").html(e.target.innerHTML);

@@ -1,5 +1,3 @@
-//import { Task } from task;
-
 var priorityToClassMap = {
     0: "priority-low",
     1: "priority-med",
@@ -7,9 +5,19 @@ var priorityToClassMap = {
 };
 
 function buildTaskList() {
+    return buildTaskList(null);
+}
+
+function buildTaskList(sortBy) {
     var upcomingUL = document.getElementById("task-list");
     var overdueUL = document.getElementById("overdue-list");
     var tasks = getTaskList();
+    if(sortBy === "sortByPriority") {
+        tasks.sort(compareTaskByPriorityDescending);
+    }
+    else if(sortBy === "sortByDueDate") {
+        tasks.sort(compareTaskByDateAscending);
+    }
     var overdue = [];
 
     while (upcomingUL.firstChild) {
@@ -34,9 +42,12 @@ function buildTaskList() {
     });
     if (overdue.length == 0) {
         $("#overdue-div").hide();
+        $("#sortByDropdown2").show();
+    }
+    else {
+        $("#sortByDropdown2").hide();
     }
 }
-
 
 function buildTaskCard(task) {
     var dueDate = new Date(task.due)
@@ -59,4 +70,27 @@ function buildTaskCard(task) {
 
 function formatDateTime(date) {
     return date.toLocaleString();
+}
+
+function compareTaskByDateAscending(lhs, rhs) {
+    var lhsDate = new Date(lhs.due),
+        rhsDate = new Date(rhs.due);
+    
+    if(lhs.due === rhs.due) {
+        return lhs.priority - rhs.priority;
+    }
+    if(lhsDate > rhsDate) {
+        return 1;
+    }
+    if(lhsDate < rhsDate) {
+        return -1;
+    }
+    return 0;
+}
+
+function compareTaskByPriorityDescending(lhs, rhs) {
+    if(lhs.priority === rhs.priority) {
+        return compareTaskByDateAscending(lhs, rhs);
+    }
+    return rhs.priority - lhs.priority;
 }

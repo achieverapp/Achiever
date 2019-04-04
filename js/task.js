@@ -11,7 +11,7 @@ export class Task {
     }
 }
 
-function compareTaskByDateAscending(lhs, rhs) {
+export function compareTaskByDateAscending(lhs, rhs) {
     var lhsDate = new Date(lhs.due),
         rhsDate = new Date(rhs.due);
 
@@ -28,7 +28,7 @@ function compareTaskByDateAscending(lhs, rhs) {
     return 0;
 }
 
-function compareTaskByPriorityDescending(lhs, rhs) {
+export function compareTaskByPriorityDescending(lhs, rhs) {
     if(lhs.priority === rhs.priority) {
         return compareTaskByDateAscending(lhs, rhs);
     }

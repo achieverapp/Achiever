@@ -9,8 +9,8 @@
     margin-top: 0px;
     top: -64px;
     padding-top: 96px;
-    padding-right: 0px;
-    padding-left:0px;
+    /* padding-right: 0px;
+    padding-left:0px; */
     position: relative;
 }
 
@@ -25,7 +25,7 @@
 }
 
 .nav-link {
-    font-size: 16pt;
+    font-size: 12pt;
     padding: 16px;
 }
 
@@ -37,18 +37,23 @@
 }
 
 .task-due {
-    font-size: 10pt;
+    font-size: 8pt;
     display:inline-block;
     margin-right:16px;
+    margin-bottom:0px;
 }
 
 .task-category {
-    font-size: 10pt;
+    font-size: 8pt;
     display:inline-block;
     margin-right:16px;
+    margin-bottom: 0px;
 }
 
 .task-checkbox {
+    margin-right:8px; 
+    margin-top: 0px;
+    margin-bottom: 0px;
     display: inline-block;
     color: white;
 }
@@ -68,11 +73,23 @@
 
 .task-card {
     margin: 2px;
+    padding: 8px;
+}
+
+.task-card-content {
+    display:inline-block; 
+    max-width:90%;
+}
+
+.task-card-container {
+    padding: 0px;
 }
 
 .task-card-title {
     background-color: rgba(0,0,0,0);
     margin-bottom: 0px;
+    margin-top: 0px;
+    font-size: 12pt;
 }
 
 .task-title {

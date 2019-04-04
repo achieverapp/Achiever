@@ -1,5 +1,3 @@
-
-
 <head>
     <base target="_top">
     <meta charset="utf-8">
@@ -27,11 +25,50 @@
 
 <body>
     <nav class="nav" id="navbar"></nav>
+
+    <div id="tasks" class="container page-container">
+
+        <table style="width: 100%;" cellpadding="2">
+            <colgroup width="5%" valign="middle" span="1" align="center"></colgroup>
+            <colgroup width="95%" valign="middle" span="1" align="center"></colgroup>
+            <tbody>
+                <tr bgcolor="#00FF00">
+                    <th>Hour</th>
+                    <th>Tasks</th>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
 </body>
 
 <script>
     //load the navbar when the page loads
     $(document).ready(function () {
         $("#navbar").load("navbar.html");
+        generateTableRows(); //generates tables for the whole 24 hour day
     });
+
+    function generateTableRows() {
+        var rowHTML = "";
+        var time;
+        var meridian = "AM";
+        for (var i = 0; i < 24; i++) {
+            time = (i % 12);
+            if (time == 0)
+                time = 12;
+            if(i>=12)
+                meridian="PM"
+
+            rowHTML +=
+                "<tr>" +
+                "<td rowspan=\"4\" scope=\"row\"><span>" + time + ":00" + meridian + "</span></td>" +
+                "<td>&nbsp;</td>" +
+                "</tr>" +
+                "<tr><td>&nbsp;</td></tr>" +
+                "<tr><td>&nbsp;</td></tr>" +
+                "<tr><td>&nbsp;</td></tr>";
+        }
+        $("tbody").append(rowHTML);
+    }
 </script>

@@ -118,3 +118,7 @@
 .priority-low {
     background-color: #99ff99;
 }
+
+td, th {
+    border: 1px solid lightgrey;
+}

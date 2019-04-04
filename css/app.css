@@ -103,7 +103,8 @@
     border-color: rgba(0,0,0,0);
     width: 90%;
     display: flex;
-    flex: 1
+    flex: 1;
+    outline: none;
 }
 
 .priority-high {

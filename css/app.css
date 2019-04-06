@@ -1,0 +1,153 @@
+/* <!-- CSS definitions for app styles in here --> */
+
+/*////////////////////*/
+/* PAGE STYLES */
+/*////////////////////*/
+
+.page-container {
+    height: 100%;
+    margin-top: 0px;
+    top: -64px;
+    padding-top: 96px;
+    /* padding-right: 0px;
+    padding-left:0px; */
+    position: relative;
+}
+
+/*////////////////////*/
+/* NAV STYLES */
+/*////////////////////*/
+
+.nav {
+    width:100%;
+    z-index: 100;
+    box-shadow: 2px 0px 2px grey;
+}
+
+.nav-link {
+    font-size: 12pt;
+    padding: 16px;
+}
+
+.nav-active {
+    border-top: 4px solid white;
+}
+
+/*////////////////////*/
+/* TASK STYLES */
+/*////////////////////*/
+.task-title {
+    margin-bottom: 0px;
+}
+
+.task-due {
+    font-size: 8pt;
+    display:inline-block;
+    margin-right:16px;
+    margin-bottom:0px;
+}
+
+.task-category {
+    font-size: 8pt;
+    display:inline-block;
+    margin-right:16px;
+    margin-bottom: 0px;
+}
+
+.task-checkbox {
+    margin-right:8px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    display: inline-block;
+    color: white;
+}
+
+.task-checkbox:hover {
+    /* color: #343A40; */
+    cursor: pointer;
+}
+
+.check-complete {
+    color: #343A40;
+}
+
+.check-incomplete {
+    color: white;
+}
+
+.task-card {
+    margin: 2px;
+    padding: 8px;
+}
+
+.task-card-content {
+    display:inline-block;
+    max-width:90%;
+}
+
+.task-card-container {
+    padding: 0px;
+}
+
+.task-card-title {
+    background-color: rgba(0,0,0,0);
+    margin-bottom: 0px;
+    margin-top: 0px;
+    font-size: 12pt;
+}
+
+.task-title {
+    font-size: 30px;
+    background-color: rgba(0,0,0,0);
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.task-textbox {
+    border-color: rgba(0,0,0,0);
+    width: 90%;
+    display: flex;
+    flex: 1;
+    outline: none;
+}
+
+.priority-high {
+    background-color: #ff9999;
+}
+
+.priority-med {
+    background-color: #ffdd99;
+}
+
+.priority-low {
+    background-color: #99ff99;
+}
+
+td, th {
+    border: 1px solid lightgrey;
+}
+
+
+
+
+.vertical-alignment-helper {
+    display:table;
+    height: 100%;
+    width: 100%;
+    pointer-events:none; /* This makes sure that we can still click outside of the modal to close it */
+}
+.vertical-align-center {
+    /* To center vertically */
+    display: table-cell;
+    vertical-align: middle;
+    pointer-events:none;
+}
+.modal-content {
+    /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
+    width:inherit;
+    max-width:inherit; /* For Bootstrap 4 - to avoid the modal window stretching full width */
+    height:inherit;
+    /* To center horizontally */
+    margin: 0 auto;
+    pointer-events: all;
+}

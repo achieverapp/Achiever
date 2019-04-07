@@ -37,9 +37,8 @@
 
     <div id="tasks" class="container page-container">
 
-        <div class='d-flex justify-content-between'>
-            <h1 id="selectedDate">
-            </h1>
+        <div class='d-flex justify-content-between flex-sm-column'>
+            <h1 id="selectedDate"></h1>
             <button type="button" class="btn btn-secondary" id="prevDayBtn"
                 style='margin-top:auto; margin-bottom: auto;'>
                 <i class="fas fa-chevron-left"></i>&nbsp;
@@ -94,7 +93,7 @@
             <colgroup width="5%" valign="middle" span="1" align="center"></colgroup>
             <colgroup width="95%" valign="middle" span="1" align="center"></colgroup>
             <tbody>
-                <tr bgcolor="#4dc3ff">
+                <tr bgcolor="#007bff">
                     <th><h4>Hour</h4></th>
                     <th><h4>Tasks</h4></th>
                 </tr>
@@ -109,8 +108,9 @@
     $(document).ready(function () {
         $("#navbar").load("navbar.html", function() {
             $("#nav-schedule").addClass("nav-active");
+            resizeNav();
         });
-        generateTableRows(); //generates tables for the whole 24 hour day
+        generateTableRows(5,24); //generates tables for the whole 24 hour day
         loadModalDropdown();
 
         var today = new Date();
@@ -120,11 +120,11 @@
 
     // Function to generate rows for a table to make it look like a calendar.
     // The table will have 24 hours (12AM-11PM) and be broken down into sections of 15 minutes.
-    function generateTableRows() {
+    function generateTableRows(startHour, endHour) {
         var rowHTML = "";
         var time;
         var meridian = "AM";
-        for (var i = 0; i < 24; i++) {
+        for (var i = startHour; i < endHour; i++) {
             time = (i % 12);
             if (time == 0)
                 time = 12;
@@ -134,11 +134,11 @@
             rowHTML +=
                 "<tr>" +
                 "<td rowspan=\"4\" scope=\"row\"><span>" + time + ":00" + meridian + "</span></td>" +
-                "<td class=\"empty-task-time\" id=\"time:" + i + ":00" + "\">&nbsp;</td>" +
+                "<td class=\"empty-task-time\" id=\"time:" + i + ":00" + "\" height=\"10em\"></td>" +
                 "</tr>" +
-                "<tr><td class=\"empty-task-time\" id=\"time:" + i + ":15" + "\">&nbsp;</td></tr>" +
-                "<tr><td class=\"empty-task-time\" id=\"time:" + i + ":30" + "\">&nbsp;</td></tr>" +
-                "<tr><td class=\"empty-task-time\" id=\"time:" + i + ":45" + "\">&nbsp;</td></tr>";
+                "<tr><td class=\"empty-task-time\" id=\"time:" + i + ":15" + "\" height=\"10em\"></td></tr>" +
+                "<tr><td class=\"empty-task-time\" id=\"time:" + i + ":30" + "\" height=\"10em\"></td></tr>" +
+                "<tr><td class=\"empty-task-time\" id=\"time:" + i + ":45" + "\" height=\"10em\"></td></tr>";
         }
         $("tbody").append(rowHTML);
     }

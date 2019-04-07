@@ -1,0 +1,101 @@
+<!-- CptS 489, Spring 2019
+     Project: Task Tracker
+     File: progress.html
+     This file is responsible for displaying a login page when the user first goes to the website.
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Import External stylesheets and libraries using 'CDN' (content delivery network) links: -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+        integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <link rel="stylesheet" href="../css/app.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous">
+        </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">
+        </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous">
+        </script>
+
+</head>
+
+<style>
+</style>
+
+<body>
+    <nav class="nav bg-primary" id="navbar"></nav>
+
+    <!-- placeholder HTML from IM3 -->
+    <div id="loginDiv">
+        <form id="loginInterface" method="get"
+            action="https://script.google.com/macros/s/AKfycbz9fletVh4ybAZHid8UjgcG3K0-9o06-6yzbkH44ot9YgkE0gg3/exec">
+            <center>
+                <div style="width: 80%">
+                    <img id="tLogo" src="https://drive.google.com/uc?export=view&id=1Pf83BwvycOuMRbuNbEm1zcFmW5ouUCaN"
+                        style="max-width: 100%; max-height:100%">
+                </div>
+                <H2>Welcome to <i>SpeedScore Live</i></H2>
+                <div>
+                    <label for="example-code-input" style="font-size:24px">Player Code:</label>
+                    <div>
+                        <input type="text" placeholder="Enter Player Code" name="playerName" id="codeInput"
+                            class="playercode-field">
+                    </div>
+                </div>
+
+                <button type="button" id="startScoringBtn" class="btn blue-btn">
+                    <span id="loginSpinner"></span>&nbsp;Get Started
+                </button>
+
+                <br />
+
+                <p><i>Version CptS 489 IM3</i></p>
+                <p><i>&copy; 2017-19 The Professor of Speedgolf. All rights reserved.</i></p>
+            </center>
+        </form>
+    </div>
+
+    <div id="errorModal" class="modal fade" tabindex="-1" role="dialog" aria-label="Saved" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: red">
+                    <div class="modal-title">
+                        <span class="fas fa-times"
+                            style="color:white;font-size:30px;cursor:pointer;text-align:center">&nbsp;Error.</span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <p id="modalErrorMessage">Placeholder</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" class="close" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    $(document).ready(function () {
+        $("#navbar").load("navbar.html", function () {
+            $("#nav-progress").addClass("nav-active");
+        });
+    })
+</script>
+
+</html>

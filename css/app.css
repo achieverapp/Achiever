@@ -21,6 +21,9 @@
 .nav {
     width:100%;
     z-index: 100;
+}
+
+#navbar {
     box-shadow: 2px 0px 2px grey;
 }
 
@@ -126,9 +129,6 @@
 td, th {
     border: 1px solid lightgrey;
 }
-
-
-
 
 .vertical-alignment-helper {
     display:table;

@@ -9,6 +9,14 @@
         var TTuser=require('../controllers/UserController')
 
         app.route('/users')
-        .post(TTuser.addUser)
-        .get(TTuser.getUser);
+        .post(TTuser.addUser);
+
+        //route calls
+
+        app.route('/users/:userId')
+        .get(TTuser.getUser)
+        .put(TTuser.updateUser)
+        .delete(TTuser.deleteUser);
+
+
     }

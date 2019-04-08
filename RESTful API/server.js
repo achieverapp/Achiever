@@ -23,6 +23,7 @@ routes(app); //Register routes with the app
 app.listen(port); //Listens for requests (asynchronous!)
 console.log('Achiever RESTful API server started on local port ' + port);
 */
+//mongo the above was for sql.
 const express = require('express'); //we are using express.js to process GET and POST requests
 const app = express(); //instantiate an express app.
 const MongoClient = require('mongodb').MongoClient;
@@ -33,9 +34,10 @@ const port = process.env.PORT || 3000; //create a port for listening for request
 app.use(bodyParser.urlencoded({extended: true})); //init body parser
 app.use(bodyParser.json());
 
-var routes = require("./routes/apiRoutes"); //Define  routes 
+var routes = require("./routes/userRoutes"); //Define  routes 
+//var routesTask=require("./routes/taskRoutes")
 routes(app); //Register routes with the app
-
+//routesTask(app);
 MongoClient.connect("mongodb://localhost:27017/TaskManager",
 
                     {useNewUrlParser: true})

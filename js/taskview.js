@@ -7,7 +7,7 @@ $(document).ready(function () {
     $(".dropdown").data("prevPriority", "btn-secondary"); //default style for priority dropdown
     addSubTasks(demoTasks);
 
-    $("#navbar").load("navbar.html", function() {
+    $("#navbar").load("navbar.html", function () {
         resizeNav();
     });
 
@@ -118,4 +118,9 @@ function addSubTasks(tasks) {
             "\"type=\"text\" rows=\"1\"></textarea></div>"
         );
     autosize($('textarea'));
+
+    //Placeholder for now since this is not yet attached to any data.
+    $("#saveTaskBtn").click(function () {
+        window.location.href = './tasklist.html';
+    });
 }

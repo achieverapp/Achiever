@@ -62,7 +62,9 @@
                 <div class="modal-dialog vertical-align-center" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h3 class="modal-title" id="exampleModalLabel">Schedule A Task For A Time Block</h3>
+                            <center style="width:100%;">
+                                <h3 class="modal-title" id="exampleModalLabel">Add/Edit Timeblock</h3>
+                            </center>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -80,48 +82,108 @@
                                 </span>
 
                                 <span class="d-flex flex-row">
-                                    <span class="input-group" style="flex-grow: 0; flex-shrink: 0; flex-basis: 10em;">
+
+                                    <div class="p-2 flex-grow-1">Start:</div>
+
+                                    <span class="input-group" style="flex-grow: 0; flex-shrink: 0; flex-basis: 8em;">
                                         <div class="input-group-prepend">
-                                            <button class="btn btn-outline-secondary" type="button">
+                                            <button class="btn btn-outline-secondary input-minus" type="button">
                                                 <i class="fas fa-minus"></i>
                                             </button>
                                         </div>
-                                        <input type="number" min="1" max="12" size="2" value="06" class="form-control"
-                                            placeholder="12" aria-label="Hour" aria-describedby="basic-addon2">
+                                        <input type="number" min="1" max="12" size="2" value="06"
+                                            class="form-control input-hour input-no-spinner" placeholder="12"
+                                            aria-label="Hour" aria-describedby="basic-addon2" id="inputStartHour">
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary" type="button">
+                                            <button class="btn btn-outline-secondary input-plus" type="button">
                                                 <i class="fas fa-plus"></i>
                                             </button>
                                         </div>
                                     </span>
 
-                                    <center class="p-2 flex-grow-1">:</center>
+                                    <center class="p-2">:</center>
 
-                                    <span class="input-group" style="flex-grow: 0; flex-shrink: 0; flex-basis: 10em;">
+                                    <span class="input-group" style="flex-grow: 0; flex-shrink: 0; flex-basis: 8em;">
                                         <div class="input-group-prepend">
-                                            <button class="btn btn-outline-secondary" type="button" id="btnMinuteMinus">
+                                            <button class="btn btn-outline-secondary input-minus" type="button">
                                                 <i class="fas fa-minus"></i>
                                             </button>
                                         </div>
-                                        <input type="number" class="form-control input-no-spinner" placeholder="Minute"
-                                            aria-label="Minute" aria-describedby="basic-addon2" value="00">
+                                        <input type="number" min="0" max="45" step="15" size="2"
+                                            class="form-control input-no-spinner" placeholder="Minute"
+                                            aria-label="Minute" aria-describedby="basic-addon2" value="00"
+                                            id="inputStartMinute">
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary" type="button" id="btnMinutePlus">
+                                            <button class="btn btn-outline-secondary input-plus" type="button">
                                                 <i class="fas fa-plus"></i>
                                             </button>
                                         </div>
                                     </span>
 
-                                    <div class="p-2 flex-grow-1"></div>
+                                    <div class="p-2"></div>
 
                                     <div class="btn-group btn-group-toggle" data-toggle="buttons"
                                         style="flex-grow: 0; flex-shrink: 0; flex-basis: 6em;">
                                         <label class="btn btn-outline-secondary active">
-                                            <input type="radio" name="options" id="optionAM" autocomplete="off" checked>
+                                            <input type="radio" name="options" id="optionStartAM" autocomplete="off"
+                                                checked>
                                             AM
                                         </label>
                                         <label class="btn btn-outline-secondary">
-                                            <input type="radio" name="options" id="optionPM" autocomplete="off">PM
+                                            <input type="radio" name="options" id="optionStartPM" autocomplete="off">PM
+                                        </label>
+                                    </div>
+                                </span>
+
+                                <span class="d-flex flex-row">
+                                    <div class="p-2 flex-grow-1">End:</div>
+
+                                    <span class="input-group" style="flex-grow: 0; flex-shrink: 0; flex-basis: 8em;">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-outline-secondary input-minus" type="button">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                        <input type="number" min="1" max="12" size="2" value="06"
+                                            class="form-control input-hour input-no-spinner" placeholder="12"
+                                            aria-label="Hour" aria-describedby="basic-addon2" id="inputEndHour">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary input-plus" type="button">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </span>
+
+                                    <center class="p-2">:</center>
+
+                                    <span class="input-group" style="flex-grow: 0; flex-shrink: 0; flex-basis: 8em;">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-outline-secondary input-minus" type="button">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                        <input type="number" min="0" max="45" step="15" size="2"
+                                            class="form-control input-no-spinner" placeholder="Minute"
+                                            aria-label="Minute" aria-describedby="basic-addon2" value="00"
+                                            id="inputEndMinute">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary input-plus" type="button">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </span>
+
+                                    <div class="p-2"></div>
+
+                                    <div class="btn-group btn-group-toggle" data-toggle="buttons"
+                                        style="flex-grow: 0; flex-shrink: 0; flex-basis: 6em;">
+                                        <label class="btn btn-outline-secondary active">
+                                            <input type="radio" name="options" id="optionEndAM" autocomplete="off"
+                                                checked>
+                                            AM
+                                        </label>
+                                        <label class="btn btn-outline-secondary">
+                                            <input type="radio" name="options" id="optionEndPM" autocomplete="off">PM
                                         </label>
                                     </div>
                                 </span>
@@ -129,8 +191,9 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
-                            <button type="button" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                id="btnDiscard">Discard</button>
+                            <button type="button" input="submit" class="btn btn-primary" id="btnSave" data-dismiss="modal">Save</button>
                         </div>
                     </div>
                 </div>
@@ -191,33 +254,81 @@
 
             rowHTML +=
                 "<tr>" +
-                "<td rowspan=\"4\" scope=\"row\"><span>" + time + ":00" + meridian + "</span></td>" +
-                "<td class=\"empty-task-time\" id=\"time:" + i + ":00" + "\" height=\"10em\"></td>" +
+                "<td rowspan=\"4\" scope=\"row\"><span>" + time + ":0" + meridian + "</span></td>" +
+                "<td class=\"empty-task-time\" id=\"time-" + i + "-0" + "\" height=\"10em\"></td>" +
                 "</tr>" +
-                "<tr><td class=\"empty-task-time\" id=\"time:" + i + ":15" + "\" height=\"10em\"></td></tr>" +
-                "<tr><td class=\"empty-task-time\" id=\"time:" + i + ":30" + "\" height=\"10em\"></td></tr>" +
-                "<tr><td class=\"empty-task-time\" id=\"time:" + i + ":45" + "\" height=\"10em\"></td></tr>";
+                "<tr><td class=\"empty-task-time\" id=\"time-" + i + "-15" + "\" height=\"10em\"></td></tr>" +
+                "<tr><td class=\"empty-task-time\" id=\"time-" + i + "-30" + "\" height=\"10em\"></td></tr>" +
+                "<tr><td class=\"empty-task-time\" id=\"time-" + i + "-45" + "\" height=\"10em\"></td></tr>";
         }
         $("tbody").append(rowHTML);
     }
 
     //event handler for when the user clicks on an empty time slot to add a task to.
+    //It will show them the schedule time block modal and populate it with an hour
+    //time block from where they clicked.
     $(document.body).on("click", ".empty-task-time", function (e) {
-        var id = e.target.id;
-        var temp = id.split(':');
-        var hour24 = temp[1];
-        var quarter = temp[2];
+        var temp = e.target.id.split('-'); // empty time block's ids are displayed as times in 24hr format
+        var hour24 = parseInt(temp[1]);
+        var hour = hour24 % 12;
+        var endHour = hour + 1; //by default we would schedule a time block as 1 hour long for simplicity for the user.
+        var quarter = parseInt(temp[2]);
 
-        //TODO: input data to the modal related to what the user clicked on.
+        // Showing whether the time selected is AM or PM
+        if (hour24 >= 12) {
+            $("#optionStartAM").parent().removeClass("active");
+            $("#optionStartPM").parent().addClass("active");
+            // $("#optionStartAM").prop("checked", false);
+            // $("#optionStartPM").prop("checked", true);
+        } else {
+            $("#optionStartAM").parent().addClass("active");
+            $("#optionStartPM").parent().removeClass("active");
+            // $("#optionStartAM").prop("checked", true);
+            // $("#optionStartPM").prop("checked", false);
+        }
+
+        // Showing whether the default 1 hour later end time is AM or PM
+        if (hour24 + 1 >= 12 && hour24 + 1 < 24) {
+            $("#optionEndAM").parent().removeClass("active");
+            $("#optionEndPM").parent().addClass("active");
+            // $("#optionEndAM").removeProp("checked");
+            // $("#optionEndPM").prop("checked");
+            // $("#optionEndPM").click();
+        } else {
+            $("#optionEndAM").parent().addClass("active");
+            $("#optionEndPM").parent().removeClass("active");
+            // $("#optionEndAM").prop("checked");
+            // $("#optionEndPM").removeProp("checked");
+            // $("#optionEndAM").click();
+        }
+
+        // Padding times that are less than 10 with a 0 to make them uniform
+        if (quarter < 10) {
+            quarter = "0" + quarter.toString();
+        }
+        if (hour < 10) {
+            hour = "0" + hour.toString();
+        }
+        if (endHour < 10) {
+            endHour = "0" + endHour.toString();
+        }
+
+        // setting the actual start and end times in the modal.
+        $("#inputStartHour").val(hour % 12 == 0 ? '12' : hour % 12);
+        $("#inputEndHour").val(endHour % 12 == 0 ? '12' : endHour % 12);
+        $("#inputEndMinute").val(quarter);
+        $("#inputStartMinute").val(quarter);
 
         $("#timeblockEditModal").modal("show"); //open the modal
     });
 
     // Event handler for when the time block editor is opened.
+    // Will query the model for a list of tasks and populate the dropdown with what it recieves.
     function loadModalDropdown() {
         var tasks = getTaskList();
         var taskSelectHTML = "";
 
+        //First build html elements for each item in the drop
         tasks.forEach(task => {
             taskSelectHTML += "<a class='dropdown-item task-dropdown-item' id='task:" + task.id + "'>" + task.title + "</a>";
         });
@@ -229,5 +340,97 @@
     $(document.body).on("click", ".task-dropdown-item", function (e) {
         $("#taskDropdown").html(e.target.innerHTML);
     });
+
+    // Event handler for .input-minus button click event
+    // when the button is clicked, decrement the corresponding input value
+    $(document.body).on("click", ".input-minus", function (e) {
+        var inputGroup = $(this).closest(".input-group")[0];
+        var input = $(inputGroup).find("input")[0];
+        var min = Number($(input).prop("min"))
+        var step = Number($(input).prop("step"))
+        var currentVal = Number($(input).val());
+        var newVal = currentVal;
+        if (currentVal > min || null == min) {
+            if (step) {
+                newVal -= step;
+            }
+            else {
+                newVal--;
+            }
+        }
+        if (newVal < 10) {
+            newVal = "0" + newVal;
+        }
+        $(input).val(newVal);
+    });
+
+    // Event handler for .input-plus button click event
+    // when the button is clicked, increment the corresponding input value
+    $(document.body).on("click", ".input-plus", function (e) {
+        var inputGroup = $(this).closest(".input-group")[0];
+        var input = $(inputGroup).find("input")[0];
+        var currentVal = Number($(input).val());
+        var newVal = currentVal;
+        var max = Number($(input).prop("max"))
+        var step = Number($(input).prop("step"))
+
+        if (currentVal < max || null == max) {
+            if (step) {
+                newVal += step;
+            }
+            else {
+                newVal++;
+            }
+        }
+
+        if (newVal < 10) {
+            newVal = "0" + newVal;
+        }
+        $(input).val(newVal);
+    });
+
+
+
+    $("#btnSave").click(function () {
+        var startHour = Number($("#inputStartHour").val()),
+            startMinute = Number($("#inputStartMinute").val()),
+            startIsPM = $("#optionStartPM").closest("label").hasClass('active'),
+            endHour = Number($("#inputEndHour").val()),
+            endMinute = Number($("#inputStartHour").val()),
+            endIsPM = $("optionEndPM").closest("label").hasClass('active');
+
+
+        startHour += startIsPM ? 12 : 0;
+        endHour += endIsPM ? 12 : 0;
+        startHour %= 24;
+        endHour %= 24;
+        var lastHour = endHour-1;
+
+        console.log(startHour);
+        console.log(endHour)
+
+        var nRows = (endHour - startHour)*4;
+        var tdId = "#time-" + startHour + "-" + startMinute;
+        currentHour = startHour;
+        currentMinute = startMinute;
+
+        $(tdId).prop("rowspan", nRows);
+
+        //TODO fix height for new td
+        $(tdId).closest("tr").css("line-height", (nRows * 10) +"em");
+
+        for(var i = 0; i < nRows - 1; i++) {
+            console.log(tdId)
+            tdId = "#time-" + currentHour + "-" + currentMinute;
+            $(tdId).remove();
+            if(currentMinute == 45) {
+                currentMinute == 0;
+                currentHour++;
+            }
+            else {
+                currentMinute += 15;
+            }
+        }
+    })
 
 </script>

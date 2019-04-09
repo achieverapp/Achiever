@@ -1,7 +1,7 @@
 /* <!-- CSS definitions for app styles in here --> */
 
 /*////////////////////*/
-/* PAGE STYLES */
+/* APP STYLES */
 /*////////////////////*/
 
 .page-container {
@@ -13,6 +13,32 @@
     padding-left:0px; */
     position: relative;
 }
+
+/* input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+} */
+
+.input-no-spinner::-webkit-inner-spin-button,
+.input-no-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.floating-action-btn {
+    font-size:16pt;
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    border-radius: 30px;
+    box-shadow: 0 6px 14px 0 #555;
+}
+
+.floating-action-btn:hover {
+    box-shadow: 0 6px 14px 0 #777 !important;
+    transform: scale(1.05) !important;
+ }
 
 /*////////////////////*/
 /* NAV STYLES */

@@ -5,6 +5,7 @@
      These time blocks are separate from the due date, and encourage the user to work on their tasks in a timely mannner.
      This page displays a day view, where all the hours are mapped out and the user is able to select a time to schedule a task.
 -->
+
 <head>
     <base target="_top">
     <meta charset="utf-8">
@@ -17,7 +18,6 @@
         integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="../css/app.css">
 
     <script src="../js/model.js"></script>
 
@@ -30,6 +30,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
         integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous">
         </script>
+
+    <link rel="stylesheet" href="../css/app.css">
 </head>
 
 <body>
@@ -37,8 +39,9 @@
 
     <div id="tasks" class="container page-container">
 
-        <div class='d-flex justify-content-between flex-sm-column'>
-            <h1 id="selectedDate"></h1>
+        <h1 id="selectedDate"></h1>
+        <div class='d-flex justify-content-between flex-row' id="scheduleHeader">
+
             <button type="button" class="btn btn-secondary" id="prevDayBtn"
                 style='margin-top:auto; margin-bottom: auto;'>
                 <i class="fas fa-chevron-left"></i>&nbsp;
@@ -49,10 +52,7 @@
                 Next Day&nbsp;
                 <i class="fas fa-chevron-right"></i>
             </button>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#timeblockEditModal"
-                style='margin-top:auto; margin-bottom: auto;'>
-                Schedule Timeblock
-            </button>
+
         </div>
 
         <!-- Modal -->
@@ -68,17 +68,65 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form>
+                            <form class="d-flex flex-column">
                                 <span class="dropdown" style="float: right; width: 100%;">
-                                    <button class="btn btn-secondary dropdown-toggle task-dropdown" type="button"
-                                        id="taskDropdown" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false" style="width: 100%">
+                                    <button class="btn btn-outline-secondary dropdown-toggle task-dropdown"
+                                        type="button" id="taskDropdown" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false" style="width: 100%; margin-bottom: 8px;">
                                         Select a task...
                                     </button>
                                     <div class="dropdown-menu" id="taskDropdownMenu"
                                         aria-labelledby="dropdownMenuButton"></div>
                                 </span>
+
+                                <span class="d-flex flex-row">
+                                    <span class="input-group" style="flex-grow: 0; flex-shrink: 0; flex-basis: 10em;">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-outline-secondary" type="button">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                        <input type="number" min="1" max="12" size="2" value="06" class="form-control"
+                                            placeholder="12" aria-label="Hour" aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </span>
+
+                                    <center class="p-2 flex-grow-1">:</center>
+
+                                    <span class="input-group" style="flex-grow: 0; flex-shrink: 0; flex-basis: 10em;">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-outline-secondary" type="button" id="btnMinuteMinus">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                        <input type="number" class="form-control input-no-spinner" placeholder="Minute"
+                                            aria-label="Minute" aria-describedby="basic-addon2" value="00">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button" id="btnMinutePlus">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </span>
+
+                                    <div class="p-2 flex-grow-1"></div>
+
+                                    <div class="btn-group btn-group-toggle" data-toggle="buttons"
+                                        style="flex-grow: 0; flex-shrink: 0; flex-basis: 6em;">
+                                        <label class="btn btn-outline-secondary active">
+                                            <input type="radio" name="options" id="optionAM" autocomplete="off" checked>
+                                            AM
+                                        </label>
+                                        <label class="btn btn-outline-secondary">
+                                            <input type="radio" name="options" id="optionPM" autocomplete="off">PM
+                                        </label>
+                                    </div>
+                                </span>
                             </form>
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
@@ -94,27 +142,37 @@
             <colgroup width="95%" valign="middle" span="1" align="center"></colgroup>
             <tbody>
                 <tr bgcolor="#007bff">
-                    <th><h4>Hour</h4></th>
-                    <th><h4>Tasks</h4></th>
+                    <th>
+                        <h4>Hour</h4>
+                    </th>
+                    <th>
+                        <h4>Tasks</h4>
+                    </th>
                 </tr>
             </tbody>
         </table>
 
+        <button type="button" class="btn btn-primary floating-action-btn" data-toggle="modal"
+            data-target="#timeblockEditModal">
+            Schedule Timeblock
+        </button>
     </div>
 </body>
 
 <script>
     //load the navbar when the page loads
     $(document).ready(function () {
-        $("#navbar").load("navbar.html", function() {
+        $("#navbar").load("navbar.html", function () {
             $("#nav-schedule").addClass("nav-active");
             resizeNav();
         });
-        generateTableRows(5,24); //generates tables for the whole 24 hour day
+        generateTableRows(5, 24); //generates tables for the whole 24 hour day
         loadModalDropdown();
 
         var today = new Date();
         $("#selectedDate").html(today.toDateString() + ":");
+
+        console.log(String(5).padStart(2, 0));
     });
 
 
@@ -162,7 +220,6 @@
 
         tasks.forEach(task => {
             taskSelectHTML += "<a class='dropdown-item task-dropdown-item' id='task:" + task.id + "'>" + task.title + "</a>";
-            console.log(task);
         });
         $("#taskDropdownMenu").html(taskSelectHTML);
     };

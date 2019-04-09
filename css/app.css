@@ -1,6 +1,35 @@
 /* <!-- CSS definitions for app styles in here --> */
 
 /*////////////////////*/
+/* LOGIN STYLES */
+/*////////////////////*/
+
+.center-screen {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    padding: 1rem;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: 1.1rem;
+    outline: 0;
+    max-width: 500px;
+}
+
+.google {
+    border-color: #DB4437;
+}
+
+.facebook {
+    border-color: #3C5A99;
+}
+
+/*////////////////////*/
 /* PAGE STYLES */
 /*////////////////////*/
 

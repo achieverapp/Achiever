@@ -38,55 +38,39 @@
 </style>
 
 <body>
-    <nav class="nav bg-primary" id="navbar"></nav>
+    <div class="col-sm-4 mx-auto page-container">
+        <div class="card center-screen">
+            <article class="card-body">
+                <a href="" class="float-right btn btn-outline-primary">Sign up</a>
+                <h4 class="card-title mb-4 mt-1">Sign in</h4>
+                <p>
+                    <a href="" class="btn btn-block google"> <i class="fab fa-google"></i>   Login via
+                        Google</a>
+                    <a href="" class="btn btn-block facebook"> <i class="fab fa-facebook-f"></i>   Login via
+                        facebook</a>
+                </p>
+                <hr>
+                <form>
+                    <div class="form-group">
+                        <input name="" class="form-control" placeholder="Email or login" type="email">
+                    </div> <!-- form-group// -->
+                    <div class="form-group">
+                        <input class="form-control" placeholder="******" type="password">
+                    </div> <!-- form-group// -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-block"> Login </button>
+                            </div> <!-- form-group// -->
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <a class="small" href="#">Forgot password?</a>
+                        </div>
+                    </div> <!-- .row// -->
+                </form>
+            </article>
+        </div> <!-- card.// -->
 
-    <!-- placeholder HTML from IM3 -->
-    <div id="loginDiv" class="container p-2">
-        <form id="loginInterface" method="get"
-            action="https://script.google.com/macros/s/AKfycbz9fletVh4ybAZHid8UjgcG3K0-9o06-6yzbkH44ot9YgkE0gg3/exec">
-            <center>
-                <div style="width: 80%">
-                    <img id="tLogo" src="https://drive.google.com/uc?export=view&id=1Pf83BwvycOuMRbuNbEm1zcFmW5ouUCaN"
-                        style="max-width: 100%; max-height:100%">
-                </div>
-                <H2>Welcome to <i>SpeedScore Live</i></H2>
-                <div>
-                    <label for="example-code-input" style="font-size:24px">Player Code:</label>
-                    <div>
-                        <input type="text" placeholder="Enter Player Code" name="playerName" id="codeInput"
-                            class="playercode-field">
-                    </div>
-                </div>
-
-                <button type="button" id="startScoringBtn" class="btn blue-btn">
-                    <span id="loginSpinner"></span>&nbsp;Get Started
-                </button>
-
-                <br />
-
-                <p><i>Version CptS 489 IM3</i></p>
-                <p><i>&copy; 2017-19 The Professor of Speedgolf. All rights reserved.</i></p>
-            </center>
-        </form>
-    </div>
-
-    <div id="errorModal" class="modal fade" tabindex="-1" role="dialog" aria-label="Saved" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header" style="background-color: red">
-                    <div class="modal-title">
-                        <span class="fas fa-times"
-                            style="color:white;font-size:30px;cursor:pointer;text-align:center">&nbsp;Error.</span>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <p id="modalErrorMessage">Placeholder</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary" class="close" data-dismiss="modal">OK</button>
-                </div>
-            </div>
-        </div>
     </div>
 </body>
 

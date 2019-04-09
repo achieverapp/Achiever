@@ -4,6 +4,25 @@
 /* APP STYLES */
 /*////////////////////*/
 
+.center-screen {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    padding: 1rem;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: 1.1rem;
+    outline: 0;
+    max-width: 500px;
+}
+
+
+
 .page-container {
     height: 100%;
     margin-top: 0px;
@@ -43,6 +62,17 @@ input[type=number].input-no-spinner {
     box-shadow: 0 6px 14px 0 #777 !important;
     transform: scale(1.05) !important;
  }
+/*////////////////////*/
+/* LOGIN STYLES */
+/*////////////////////*/
+
+ .google {
+    border-color: #DB4437;
+}
+
+.facebook {
+    border-color: #3C5A99;
+}
 
 /*////////////////////*/
 /* NAV STYLES */

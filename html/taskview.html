@@ -26,13 +26,13 @@
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous">
-        </script>
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
         integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">
-        </script>
+    </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
         integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous">
-        </script>
+    </script>
     <script src="../js/autosize.min.js"></script>
     <script src="../js/taskview.js"></script>
 
@@ -42,8 +42,7 @@
 <body>
     <nav class="nav bg-primary" id="navbar"></nav>
 
-    <div id="tasks" class="container">
-        <br />
+    <div id="tasks" class="container p-2">
 
         <div class="card task">
             <div class="card-header">
@@ -58,42 +57,46 @@
                     <div class="form-inline"></div>
                 </form>
             </div>
-            <div class="card-footer d-flex justify-content-between">
-                <span class="dropdown" style="margin-right: 12px">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="categryDropdown"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Category
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item category-dropdown" id="fitnessDropdown">Fitness</a>
-                        <a class="dropdown-item category-dropdown" id="workSchoolDropdown">Work/School</a>
-                        <a class="dropdown-item category-dropdown" id="homeDropdown">Home</a>
-                    </div>
-                </span>
-                <span class="dropdown" style="margin-right: 12px">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="priorityDropdown"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Priority
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item priority-dropdown" id="priority-low">Low</a>
-                        <a class="dropdown-item priority-dropdown" id="priority-med">Medium</a>
-                        <a class="dropdown-item priority-dropdown" id="priority-high">High</a>
-                    </div>
-                </span>
+            <div class="card-footer d-flex justify-content-between flex-sm-wrap">
+                <div>
+                    <span class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle p-2" type="button" id="categryDropdown"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Category
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item category-dropdown" id="fitnessDropdown">Fitness</a>
+                            <a class="dropdown-item category-dropdown" id="workSchoolDropdown">Work/School</a>
+                            <a class="dropdown-item category-dropdown" id="homeDropdown">Home</a>
+                        </div>
+                    </span>
+                    <span class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle p-2" type="button" id="priorityDropdown"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Priority
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item priority-dropdown" id="priority-low">Low</a>
+                            <a class="dropdown-item priority-dropdown" id="priority-med">Medium</a>
+                            <a class="dropdown-item priority-dropdown" id="priority-high">High</a>
+                        </div>
+                    </span>
+                </div>
 
-                <div class="p-2 flex-sm-column"></div>
+                <div class="p-2 flex-grow-1 hidden-sm hidden-md"></div>
 
-                <span style="margin-right: 12px">
-                    <label for="datepicker" style="display: inline-block;">Due Date:&nbsp;</label>
-                    <input type="date" class="form-control" id="datepicker"
-                        style="max-width: 10.15rem; display: inline-block;"></input>
-                </span>
-                <span>
-                    <label for="timepicker" style="display: inline-block">Time Due:&nbsp;</label>
-                    <input type="time" class="form-control" id="timepicker"
-                        style="max-width: 7.2rem; display: inline-block"></input>
-                </span>
+                <div class="flex-column">
+                    <span>
+                        <label for="datepicker" style="display: inline-block;">Due Date:&nbsp;</label>
+                        <input type="date" class="form-control" id="datepicker"
+                            style="max-width: 10.15rem; display: inline-block;"></input>
+                    </span>
+                    <span>
+                        <label for="timepicker" style="display: inline-block">Time Due:&nbsp;</label>
+                        <input type="time" class="form-control" id="timepicker"
+                            style="max-width: 7.2rem; display: inline-block"></input>
+                    </span>
+                </div>
 
             </div>
         </div>

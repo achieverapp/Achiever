@@ -21,8 +21,6 @@
     max-width: 500px;
 }
 
-
-
 .page-container {
     height: 100%;
     margin-top: 0px;
@@ -31,6 +29,19 @@
     /* padding-right: 0px;
     padding-left:0px; */
     position: relative;
+}
+
+td:empty:after {
+    content: "\00a0";
+}
+
+.td-minute {
+    font-size: 8pt;
+}
+
+td.task-time-block {
+    border: 2px solid darkblue;
+    background-color: lightcyan;
 }
 
 /* input[type=number]::-webkit-inner-spin-button,

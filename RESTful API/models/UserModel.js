@@ -1,6 +1,6 @@
 /* CptS 489, Spring 2019
     Project: Task Tracker
-    File: UserModel.js    */ 
+    File: UserModel.js    */
 
 'user strict';
 //var noSql = require('./noSqlDb.js');
@@ -8,20 +8,22 @@ var ObjectId = require('mongodb').ObjectId;
 
 var User=function(Users)
 {
-this.completedTask=[];
-this.savedTask=[];
-this.inProgress=[];
 this.name=Users.name;
 this.id=Users.id;
-
 }
+
 
 
 
 Users.addUser=function(Users,userName,result)
 {
+Users.find({name: userName.name}).toArray(function(err,res)
+{
+    if(err)
+    {
 
-
+    }
+})
 }
 
 

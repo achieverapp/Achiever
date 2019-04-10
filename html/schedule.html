@@ -193,27 +193,34 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal"
                                 id="btnDiscard">Discard</button>
-                            <button type="button" input="submit" class="btn btn-primary" id="btnSave" data-dismiss="modal">Save</button>
+                            <button type="button" input="submit" class="btn btn-primary" id="btnSave"
+                                data-dismiss="modal">Save</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <table style="width: 100%; margin-bottom: 64px;" cellpadding="2">
-            <colgroup width="5%" valign="middle" span="1" align="center"></colgroup>
-            <colgroup width="95%" valign="middle" span="1" align="center"></colgroup>
-            <tbody>
-                <tr bgcolor="#007bff">
-                    <th>
-                        <h4>Hour</h4>
-                    </th>
-                    <th>
-                        <h4>Tasks</h4>
-                    </th>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table style="width: 100%; margin-bottom: 64px;" cellpadding="2" class="table-sm">
+                <colgroup width="15%" valign="middle" span="1" align="center"></colgroup>
+                <colgroup width="" valign="middle" span="1" align="center"></colgroup>
+                <colgroup width="85%" valign="middle" span="1" align="center"></colgroup>
+                <tbody>
+                    <tr bgcolor="#007bff">
+                        <th>
+                            <h4>Hour</h4>
+                        </th>
+                        <th>
+                            <h4>Min</h4>
+                        </th>
+                        <th>
+                            <h4>Tasks</h4>
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <button type="button" class="btn btn-primary floating-action-btn" data-toggle="modal"
             data-target="#timeblockEditModal">
@@ -253,13 +260,23 @@
                 meridian = "PM"
 
             rowHTML +=
-                "<tr>" +
-                "<td rowspan=\"4\" scope=\"row\"><span>" + time + ":0" + meridian + "</span></td>" +
-                "<td class=\"empty-task-time\" id=\"time-" + i + "-0" + "\" height=\"10em\"></td>" +
+                "<tr style='line-height:10px'>" +
+                    "<td rowspan='4' scope='row'><span>" + time + ":00 " + meridian + "</span></td>" +
+                    "<td class='td-minute'>00</td>" +
+                    "<td class='empty-task-time' id='time-" + i + "-0" + "' ></td>" +
                 "</tr>" +
-                "<tr><td class=\"empty-task-time\" id=\"time-" + i + "-15" + "\" height=\"10em\"></td></tr>" +
-                "<tr><td class=\"empty-task-time\" id=\"time-" + i + "-30" + "\" height=\"10em\"></td></tr>" +
-                "<tr><td class=\"empty-task-time\" id=\"time-" + i + "-45" + "\" height=\"10em\"></td></tr>";
+                "<tr style='line-height:10px'>" +
+                    "<td class='td-minute'>15</td>" +
+                    "<td class='empty-task-time' id='time-" + i + "-15" + "' ></td>" +
+                "</tr>" +
+                "<tr style='line-height:10px'>"+
+                    "<td class='td-minute'>30</td>" +
+                    "<td class='empty-task-time' id='time-" + i + "-30" + "' ></td>"+
+                "</tr>" +
+                "<tr style='line-height:10px'>" +
+                    "<td class='td-minute'>45</td>" +
+                    "<td class='empty-task-time' id='time-" + i + "-45" + "' ></td>"+
+                "</tr>";
         }
         $("tbody").append(rowHTML);
     }
@@ -278,28 +295,18 @@
         if (hour24 >= 12) {
             $("#optionStartAM").parent().removeClass("active");
             $("#optionStartPM").parent().addClass("active");
-            // $("#optionStartAM").prop("checked", false);
-            // $("#optionStartPM").prop("checked", true);
         } else {
             $("#optionStartAM").parent().addClass("active");
             $("#optionStartPM").parent().removeClass("active");
-            // $("#optionStartAM").prop("checked", true);
-            // $("#optionStartPM").prop("checked", false);
         }
 
         // Showing whether the default 1 hour later end time is AM or PM
         if (hour24 + 1 >= 12 && hour24 + 1 < 24) {
             $("#optionEndAM").parent().removeClass("active");
             $("#optionEndPM").parent().addClass("active");
-            // $("#optionEndAM").removeProp("checked");
-            // $("#optionEndPM").prop("checked");
-            // $("#optionEndPM").click();
         } else {
             $("#optionEndAM").parent().addClass("active");
             $("#optionEndPM").parent().removeClass("active");
-            // $("#optionEndAM").prop("checked");
-            // $("#optionEndPM").removeProp("checked");
-            // $("#optionEndAM").click();
         }
 
         // Padding times that are less than 10 with a 0 to make them uniform
@@ -396,35 +403,45 @@
             startMinute = Number($("#inputStartMinute").val()),
             startIsPM = $("#optionStartPM").closest("label").hasClass('active'),
             endHour = Number($("#inputEndHour").val()),
-            endMinute = Number($("#inputStartHour").val()),
-            endIsPM = $("optionEndPM").closest("label").hasClass('active');
+            endMinute = Number($("#inputEndMinute").val()),
+            endIsPM = $("#optionEndPM").closest("label").hasClass('active');
 
 
-        startHour += startIsPM ? 12 : 0;
-        endHour += endIsPM ? 12 : 0;
+        startHour += (startIsPM == true ? 12 : 0);
+        // if (endIsPM)
+        //     endHour += 12;
         startHour %= 24;
         endHour %= 24;
-        var lastHour = endHour-1;
+        var lastHour = endHour - 1;
 
-        console.log(startHour);
-        console.log(endHour)
+        console.log(12 + (endIsPM == true ? 12 : 0))
+        console.log("endIsPM = " + endIsPM)
+        console.log("startHour = " + startHour);
+        console.log("endHour = " + endHour);
+        console.log("(endhour - start)*4 =" + (endHour - startHour)*4);
+        console.log("(startMinute/15) = " + (startMinute/15));
+        console.log("(endMinute/15) = " + (endMinute/15));
 
-        var nRows = (endHour - startHour)*4;
+        var nRows = ((endHour - startHour)*4) - (startMinute/15) + (endMinute/15);
         var tdId = "#time-" + startHour + "-" + startMinute;
         currentHour = startHour;
-        currentMinute = startMinute;
+        currentMinute = (startMinute + 15) % 60;
 
         $(tdId).prop("rowspan", nRows);
+        //$(tdId).css("background-color", "lightblue");
+        $(tdId).removeClass("emty-task-time");
+        $(tdId).addClass("task-time-block");
 
         //TODO fix height for new td
-        $(tdId).closest("tr").css("line-height", (nRows * 10) +"em");
+        //$(tdId).closest("tr").css("line-height", (nRows * 15) - 5 + "px");
 
-        for(var i = 0; i < nRows - 1; i++) {
+        console.log("nRows: " + nRows)
+        for (var i = 0; i < nRows-1; i++) {
             console.log(tdId)
             tdId = "#time-" + currentHour + "-" + currentMinute;
             $(tdId).remove();
-            if(currentMinute == 45) {
-                currentMinute == 0;
+            if (currentMinute == 45) {
+                currentMinute = 0;
                 currentHour++;
             }
             else {

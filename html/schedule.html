@@ -261,21 +261,21 @@
 
             rowHTML +=
                 "<tr style='line-height:10px'>" +
-                    "<td rowspan='4' scope='row'><span>" + time + ":00 " + meridian + "</span></td>" +
-                    "<td class='td-minute'>00</td>" +
-                    "<td class='empty-task-time' id='time-" + i + "-0" + "' ></td>" +
+                "    <td rowspan='4' scope='row'><span>" + time + ":00 " + meridian + "</span></td>" +
+                "    <td class='td-minute'>00</td>" +
+                "    <td class='empty-task-time' id='time-" + i + "-0" + "' ></td>" +
                 "</tr>" +
                 "<tr style='line-height:10px'>" +
-                    "<td class='td-minute'>15</td>" +
-                    "<td class='empty-task-time' id='time-" + i + "-15" + "' ></td>" +
-                "</tr>" +
-                "<tr style='line-height:10px'>"+
-                    "<td class='td-minute'>30</td>" +
-                    "<td class='empty-task-time' id='time-" + i + "-30" + "' ></td>"+
+                "    <td class='td-minute'>15</td>" +
+                "    <td class='empty-task-time' id='time-" + i + "-15" + "' ></td>" +
                 "</tr>" +
                 "<tr style='line-height:10px'>" +
-                    "<td class='td-minute'>45</td>" +
-                    "<td class='empty-task-time' id='time-" + i + "-45" + "' ></td>"+
+                "    <td class='td-minute'>30</td>" +
+                "    <td class='empty-task-time' id='time-" + i + "-30" + "' ></td>" +
+                "</tr>" +
+                "<tr style='line-height:10px'>" +
+                "    <td class='td-minute'>45</td>" +
+                "    <td class='empty-task-time' id='time-" + i + "-45" + "' ></td>" +
                 "</tr>";
         }
         $("tbody").append(rowHTML);
@@ -406,37 +406,24 @@
             endMinute = Number($("#inputEndMinute").val()),
             endIsPM = $("#optionEndPM").closest("label").hasClass('active');
 
+        startHour %= 12;
+        endHour %= 12;
+        startHour += (startIsPM ? 12 : 0);
+        endHour += (endIsPM ? 12 : 0);
 
-        startHour += (startIsPM == true ? 12 : 0);
-        // if (endIsPM)
-        //     endHour += 12;
-        startHour %= 24;
-        endHour %= 24;
-        var lastHour = endHour - 1;
-
-        console.log(12 + (endIsPM == true ? 12 : 0))
-        console.log("endIsPM = " + endIsPM)
-        console.log("startHour = " + startHour);
-        console.log("endHour = " + endHour);
-        console.log("(endhour - start)*4 =" + (endHour - startHour)*4);
-        console.log("(startMinute/15) = " + (startMinute/15));
-        console.log("(endMinute/15) = " + (endMinute/15));
-
-        var nRows = ((endHour - startHour)*4) - (startMinute/15) + (endMinute/15);
+        var nRows = ((endHour - startHour) * 4) - (startMinute / 15) + (endMinute / 15);
         var tdId = "#time-" + startHour + "-" + startMinute;
         currentHour = startHour;
         currentMinute = (startMinute + 15) % 60;
 
+        console.log("last row id: " + getRowId(startHour, startMinute, nRows));
+
         $(tdId).prop("rowspan", nRows);
-        //$(tdId).css("background-color", "lightblue");
         $(tdId).removeClass("emty-task-time");
         $(tdId).addClass("task-time-block");
+        $(tdId).html($("#taskDropdown").html())
 
-        //TODO fix height for new td
-        //$(tdId).closest("tr").css("line-height", (nRows * 15) - 5 + "px");
-
-        console.log("nRows: " + nRows)
-        for (var i = 0; i < nRows-1; i++) {
+        for (var i = 0; i < nRows - 1; i++) {
             console.log(tdId)
             tdId = "#time-" + currentHour + "-" + currentMinute;
             $(tdId).remove();
@@ -448,6 +435,22 @@
                 currentMinute += 15;
             }
         }
-    })
+    });
+
+    function getRowId(hour24, minute, rowOffset) {
+        var currentHour = hour24,
+            currentMinute = minute,
+            tdId;
+        for (var i = 0; i < rowOffset - 1; i++) {
+            if (currentMinute == 45) {
+                currentMinute = 0;
+                currentHour++;
+            }
+            else {
+                currentMinute += 15;
+            }
+        }
+        return "#time-" + currentHour + "-" + currentMinute;
+    }
 
 </script>

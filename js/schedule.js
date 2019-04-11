@@ -9,7 +9,6 @@ $(document).ready(function () {
     var today = new Date();
     $("#selectedDate").html(today.toDateString() + ":");
 
-
     // Function to generate rows for a table to make it look like a calendar.
     // The table will have 24 hours (12AM-11PM) and be broken down into sections of 15 minutes.
     function generateTableRows(startHour, endHour) {
@@ -175,19 +174,71 @@ $(document).ready(function () {
             endMinute = Number($("#inputEndMinute").val()),
             endIsPM = $("#optionEndPM").closest("label").hasClass('active');
 
-        startHour %= 12;
-        endHour %= 12;
+        if(startHour != 12) {
+            startHour %= 12;
+        }
+        if(endHour != 12) {
+            endHour %= 12;
+        }
         startHour += (startIsPM ? 12 : 0);
         endHour += (endIsPM ? 12 : 0);
+        if(!isTimeValid(startHour, startMinute, endHour, endMinute)) {
+            showInvalidTimeToast();
+            return;
+        }
         var nRows = ((endHour - startHour) * 4) - (startMinute / 15) + (endMinute / 15);
-
         if (hasOverlaps(startHour, startMinute, nRows)) {
-            $('.toast').toast('show');
+            showOverlapToast();
             return;
         }
         taskId = Number($("#taskDropdown").data("taskId"));
         addTaskToPage(startHour, startMinute, nRows, taskId);
     });
+
+    function isTimeValid(startHour, startMinute, endHour, endMinute) {
+        if(startHour >= 24) { // cannot start at or after midnight
+            console.log("startHour >= 24")
+            return false;
+        }
+        if(endHour >= 24 && endMinute > 0) { // cannot end after midnight
+            console.log("endHour >= 24 && endMinute > 0")
+            return false;
+        }
+        if(startHour > endHour) { // starts after it ends
+            console.log("startHour > endHour")
+            return false;
+        }
+        if(startHour == endHour) { // starts and ends in same hour
+            console.log("startHour == endHour")
+            if(startMinute >= endMinute) { // start time is >= end time
+                console.log("startMinute >= endMinute")
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Show a toast notifying the user that the timeblock could not be created
+     * due to a time conflict with another timeblock
+     */
+    function showOverlapToast() {
+        $("#toastTitle").html("Error when creating timeblock");
+        $("#toastSubtitle").html("");
+        $("#toastBody").html("Cannot create overlapping timeblocks. Please ensure the selected time range does not conflict with other scheduled tasks.");
+        $('.toast').toast('show');
+    }
+
+    /**
+     * Show a toast notifying the user that the timeblock could not be created
+     * due to an invalid time range
+     */
+    function showInvalidTimeToast() {
+        $("#toastTitle").html("Error when creating timeblock");
+        $("#toastSubtitle").html("");
+        $("#toastBody").html("The selected time range was invalid. Please make sure the start time precedes the end time, and the end is no later than 12:00PM.");
+        $('.toast').toast('show');
+    }
 
 
     /**

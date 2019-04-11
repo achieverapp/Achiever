@@ -12,7 +12,7 @@ module.exports = function (app) {
         .post(TMuser.addUser)
         .put(TMuser.updateUser);
 
-    app.route('/users/:userId')
+    app.route('/users/:id')
         .get(TMuser.getUser)
         .delete(TMuser.deleteUser);
 

@@ -6,17 +6,17 @@
 
     module.exports=function(app)
     {
-        var TTuser=require('../controllers/UserController')
+        var TMuser=require('../controllers/UserController')
 
         app.route('/users')
-        .post(TTuser.addUser);
+        .post(TMuser.addUser)
+        .put(TMuser.updateUser);
 
         //route calls
 
         app.route('/users/:userId')
-        .get(TTuser.getUser)
-        .put(TTuser.updateUser)
-        .delete(TTuser.deleteUser);
+        .get(TMuser.getUser)
+        .delete(TMuser.deleteUser);
 
 
     }

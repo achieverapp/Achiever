@@ -1,0 +1,257 @@
+//load the navbar when the page loads
+$(document).ready(function () {
+    $("#navbar").load("navbar.html", function () {
+        $("#nav-schedule").addClass("nav-active");
+        resizeNav();
+    });
+    generateTableRows(5, 24); //generates tables for the whole 24 hour day
+    loadModalDropdown();
+
+    var today = new Date();
+    $("#selectedDate").html(today.toDateString() + ":");
+
+    console.log(String(5).padStart(2, 0));
+
+
+
+    // Function to generate rows for a table to make it look like a calendar.
+    // The table will have 24 hours (12AM-11PM) and be broken down into sections of 15 minutes.
+    function generateTableRows(startHour, endHour) {
+        var rowHTML = "";
+        var time;
+        var meridian = "AM";
+        for (var i = startHour; i < endHour; i++) {
+            time = (i % 12);
+            if (time == 0)
+                time = 12;
+            if (i >= 12)
+                meridian = "PM"
+
+            rowHTML +=
+                "<tr style='line-height:10px'>" +
+                "    <td rowspan='4' scope='row'><span>" + time + ":00 " + meridian + "</span></td>" +
+                "    <td class='td-minute'>00</td>" +
+                "    <td class='empty-task-time' id='time-" + i + "-0" + "' ></td>" +
+                "</tr>" +
+                "<tr style='line-height:10px'>" +
+                "    <td class='td-minute'>15</td>" +
+                "    <td class='empty-task-time' id='time-" + i + "-15" + "' ></td>" +
+                "</tr>" +
+                "<tr style='line-height:10px'>" +
+                "    <td class='td-minute'>30</td>" +
+                "    <td class='empty-task-time' id='time-" + i + "-30" + "' ></td>" +
+                "</tr>" +
+                "<tr style='line-height:10px'>" +
+                "    <td class='td-minute'>45</td>" +
+                "    <td class='empty-task-time' id='time-" + i + "-45" + "' ></td>" +
+                "</tr>";
+        }
+        $("tbody").append(rowHTML);
+    }
+
+    //event handler for when the user clicks on an empty time slot to add a task to.
+    //It will show them the schedule time block modal and populate it with an hour
+    //time block from where they clicked.
+    $(document.body).on("click", ".empty-task-time", function (e) {
+        var temp = e.target.id.split('-'); // empty time block's ids are displayed as times in 24hr format
+        var hour24 = parseInt(temp[1]);
+        var hour = hour24 % 12;
+        var endHour = hour +
+            1; //by default we would schedule a time block as 1 hour long for simplicity for the user.
+        var quarter = parseInt(temp[2]);
+
+        // Showing whether the time selected is AM or PM
+        if (hour24 >= 12) {
+            $("#optionStartAM").parent().removeClass("active");
+            $("#optionStartPM").parent().addClass("active");
+        } else {
+            $("#optionStartAM").parent().addClass("active");
+            $("#optionStartPM").parent().removeClass("active");
+        }
+
+        // Showing whether the default 1 hour later end time is AM or PM
+        if (hour24 + 1 >= 12 && hour24 + 1 < 24) {
+            $("#optionEndAM").parent().removeClass("active");
+            $("#optionEndPM").parent().addClass("active");
+        } else {
+            $("#optionEndAM").parent().addClass("active");
+            $("#optionEndPM").parent().removeClass("active");
+        }
+
+        // Padding times that are less than 10 with a 0 to make them uniform
+        if (quarter < 10) {
+            quarter = "0" + quarter.toString();
+        }
+        if (hour < 10) {
+            hour = "0" + hour.toString();
+        }
+        if (endHour < 10) {
+            endHour = "0" + endHour.toString();
+        }
+
+        // setting the actual start and end times in the modal.
+        $("#inputStartHour").val(hour % 12 == 0 ? '12' : hour % 12);
+        $("#inputEndHour").val(endHour % 12 == 0 ? '12' : endHour % 12);
+        $("#inputEndMinute").val(quarter);
+        $("#inputStartMinute").val(quarter);
+
+        $("#timeblockEditModal").modal("show"); //open the modal
+    });
+
+    // Event handler for when the time block editor is opened.
+    // Will query the model for a list of tasks and populate the dropdown with what it recieves.
+    function loadModalDropdown() {
+        var tasks = getTaskList();
+        var taskSelectHTML = "";
+
+        //First build html elements for each item in the drop
+        tasks.forEach(task => {
+            taskSelectHTML += "<a class='dropdown-item task-dropdown-item' id='task:" + task.id + "'>" + task
+                .title + "</a>";
+        });
+        $("#taskDropdownMenu").html(taskSelectHTML);
+    };
+
+    // Event handler for when a task from the dropdown is clicked.
+    // Updates the text of the dropdown to be the contents of the item that was clicked.
+    $(document.body).on("click", ".task-dropdown-item", function (e) {
+        $("#taskDropdown").html(e.target.innerHTML);
+        taskId = (e.target.id).split(':')[1];
+        $("#taskDropdown").data("taskId", taskId);
+    });
+
+    // Event handler for .input-minus button click event
+    // when the button is clicked, decrement the corresponding input value
+    $(document.body).on("click", ".input-minus", function (e) {
+        var inputGroup = $(this).closest(".input-group")[0];
+        var input = $(inputGroup).find("input")[0];
+        var min = Number($(input).prop("min"))
+        var step = Number($(input).prop("step"))
+        var currentVal = Number($(input).val());
+        var newVal = currentVal;
+        if (currentVal > min || null == min) {
+            if (step) {
+                newVal -= step;
+            } else {
+                newVal--;
+            }
+        }
+        if (newVal < 10) {
+            newVal = "0" + newVal;
+        }
+        $(input).val(newVal);
+    });
+
+    // Event handler for .input-plus button click event
+    // when the button is clicked, increment the corresponding input value
+    $(document.body).on("click", ".input-plus", function (e) {
+        var inputGroup = $(this).closest(".input-group")[0];
+        var input = $(inputGroup).find("input")[0];
+        var currentVal = Number($(input).val());
+        var newVal = currentVal;
+        var max = Number($(input).prop("max"))
+        var step = Number($(input).prop("step"))
+
+        if (currentVal < max || null == max) {
+            if (step) {
+                newVal += step;
+            } else {
+                newVal++;
+            }
+        }
+
+        if (newVal < 10) {
+            newVal = "0" + newVal;
+        }
+        $(input).val(newVal);
+    });
+
+
+
+    $("#btnSave").click(function () {
+        var startHour = Number($("#inputStartHour").val()),
+            startMinute = Number($("#inputStartMinute").val()),
+            startIsPM = $("#optionStartPM").closest("label").hasClass('active'),
+            endHour = Number($("#inputEndHour").val()),
+            endMinute = Number($("#inputEndMinute").val()),
+            endIsPM = $("#optionEndPM").closest("label").hasClass('active');
+
+        startHour %= 12;
+        endHour %= 12;
+        startHour += (startIsPM ? 12 : 0);
+        endHour += (endIsPM ? 12 : 0);
+        var nRows = ((endHour - startHour) * 4) - (startMinute / 15) + (endMinute / 15);
+
+        if (hasOverlaps(startHour, startMinute, nRows)) {
+            $('.toast').toast('show');
+            return;
+        }
+        taskId = Number($("#taskDropdown").data("taskId"));
+        addTask(startHour, startMinute, nRows, taskId);
+    });
+
+    function addTask(startHour, startMinute, nRows, taskId) {
+        var tdId = "#time-" + startHour + "-" + startMinute;
+        var task = getTask(taskId);
+        $(tdId).prop("rowspan", nRows);
+        $(tdId).removeClass("emty-task-time");
+        $(tdId).addClass("task-time-block");
+        $(tdId).html(task.title);
+        setPriorityColor(tdId, task.priority);
+
+        currentHour = startHour;
+        currentMinute = (startMinute + 15) % 60;
+        if (45 == startMinute) {
+            currentHour++;
+        }
+
+        for (var i = 0; i < nRows - 1; i++) {
+            console.log(tdId)
+            tdId = "#time-" + currentHour + "-" + currentMinute;
+            $(tdId).remove();
+            if (currentMinute == 45) {
+                currentMinute = 0;
+                currentHour++;
+            } else {
+                currentMinute += 15;
+            }
+        }
+    }
+
+    function setPriorityColor(elementId, priority) {
+        switch (priority) {
+            case 0:
+                $(elementId).addClass("priority-low");
+                break;
+            case 1:
+                $(elementId).addClass("priority-med");
+                break;
+            case 2:
+                $(elementId).addClass("priority-high");
+                break;
+        }
+    }
+
+    function hasOverlaps(hour24, minute, nRows) {
+        var currentHour = hour24,
+            currentMinute = minute,
+            tdId = "#time-" + currentHour + "-" + currentMinute;
+
+        if ($(tdId).hasClass("task-time-block")) {
+            return true;
+        }
+        for (var i = 0; i < nRows - 1; i++) {
+            if (currentMinute == 45) {
+                currentMinute = 0;
+                currentHour++;
+            } else {
+                currentMinute += 15;
+            }
+            tdId = "#time-" + currentHour + "-" + currentMinute;
+            if ($(tdId).hasClass("task-time-block")) {
+                return true;
+            }
+        }
+        return false;
+    }
+});

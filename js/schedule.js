@@ -6,12 +6,8 @@ $(document).ready(function () {
     });
     generateTableRows(5, 24); //generates tables for the whole 24 hour day
     loadModalDropdown();
-
     var today = new Date();
     $("#selectedDate").html(today.toDateString() + ":");
-
-    console.log(String(5).padStart(2, 0));
-
 
 
     // Function to generate rows for a table to make it look like a calendar.
@@ -94,7 +90,6 @@ $(document).ready(function () {
         $("#inputEndHour").val(endHour % 12 == 0 ? '12' : endHour % 12);
         $("#inputEndMinute").val(quarter);
         $("#inputStartMinute").val(quarter);
-
         $("#timeblockEditModal").modal("show"); //open the modal
     });
 
@@ -167,7 +162,11 @@ $(document).ready(function () {
     });
 
 
-
+    /**
+     * click event for modal save button
+     * 
+     * gets information from modal and generates a new timeblock using that information
+     */
     $("#btnSave").click(function () {
         var startHour = Number($("#inputStartHour").val()),
             startMinute = Number($("#inputStartMinute").val()),
@@ -187,10 +186,19 @@ $(document).ready(function () {
             return;
         }
         taskId = Number($("#taskDropdown").data("taskId"));
-        addTask(startHour, startMinute, nRows, taskId);
+        addTaskToPage(startHour, startMinute, nRows, taskId);
     });
 
-    function addTask(startHour, startMinute, nRows, taskId) {
+
+    /**
+     * Update the schedule table html to show a task timeblock
+     * 
+     * @param startHour: the hour (24) at which the timeblock begins
+     * @param startMinute: the minute (increments of 15) at which the timeblock begins
+     * @param nRows: the number of quarter-hour increments the timeblock spans
+     * @param taskId: the id of the task to fill the timeblock
+     */
+    function addTaskToPage(startHour, startMinute, nRows, taskId) {
         var tdId = "#time-" + startHour + "-" + startMinute;
         var task = getTask(taskId);
         $(tdId).prop("rowspan", nRows);
@@ -218,6 +226,12 @@ $(document).ready(function () {
         }
     }
 
+    /**
+     * Takes the priority that is stored in the model and displays the correct CSS style for it
+     * 
+     * @param elementId The element ID of the HTML tag we want to style
+     * @param priority The priority code retrieved from the model
+     */
     function setPriorityColor(elementId, priority) {
         switch (priority) {
             case 0:
@@ -232,6 +246,14 @@ $(document).ready(function () {
         }
     }
 
+    /**
+     * Checks time range overlaps an existing task timeblock
+     * 
+     * @param hour24 the 24 hour start of the range
+     * @param minute the minute start of the range in 15 minute increments
+     * @param nRows the number of rows to span (number of 15 minute blocks)
+     * @return true if overlaps, false otherwise
+     */
     function hasOverlaps(hour24, minute, nRows) {
         var currentHour = hour24,
             currentMinute = minute,

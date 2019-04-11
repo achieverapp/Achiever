@@ -11,12 +11,8 @@
         app.route('/users')
         .post(TMuser.addUser)
         .put(TMuser.updateUser);
-
-        //route calls
-
+        
         app.route('/users/:userId')
         .get(TMuser.getUser)
         .delete(TMuser.deleteUser);
-
-
     }

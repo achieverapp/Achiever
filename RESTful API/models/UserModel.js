@@ -42,10 +42,10 @@ User.addUser = function (usersDB, newUser, result) {
 GetUser returns the data of the user with the given ID.
 If no user is found, there is no data retuned and a statusMsg with the reason why there was an error.
 */
-User.getUser = function (usersDB, UserId, result) {
+User.getUser = function (usersDB, userId, result) {
   var resultObj;
   usersDB.find({
-    _id: new ObjectId(UserId)
+    _id: new ObjectId(userId)
   }).toArray(function (err, res) {
     if (err) {
       resultObj = ResultObj("Error when adding user to database", err);
@@ -58,7 +58,7 @@ User.getUser = function (usersDB, UserId, result) {
       resultObj = ResultObj("user not found");
       result(resultObj);
     }
-  })
+  });
 }
 
 /* 
@@ -89,7 +89,6 @@ User.updateUser = function (usersDB, newUser, result) {
       //  User updates their name
       //  User updates thier other information (Not implemented yet)
 
-      // Update that user in the database
       if (newUser.name != null)
         updateName(usersDB, newUser, resultObj).then(function (res1) {
           result(res1);

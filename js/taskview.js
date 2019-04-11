@@ -11,7 +11,6 @@ $(document).ready(function () {
         resizeNav();
     });
 
-
     // Event handler for the category dropdown menu.
     // When the user clicks a category, the dropdown will change its text to what they selected.
     $(".category-dropdown").click(function (e) {

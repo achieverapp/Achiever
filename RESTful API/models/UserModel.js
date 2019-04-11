@@ -23,13 +23,6 @@ function ResultObj(statusMsg = "", statusObj = null, success = false, id = null,
   return returnObj;
 }
 
-var ResultObj2 = function (r) { //what will be returned to the requester when the function completes
-  this.objId = r.id == null ? r.id : null;
-  this.success = r.success == null ? r.success : null;
-  this.statusMsg = r.statusMsg == null ? r.statusMsg : null;
-  this.statusObj = r.statusObj == null ? r.statusObj : null;
-}
-
 // Takes a new User object that contains all data that we want to add.
 User.addUser = function (usersDB, newUser, result) {
   var resultObj;
@@ -87,27 +80,20 @@ User.updateUser = function (usersDB, newUser, result) {
       console.log(resultObj.statusMsg);
       result(resultObj);
     } else { //user is in the database!
-      if (false) { //THis kind of error checking should be done in the controller and not in the model
-        resultObj = ResultObj("Cannot update user with id " + newUser._Id + ". At least one data item not in proper format or out of order");
-        console.log(resultObj.statusMsg);
-        result(resultObj);
-      } else { //There is a user with that Id in the database.
 
-        // Update that user in the database
-        if (newUser.name != null)
-          updateName(usersDB, newUser, resultObj).then(function (res1) {
-            result(res1);
-          });
-        if (newUser.savedTasks.length > 0)
-          updateSavedTasks(usersDB, newUser, resultObj).then(function (res1) {
-            result(res1);
-          });
+      // Update that user in the database
+      if (newUser.name != null)
+        updateName(usersDB, newUser, resultObj).then(function (res1) {
+          result(res1);
+        });
+      if (newUser.savedTasks.length > 0)
+        updateSavedTasks(usersDB, newUser, resultObj).then(function (res1) {
+          result(res1);
+        });
 
-      } // New hole data is the same as what is in the database, so we didnt need to update anything!
-      // resultObj = ResultObj("Hole Data unchanged, update contained the same data already stored in database");
-      // result(resultObj);
-
-    }
+    } // New hole data is the same as what is in the database, so we didnt need to update anything!
+    // resultObj = ResultObj("Hole Data unchanged, update contained the same data already stored in database");
+    // result(resultObj);    
   });
 }
 
@@ -198,8 +184,9 @@ User.deleteUser = function (usersDB, UserId, result) {
         }
       });
     }
-  })
+  });
 }
+
 module.exports = {
   User,
   ResultObj

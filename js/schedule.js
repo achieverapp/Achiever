@@ -176,12 +176,19 @@ $(document).ready(function () {
 
         if(startHour != 12) {
             startHour %= 12;
+            startHour += (startIsPM ? 12 : 0);
+        }
+        else {
+            startHour += (startIsPM ? 0 : 12);
         }
         if(endHour != 12) {
             endHour %= 12;
+            endHour += (endIsPM ? 12 : 0);
         }
-        startHour += (startIsPM ? 12 : 0);
-        endHour += (endIsPM ? 12 : 0);
+        else {
+            endHour += (endIsPM ? 0 : 12);
+        }
+        
         if(!isTimeValid(startHour, startMinute, endHour, endMinute)) {
             showInvalidTimeToast();
             return;
@@ -192,6 +199,10 @@ $(document).ready(function () {
             return;
         }
         taskId = Number($("#taskDropdown").data("taskId"));
+        if(!taskId) {
+            showNoTaskToast();
+            return;
+        }
         addTaskToPage(startHour, startMinute, nRows, taskId);
     });
 
@@ -216,6 +227,17 @@ $(document).ready(function () {
             }
         }
         return true;
+    }
+
+    /**
+     * Show a toast notifying the user that the timeblock could not be created
+     * due to a time conflict with another timeblock
+     */
+    function showNoTaskToast() {
+        $("#toastTitle").html("Error when creating timeblock");
+        $("#toastSubtitle").html("");
+        $("#toastBody").html("No task was selected. Please select a task from the list to schedule for the timeblock.");
+        $('.toast').toast('show');
     }
 
     /**

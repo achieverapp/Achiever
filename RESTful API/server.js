@@ -27,11 +27,11 @@ MongoClient.connect("mongodb://localhost:27017/Achiever", {
 
     //get the collections
     const users = db.collection('Users');
-    // const tasks = db.collection('Tasks');
+    const tasks = db.collection('Tasks');
 
     //for milestone 2 we are focusing on is users and task
     app.locals.users = users; //store users
-    // app.locals.tasks = tasks; //store tasks.
+    app.locals.tasks = tasks; //store tasks.
 
     app.listen(port); //Listens for requests (asynchronous!)
 

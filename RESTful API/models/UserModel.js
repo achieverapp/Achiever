@@ -7,7 +7,6 @@
 var ObjectId = require('mongodb').ObjectId;
 
 var User = function (user) {
- 
   this.name = user.name == null ? null : user.name;
   this._id = user._id == null ? null : user._id;
   this.savedTasks = user.savedTasks == null ? [] : user.savedTasks;
@@ -60,10 +59,10 @@ User.getUser = function (usersDB, UserId, result) {
       console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
       result(resultObj);
     } else if (res.length == 1) {
-      resultObj = ResultObj("User retrieved", null, true, res[0]._id, res[0]);      
+      resultObj = ResultObj("User retrieved", null, true, res[0]._id, res[0]);
       result(resultObj);
     } else {
-      resultObj = ResultObj("user not found");      
+      resultObj = ResultObj("user not found");
       result(resultObj);
     }
   })
@@ -73,109 +72,101 @@ User.getUser = function (usersDB, UserId, result) {
 //  User adds a new task to save
 //  User updates their name
 //  User updates thier other information (Not implemented yet)
-User.updateUser = function (usersDB, user, result) {
-  newUser = new User(user);
-
+User.updateUser = function (usersDB, newUser, result) {
+  var resultObj;
   //Check if the user is in the database
   usersDB.find({
-    _id: user._id
+    _id: new ObjectId(newUser._id)
   }).toArray(function (err, res) {
     if (err) { //Unkown error, return to client and display it in the log.
-      resultObj.statusMsg = "Error when checking if user with id " + userId + " exists in database.";
-      resultObj.statusObj = err;
+      resultObj = ResultObj("Error when checking if user with id " + newUser._Id + " exists in database.", err);
       console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
-      result(resultObj, null);
+      result(resultObj);
     } else if (res.length == 0) { //no user with id userId, tell the updater and log it
-      resultObj.statusMsg = "Cannot update hole of user with id " + userId + ". No such user exists.";
+      resultObj = ResultObj("User not in database. ID:" + newUser._Id);
       console.log(resultObj.statusMsg);
-      result(resultObj, null);
+      result(resultObj);
     } else { //user is in the database!
-      if (false) { //placeholder for checking data to make sure it complies with things that we need. Ex progress not greater than 100% etc
-        resultObj.statusMsg = "Cannot update user with id " + userId + ". At least one data item not in proper format or out of order"
+      if (false) { //THis kind of error checking should be done in the controller and not in the model
+        resultObj = ResultObj("Cannot update user with id " + newUser._Id + ". At least one data item not in proper format or out of order");
         console.log(resultObj.statusMsg);
-        result(resultObj, null);
-      } else if (false) { //another placeholder for checking if subdata has errors (list of achievements contains one that doesnt exist or somethign like that)
-        resultObj.statusMsg = "Cannot update user with id " + userId + ". subdata types are invalid"
-        console.log(resultObj.statusMsg);
-        result(resultObj, null);
+        result(resultObj);
       } else { //There is a user with that Id in the database.
-        // Check if they have the new task in the database
+
         // Update that user in the database
-        // if (user.name != null)
+        if (newUser.name != null)
+          updateName(usersDB, newUser, resultObj).then(function (res1) {
+            result(res1);
+          });
+        if (newUser.savedTasks.length > 0)
+          updateSavedTasks(usersDB, newUser, resultObj).then(function (res1) {
+            result(res1);
+          });
 
       } // New hole data is the same as what is in the database, so we didnt need to update anything!
-      resultObj.statusMsg = "Hole Data unchanged, update contained the same data already stored in database";
-      result(resultObj, null);
+      // resultObj = ResultObj("Hole Data unchanged, update contained the same data already stored in database");
+      // result(resultObj);
 
     }
   });
 }
 
-async function updateName(usersDB, user) {
-  return new Promise(function (resolve, reject) {
+async function updateName(usersDB, newUser, resultObj) {
+  return new Promise(function (resolve) {
     usersDB.updateOne({ //find the user to update
-        _id: _id
+        _id: new ObjectId(newUser._id)
       }, { //update its data with:
         $set: {
-          'name': user.name
+          'name': newUser.name
         }
       },
-      function (err, res) {
+      function (err) {
         if (err) { //Unkown error, return to client and display it in the log.
-          resultObj.statusMsg = "Error when attempting to change name!";
+          resultObj = ResultObj("Error when attempting to change name!", err);
           console.log(resultObj.statusMsg + ": " + err);
-          resultObj.statusObj = err;
-          resultObj.total = null;
-          resolve(resultObj, null);
+          resolve(resultObj);
         } else { //hole updated successfully!
-          resultObj.statusMsg = "Name channged to " + user.name;
-          resultObj.success = true;
-          resolve(resultObj, null);
+          resultObj = ResultObj("Name channged to " + newUser.name, null, true);
+          resolve(resultObj);
         }
       });
   });
 }
 
-async function updateSavedTasks(usersDB, user) {
-  return new Promise(function (resolve, reject) {
+async function updateSavedTasks(usersDB, newUser, resultObj) {
+  return new Promise(function (resolve) {
     usersDB.find({
-        _id: user._id,
+        _id: new ObjectId(newUser._id),
         savedTasks: {
           $elemMatch: { //mongoDB to match anything that also matches the data inside the property     
-            taskId: user.savedTasks.taskId
+            taskId: newUser.savedTasks.taskId
           }
         }
       })
       .toArray(function (err, res) {
         if (err) { //Unkown error, return to client and display it in the log.
-          resultObj.statusMsg = "Error when locating user";
+          resultObj = ResultObj("Error when locating user", err);
           console.log(resultObj.statusMsg + ": " + err);
-          resultObj.statusObj = err;
-          resolve(statusObj, null);
+          resolve(statusObj);
         }
-        //Insert a task ID if it is not already in the data
-        if (res2.length == 0) {
+        if (res.length == 0) { //Insert a task ID if it is not already in the data
           usersDB.updateOne({ //select the user with the given userId to update
-              _id: user._id
+              _id: new ObjectId(newUser._id)
             }, {
               $push: { //adds the holedata as a new element of the holes array
                 savedTasks: {
-                  savedTask: user.newSavedTask
+                  $each: newUser.savedTasks
                 }
               },
             },
-            function (err2, res2) {
+            function (err2) {
               if (err2) { //Unkown error, return to client and display it in the log.
-                resultObj.statusMsg = "Error when attempting to add new hole " + holeData.holeNum + " for user " + user.userName;
+                resultObj = ResultObj("Error when attempting to save task ID: " + newUser.savedTasks + " for user " + newUser.userName, err2);
                 console.log(resultObj.statusMsg + ": " + err2);
-                resultObj.statusObj = err2;
-                resultObj.total = null;
-                resolve(resultObj, null);
-              } else { //Hole was added successfully!
-                resultObj.statusMsg = "Hole " + holeData.holeNum + " successfully added for user " + user.userName;
-                resultObj.success = true;
-                resultObj.total = totalObject;
-                resolve(resultObj, null);
+                resolve(resultObj);
+              } else { //Task was added successfully!
+                resultObj = ResultObj("Task saved as template for user " + newUser.userName, null, true);
+                resolve(resultObj);
               }
             });
         }
@@ -188,58 +179,27 @@ async function updateSavedTasks(usersDB, user) {
 searching for the userId(for now we will find by userId) and remove them from the database
 */
 User.deleteUser = function (usersDB, UserId, result) {
-/*
-  usersDB.find(_id = userId).toArray(function (err, res) {
-    //if err
+
+  var resultObj;
+  usersDB.find(_id = new ObjectId(userId)).toArray(function (err, res) {
     if (err) {
-      resultObj.statusMsg = "There was an error when trying to access user in database.";
+      resultObj = ResultObj("Error when deleting user to database", err);
       console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
-      resultObj.statusObj = err;
-      result(resultObj, null);
-    }
-    //if one
-    else if (res == 1) {
-      usersDB.deleteOne({
-        _id: UserId
-      }, function (err2, res2) {
-        //if err
+      result(resultObj);
+    } else {
+      usersDB.deleteOne(UserId, function (err2) {
         if (err) {
-          resultObj.statusMsg = "unable to delete the specified userId";
+          resultObj = ResultObj("Error when user user to database", err2);
           console.log(resultObj.statusMsg + ": " + JSON.stringify(err2));
-          resultObj.statusObj = err;
-          result(resultObj, null);
+          result(resultObj);
+        } else {
+          resultObj = resultObj("user with userID:" + userId + "was deleted", null, true, null, null);
+          result(resultObj);
         }
-        //delete
-        else {
-          resultObj.success = true;
-          resultObj.statusMsg = "user with" + userId + "was deleted";
-          result(resultObj, null);
-        }
-      })
+      });
     }
-    //if nothing
-    else {
-      resultObj.statusMsg = "user with" + userId + "was not found";
-      result(resultObj, null);
-    }
-  });*/
-var resultObj;
-usersDB.deleteOne(UserId,function(err)
-{
-if(err)
-{
-  resultObj = ResultObj("Error when user user to database", err2);
-  console.log(resultObj.statusMsg + ": " + JSON.stringify(err2));
-  result(resultObj);
+  })
 }
-else
-{
-  
-}
-})
-
-}
-
 module.exports = {
   User,
   ResultObj

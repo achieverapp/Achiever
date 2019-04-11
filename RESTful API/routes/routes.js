@@ -20,7 +20,7 @@ module.exports = function (app) {
     //     .post(Task.addTask)
     //     .put(Task.updateTask);
 
-    // app.route('/task/:_id')
+    // app.route('/task/:id')
     //     .get(Task.getTask)
     //     .delete(Task.deleteTask);
 }

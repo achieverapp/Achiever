@@ -19,7 +19,7 @@ exports.addUser = function (req, res) {
 };
 
 exports.getUser = function (req, res) {
-  User.getUser(req.app.locals.users, req.params.id function (result) {
+  User.getUser(req.app.locals.users, req.params.id, function (result) {
     res.json(result);
   });
 }

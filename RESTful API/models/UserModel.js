@@ -4,7 +4,7 @@
 
 'use strict';
 //var noSql = require('./noSqlDb.js');
-// var ObjectId = require('mongodb').ObjectId;
+var ObjectId = require('mongodb').ObjectId;
 
 var User = function (user) {
  
@@ -13,12 +13,13 @@ var User = function (user) {
   this.savedTasks = user.savedTasks == null ? [] : user.savedTasks;
 }
 
-function ResultObj(statusMsg = "", statusObj = null, success = false, id = null) { //what will be returned to the requester when the function completes
+function ResultObj(statusMsg = "", statusObj = null, success = false, id = null, data = null) { //what will be returned to the requester when the function completes
   var returnObj = {
     objId: id,
     success: success,
     statusMsg: statusMsg,
     statusObj: statusObj,
+    data: data,
   };
   return returnObj;
 }
@@ -52,17 +53,17 @@ If no user is found, there is no data retuned and a statusMsg with the reason wh
 User.getUser = function (usersDB, UserId, result) {
   var resultObj;
   usersDB.find({
-    _id: UserId
+    _id: new ObjectId(UserId)
   }).toArray(function (err, res) {
     if (err) {
       resultObj = ResultObj("Error when adding user to database", err);
       console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
       result(resultObj);
     } else if (res.length == 1) {
-      resultObj = ResultObj("User retrieved", null, true, res[0]._id);
+      resultObj = ResultObj("User retrieved", null, true, res[0]._id, res[0]);      
       result(resultObj);
     } else {
-      resultObj = ResultObj("user not found");
+      resultObj = ResultObj("user not found");      
       result(resultObj);
     }
   })
@@ -222,6 +223,20 @@ User.deleteUser = function (usersDB, UserId, result) {
       result(resultObj, null);
     }
   });*/
+var resultObj;
+usersDB.deleteOne(UserId,function(err)
+{
+if(err)
+{
+  resultObj = ResultObj("Error when user user to database", err2);
+  console.log(resultObj.statusMsg + ": " + JSON.stringify(err2));
+  result(resultObj);
+}
+else
+{
+  
+}
+})
 
 }
 

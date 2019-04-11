@@ -4,9 +4,9 @@
 
 'user strict';
 //var noSql = require('./noSqlDb.js');
-var ObjectId = require('mongodb').ObjectId;
+//var ObjectId = require('mongodb').ObjectId;
 
-var User = function (task) {
+var Task = function (task) {
     this.TaskName = task.TaskName;
     this.Category = task.Category;
     this.Priority = task.Priority;
@@ -15,7 +15,7 @@ var User = function (task) {
     this.TimeBlocks = [];
 }
 
-Tasks.addTask = function (Tasks, taskName, result) {
+Task.addTask = function (Tasks, taskName, result) {
     var resultObj, testTask, regex; // variables used throughout the function.
     resultObj = { //what will be returned to the requester when the function completes
         taskId: "",
@@ -71,15 +71,16 @@ Tasks.addTask = function (Tasks, taskName, result) {
 }
 
 
-Tasks.getTask = function (Tasks, taskId, result) {
+Task.getTask = function (Tasks, taskId, result) {
 
 }
 
-Tasks.updateTask = function (Tasks, taskId, result) {
+Task.updateTask = function (Tasks, taskId, result) {
 
 }
 
 
-Tasks.deleteTask = function (Tasks, taskId, result) {
+Task.deleteTask = function (Tasks, taskId, result) {
 
 }
+module.exports =  Task ;

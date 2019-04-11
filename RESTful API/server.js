@@ -16,24 +16,24 @@ app.use(bodyParser.urlencoded({
 })); //init body parser
 app.use(bodyParser.json());
 
-var routes = require("./routes/userRoutes"); //Define  routes 
+var routes = require("./routes/routes"); //Define routes
 //var routesTask=require("./routes/taskRoutes")
 routes(app); //Register routes with the app
 //routesTask(app);
-MongoClient.connect("mongodb://localhost:27017/TaskManager", {
+MongoClient.connect("mongodb://localhost:27017/Achiever", {
     useNewUrlParser: true
 }).then(client => {
-    const db = client.db('TaskManager');
+    const db = client.db('Achiever');
 
     //get the collections
     const users = db.collection('Users');
-    const tasks = db.collection('Tasks');
+    // const tasks = db.collection('Tasks');
 
     //for milestone 2 we are focusing on is users and task
     app.locals.users = users; //store users
-    app.locals.tasks = tasks; //store tasks
+    // app.locals.tasks = tasks; //store tasks.
 
     app.listen(port); //Listens for requests (asynchronous!)
 
-    console.log('Task Manager db connected in ' + port);
+    console.log('Achiever API running on port: ' + port);
 }).catch(error => console.error(error));

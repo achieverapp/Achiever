@@ -4,21 +4,22 @@
 
 'use strict'
 
-const Users = require('../models/UserModel.js');
+const User = require('../models/UserModel.js');
 
-exports.addUser = function (res, err) {
-  var newUser = new Users(req.body);
-  Users.addUser(req.app.locals.Users, newUser, function (err, result) {
+exports.addUser = function (req, res) {
+  var newUser = new User(res.body);
+  var regex = /^(([A-Za-z\.' -])+){3}$/;
+  User.addUser(req.app.locals.Users, newUser.name, function (err, result) {
     if (err) {
       res.send(err);
     } else {
       res.json(result);
     }
-  })
+  });
 };
 
-exports.getUser = function (res, err) {
-  Users.getUsers(req.app.locals.Users, function (err, result) {
+exports.getUser = function (req, res) {
+  User.getUser(req.app.locals.Users, function (err, result) {
     if (err) {
       res.send(err);
     } else {
@@ -27,12 +28,18 @@ exports.getUser = function (res, err) {
   });
 }
 
-exports.updateUser = function (res, err) {
-
+exports.updateUser = function (req, res) {
+  User.updateUser(req.app.locals.Users, function (err, result) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.json(result);
+    }
+  });
 }
 
-exports.deleteUser = function (res, err) {
-  Users.deleteUsers(req.app.locals.Users, function (err, result) {
+exports.deleteUser = function (req, res) {
+  User.deleteUser(req.app.locals.Users, function (err, result) {
     if (err) {
       res.send(err);
     } else {

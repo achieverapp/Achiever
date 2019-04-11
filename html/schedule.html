@@ -23,13 +23,13 @@
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous">
-        </script>
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
         integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">
-        </script>
+    </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
         integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous">
-        </script>
+    </script>
 
     <link rel="stylesheet" href="../css/app.css">
 </head>
@@ -63,7 +63,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <center style="width:100%;">
-                                <h3 class="modal-title" id="exampleModalLabel">Add/Edit Timeblock</h3>
+                                <h3 class="modal-title" id="exampleModalLabel">Add/Edit Timeblock BLAH-DITTY-BLAH</h3>
                             </center>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -288,7 +288,8 @@
         var temp = e.target.id.split('-'); // empty time block's ids are displayed as times in 24hr format
         var hour24 = parseInt(temp[1]);
         var hour = hour24 % 12;
-        var endHour = hour + 1; //by default we would schedule a time block as 1 hour long for simplicity for the user.
+        var endHour = hour +
+        1; //by default we would schedule a time block as 1 hour long for simplicity for the user.
         var quarter = parseInt(temp[2]);
 
         // Showing whether the time selected is AM or PM
@@ -337,7 +338,8 @@
 
         //First build html elements for each item in the drop
         tasks.forEach(task => {
-            taskSelectHTML += "<a class='dropdown-item task-dropdown-item' id='task:" + task.id + "'>" + task.title + "</a>";
+            taskSelectHTML += "<a class='dropdown-item task-dropdown-item' id='task:" + task.id + "'>" + task
+                .title + "</a>";
         });
         $("#taskDropdownMenu").html(taskSelectHTML);
     };
@@ -346,6 +348,8 @@
     // Updates the text of the dropdown to be the contents of the item that was clicked.
     $(document.body).on("click", ".task-dropdown-item", function (e) {
         $("#taskDropdown").html(e.target.innerHTML);
+        taskId = (e.target.id).split(':')[1];
+        $("#taskDropdown").data("taskId", taskId);
     });
 
     // Event handler for .input-minus button click event
@@ -360,8 +364,7 @@
         if (currentVal > min || null == min) {
             if (step) {
                 newVal -= step;
-            }
-            else {
+            } else {
                 newVal--;
             }
         }
@@ -384,8 +387,7 @@
         if (currentVal < max || null == max) {
             if (step) {
                 newVal += step;
-            }
-            else {
+            } else {
                 newVal++;
             }
         }
@@ -410,18 +412,28 @@
         endHour %= 12;
         startHour += (startIsPM ? 12 : 0);
         endHour += (endIsPM ? 12 : 0);
-
         var nRows = ((endHour - startHour) * 4) - (startMinute / 15) + (endMinute / 15);
+        if ($(getRowId(startHour, startMinute, nRows)).hasClass("task-time-block")) {
+            return;
+        }
+        taskId = Number($("#taskDropdown").data("taskId"));
+        addTask(startHour, startMinute, nRows, taskId);
+    });
+
+    function addTask(startHour, startMinute, nRows, taskId) {
         var tdId = "#time-" + startHour + "-" + startMinute;
-        currentHour = startHour;
-        currentMinute = (startMinute + 15) % 60;
-
-        console.log("last row id: " + getRowId(startHour, startMinute, nRows));
-
+        var task = getTask(taskId);
         $(tdId).prop("rowspan", nRows);
         $(tdId).removeClass("emty-task-time");
         $(tdId).addClass("task-time-block");
-        $(tdId).html($("#taskDropdown").html())
+        $(tdId).html(task.title);
+        setPriorityColor(tdId, task.priority);
+
+        currentHour = startHour;
+        currentMinute = (startMinute + 15) % 60;
+        if (45 == startMinute) {
+            currentHour++;
+        }
 
         for (var i = 0; i < nRows - 1; i++) {
             console.log(tdId)
@@ -430,12 +442,25 @@
             if (currentMinute == 45) {
                 currentMinute = 0;
                 currentHour++;
-            }
-            else {
+            } else {
                 currentMinute += 15;
             }
         }
-    });
+    }
+
+    function setPriorityColor(elementId, priority) {
+        switch (priority) {
+            case 0:
+                $(elementId).addClass("priority-low");
+                break;
+            case 1:
+                $(elementId).addClass("priority-med");
+                break;
+            case 2:
+                $(elementId).addClass("priority-high");
+                break;
+        }
+    }
 
     function getRowId(hour24, minute, rowOffset) {
         var currentHour = hour24,
@@ -445,12 +470,10 @@
             if (currentMinute == 45) {
                 currentMinute = 0;
                 currentHour++;
-            }
-            else {
+            } else {
                 currentMinute += 15;
             }
         }
         return "#time-" + currentHour + "-" + currentMinute;
     }
-
 </script>

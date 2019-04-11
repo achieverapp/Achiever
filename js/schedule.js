@@ -199,7 +199,7 @@ $(document).ready(function () {
             return;
         }
         taskId = Number($("#taskDropdown").data("taskId"));
-        if(!taskId) {
+        if(isNaN(taskId)) {
             showNoTaskToast();
             return;
         }

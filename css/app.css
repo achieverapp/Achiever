@@ -1,7 +1,7 @@
 /* <!-- CSS definitions for app styles in here --> */
 
 /*////////////////////*/
-/* LOGIN STYLES */
+/* APP STYLES */
 /*////////////////////*/
 
 .center-screen {
@@ -21,18 +21,6 @@
     max-width: 500px;
 }
 
-.google {
-    border-color: #DB4437;
-}
-
-.facebook {
-    border-color: #3C5A99;
-}
-
-/*////////////////////*/
-/* PAGE STYLES */
-/*////////////////////*/
-
 .page-container {
     height: 100%;
     margin-top: 0px;
@@ -41,6 +29,60 @@
     /* padding-right: 0px;
     padding-left:0px; */
     position: relative;
+}
+
+td:empty:after {
+    content: "\00a0";
+}
+
+.td-minute {
+    font-size: 8pt;
+}
+
+td.task-time-block {
+    border: 2px solid darkblue;
+    background-color: lightcyan;
+}
+
+/* input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+} */
+
+.input-no-spinner::-webkit-inner-spin-button,
+.input-no-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number].input-no-spinner {
+    -moz-appearance:textfield;
+}
+
+.floating-action-btn {
+    font-size:16pt;
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    border-radius: 30px;
+    box-shadow: 0 6px 14px 0 #555;
+}
+
+.floating-action-btn:hover {
+    box-shadow: 0 6px 14px 0 #777 !important;
+    transform: scale(1.05) !important;
+ }
+/*////////////////////*/
+/* LOGIN STYLES */
+/*////////////////////*/
+
+ .google {
+    border-color: #DB4437;
+}
+
+.facebook {
+    border-color: #3C5A99;
 }
 
 /*////////////////////*/

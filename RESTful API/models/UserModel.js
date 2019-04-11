@@ -12,6 +12,12 @@ var User = function (user) {
   this.savedTasks = user.savedTasks == null ? [] : user.savedTasks;
 }
 
+/*
+  ResultObj constructor function. Since we need to create a different return object for many different possible scenarios, all this functionality
+  can be put in one function.
+    
+  The most common parameters are closer to the start of the list while the ones that rarely get called are towards the end.
+*/
 function ResultObj(statusMsg = "", statusObj = null, success = false, id = null, data = null) { //what will be returned to the requester when the function completes
   var returnObj = {
     objId: id,

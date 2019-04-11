@@ -72,6 +72,14 @@ input[type=number].input-no-spinner {
     box-shadow: 0 6px 14px 0 #777 !important;
     transform: scale(1.05) !important;
  }
+
+ .toast-error {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    box-shadow: 0 6px 14px 0 #555;
+}
+
 /*////////////////////*/
 /* LOGIN STYLES */
 /*////////////////////*/

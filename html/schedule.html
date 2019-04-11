@@ -59,6 +59,7 @@
         <div class="modal fade" id="timeblockEditModal" tabindex="-1" role="dialog"
             aria-labelledby="timeblockModalLabel" aria-hidden="true" style="margin: auto">
             <div class="vertical-alignment-helper">
+
                 <div class="modal-dialog vertical-align-center" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -226,6 +227,20 @@
             data-target="#timeblockEditModal">
             Schedule Timeblock
         </button>
+
+        <div class="toast toast-error" style="position: absolute; top: 0; right: 0;" data-delay="10000">
+            <div class="toast-header">
+                <!-- <img src="..." class="rounded mr-2" alt="..."> -->
+                <strong class="mr-auto">Bootstrap</strong>
+                <small>11 mins ago</small>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body">
+                Hello, world! This is a toast message.
+            </div>
+        </div>
     </div>
 </body>
 
@@ -289,7 +304,7 @@
         var hour24 = parseInt(temp[1]);
         var hour = hour24 % 12;
         var endHour = hour +
-        1; //by default we would schedule a time block as 1 hour long for simplicity for the user.
+            1; //by default we would schedule a time block as 1 hour long for simplicity for the user.
         var quarter = parseInt(temp[2]);
 
         // Showing whether the time selected is AM or PM
@@ -413,7 +428,9 @@
         startHour += (startIsPM ? 12 : 0);
         endHour += (endIsPM ? 12 : 0);
         var nRows = ((endHour - startHour) * 4) - (startMinute / 15) + (endMinute / 15);
-        if ($(getRowId(startHour, startMinute, nRows)).hasClass("task-time-block")) {
+
+        if (hasOverlaps(startHour, startMinute, nRows)) {
+            $('.toast').toast('show');
             return;
         }
         taskId = Number($("#taskDropdown").data("taskId"));
@@ -462,18 +479,26 @@
         }
     }
 
-    function getRowId(hour24, minute, rowOffset) {
+    function hasOverlaps(hour24, minute, nRows) {
         var currentHour = hour24,
             currentMinute = minute,
-            tdId;
-        for (var i = 0; i < rowOffset - 1; i++) {
+            tdId = "#time-" + currentHour + "-" + currentMinute;
+
+        if ($(tdId).hasClass("task-time-block")) {
+            return true;
+        }
+        for (var i = 0; i < nRows - 1; i++) {
             if (currentMinute == 45) {
                 currentMinute = 0;
                 currentHour++;
             } else {
                 currentMinute += 15;
             }
+            tdId = "#time-" + currentHour + "-" + currentMinute;
+            if ($(tdId).hasClass("task-time-block")) {
+                return true;
+            }
         }
-        return "#time-" + currentHour + "-" + currentMinute;
+        return false;
     }
 </script>

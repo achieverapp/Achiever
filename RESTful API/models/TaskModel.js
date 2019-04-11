@@ -3,76 +3,88 @@
     File: UserModel.js    */
 
 'user strict';
-//var noSql = require('./noSqlDb.js');
-//var ObjectId = require('mongodb').ObjectId;
+
+var ObjectId = require('mongodb').ObjectId;
 
 var Task = function (task) {
-    this.TaskName = task.TaskName;
-    this.Category = task.Category;
-    this.Priority = task.Priority;
-    this.SubTasks = [];
-    this.SubTasks = task.SubTasks;
-    this.TimeBlocks = [];
+    this.owner = task.owner == null ? null : task.owner;
+    this.name = task.name;
+    this.category = task.category;
+    this.priority = task.priority;
+    this.subTasks = task.subTasks == null ? [] : task.subTasks;
+    this.timeBlocks = task.timeBlocks == null ? [] : task.timeBlocks;
 }
 
-Task.addTask = function (Tasks, taskName, result) {
-    var resultObj, testTask, regex; // variables used throughout the function.
-    resultObj = { //what will be returned to the requester when the function completes
-        taskId: "",
-        success: false, //task is not added by default
-        statusMsg: "",
-        statusObj: null
+/*
+    ResultObj constructor function. Since we need to create a different return object for many different possible scenarios, all this functionality
+    can be put in one function.
+    
+    The most common parameters are closer to the start of the list while the ones that rarely get called are towards the end.
+*/
+function ResultObj(statusMsg = "", statusObj = null, success = false, id = null, data = null) { //what will be returned to the requester when the function completes
+    var returnObj = {
+        objId: id,
+        success: success,
+        statusMsg: statusMsg,
+        statusObj: statusObj,
+        data: data,
     };
-
-    // TODO: Probably don't need this but Ill leave it here for now
-    regex = /^(?:[ '.\-a-zA-Z]*)?$/gm; //Regex tests for only alphabetics, periods, spaces, and hyphens
-
-    if (!(typeof taskName == 'string') || taskName.length == 0 || !(regex.test(taskName))) { //invalid taskName. 
-        resultObj.statusMsg = "Error: Task was not added because taskName is invalid. (is not a string, is 0 characters, or does not match Regex)";
-        result(resultObj, null);
-    } else { //data is valid
-        testTask = { //create a task to query the database with
-            taskName: taskName
-        };
-
-        //Query the database for any Tasks with taskName
-        Tasks.find(testTask).toArray(function (err, res) {
-            if (err) { //Unkown error, return to client and display it in the log.
-                resultObj.statusMsg = "There was an error when testing if the task already exists in the database";
-                console.log(resultObj.statusMsg);
-                resultObj.statusObj = err;
-                result(resultObj, null)
-            } else if (res.length > 0) { //Task is already in database
-                resultObj.statusMsg = "Task already exists in the database";
-                console.log(res[0].taskId);
-                result(resultObj, null);
-            } else { //Task is not in database, so we need to add it
-
-                //build out the testTask to be used to insert into the databse
-                testTask.taskId = taskName + Math.random().toString(36).substr(2); //random string after taskName as the key\
-                testTask = new Task(testTask); //build the rest of the parameters for a Task by using the constructor
-
-                //Add the new Task into the database
-                Tasks.insertOne(testTask, function (err2) {
-                    if (err2) { //Unkown error, return to client and display it in the log.
-                        resultObj.statusMsg = "Error when adding Task to database";
-                        console.log(resultObj.statusMsg + ": " + JSON.stringify(err2));
-                        resultObj.statusObj = err2;
-                        result(resultObj, null);
-                    } else { //Task was added to the database.
-                        resultObj.taskId = testTask.taskId; //return taskId and that they were added.
-                        resultObj.success = true;
-                        result(resultObj, null);
-                    }
-                });
-            }
-        });
-    }
+    return returnObj;
 }
 
+/*add a task to the task database
+ if the task can't be added then just return an err message */
+Task.addTask = function (tasksDB, taskName, result) {
+    var resultObj;
+    tasksDB.insertOne(taskName, function (err, res) {
+        if (err) { //Unkown error, return to client and display it in the log.
+            resultObj = ResultObj("Error when adding new Task to database", err);
+            console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
+            result(resultObj);
+        } else {
+            resultObj = ResultObj("Added task " + taskName.name, null, true, taskName._id, taskName);
+            result(resultObj);
+        }
+    });
+}
 
-Task.getTask = function (Tasks, taskId, result) {
+/*get a single task 
+if the task is not available then the return an err mess
+*/
+Task.getTask = function (tasksDB, taskId, result) {
+    var resultObj;
+    tasksDB.find({
+        _id: new ObjectId(taskId)
+    }).toArray(function (err, res) {
+        if (err) {
+            resultObj = ResultObj("Error when adding user to database", err);
+            console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
+            result(resultObj);
+        } else if (res.length == 1) {
+            resultObj = ResultObj("User retrieved", null, true, res[0]._id, res[0]);
+            result(resultObj);
+        } else {
+            resultObj = ResultObj("user not found");
+            result(resultObj);
+        }
+    });
+}
 
+//get all tasks for a specific user
+Task.getAllTasks = function (tasksDB, userId, result) {
+    var resultObj;
+    tasksDB.find({
+        owner: new ObjectId(userId)
+    }).toArray(function (err, res) {
+        if (err) {
+            resultObj = ResultObj("Error when adding user to database", err);
+            console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
+            result(resultObj);
+        } else {
+            resultObj = ResultObj("User retrieved", null, true, res[0]._id, res[0]);
+            result(resultObj);
+        }
+    });
 }
 
 Task.updateTask = function (Tasks, taskId, result) {
@@ -83,4 +95,7 @@ Task.updateTask = function (Tasks, taskId, result) {
 Task.deleteTask = function (Tasks, taskId, result) {
 
 }
-module.exports =  Task ;
+module.exports = {
+    Task,
+    ResultObj
+};

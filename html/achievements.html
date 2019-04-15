@@ -41,8 +41,7 @@
 <body>
     <nav class="nav bg-primary" id="navbar"></nav>
   <!-- basic list of acievements -->
-  <div id="achievements" class="container">
-    <br />
+  <div id="achievements" class="container p-2">    
     <h1>Achievements</h1>
     <!-- start of a list of achievements-->
     <ul style="padding:0px">
@@ -56,6 +55,7 @@
             </span>
           </header>
         </div>
+        <!--achievements card with a trophy icon and a genaric description -->
         <div class="container">
           <p>
             genearic description for achievements
@@ -69,6 +69,7 @@
         </div>
 
       </li>
+      <!--2nd achievements card with a trophy icon and a genaric description -->
       <li class="card">
         <div class="card-header" id="achievemnts-header">
           <header class="container">
@@ -98,6 +99,7 @@
   $(document).ready(function () {
     $("#navbar").load("navbar.html", function() {
       $("#nav-achievements").addClass("nav-active");
+      resizeNav();
     });
   });
 </script>

@@ -4,30 +4,80 @@
      This file contains the definition of the navbar that is used throughout the webapp.
 -->
 <nav class="nav bg-dark" id="navbar">
-    <ul class="nav">
-        <li class="nav-item bg-primary">
-            <a class="nav-link text-white" href="tasklist.html" id="nav-tasklist">
-                <i class="fas fa-check-double"></i>&nbsp;
-                Tasks
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-white" href="schedule.html" id="nav-schedule">
-                <!--<i class="fas fa-calendar"></i>&nbsp;-->
-                Schedule
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-white" href="progress.html" id="nav-progress">
-                <!-- <i class="fas fa-tasks"></i>&nbsp; -->
-                Progress
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-white" href="achievements.html" id="nav-achievements">
-                <!-- <i class="fas fa-trophy"></i>&nbsp; -->
-                Achievements
-            </a>
-        </li>
-    </ul>
+    <div class="nav-large">
+        <ul class="nav">
+            <li class="nav-item bg-primary">
+                <a class="nav-link text-white" href="tasklist.html" id="nav-tasklist">
+                    <i class="fas fa-check-double"></i>&nbsp;
+                    Tasks
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="schedule.html" id="nav-schedule">
+                    <!-- <i class="fas fa-calendar"></i>&nbsp; -->
+                    Schedule
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="progress.html" id="nav-progress">
+                    <!-- <i class="fas fa-tasks"></i>&nbsp; -->
+                    Progress
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="achievements.html" id="nav-achievements">
+                    <!-- <i class="fas fa-trophy"></i>&nbsp; -->
+                    Achievements
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="nav-smol" style="width:100%">
+        <div class="pos-f-t">
+            <div class="collapse" id="navbarToggleExternalContent">
+                <div class="nav-item bg-dark">
+                    <a class="nav-link text-white bg-primary" href="tasklist.html" id="nav-tasklist"><i class="fas fa-check-double"></i>&nbsp;Tasks</a>
+                    <a class="nav-link text-white" href="schedule.html" id="nav-schedule"><i class="fas fa-calendar"></i>&nbsp;Schedule</a>
+                    <a class="nav-link text-white" href="progress.html" id="nav-progress"><i class="fas fa-tasks"></i>&nbsp;Progress</a>
+                    <a class="nav-link text-white" href="achievements.html" id="nav-achievements"><i class="fas fa-trophy"></i>&nbsp;Achievements</a>
+                </div>
+            </div>
+            <nav class="navbar navbar-dark bg-dark">
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="fas fa-bars text-white" style="font-size: 18pt"></span>
+                </button>
+                <div class="text-white" style="margin-left: 10px; font-size: 14pt">
+                    Achiever
+                </div>
+                <div class="p-2 flex-grow-1"></div>
+            </nav>
+        </div>
+    </div>
 </nav>
+
+<script>
+    $(document).ready(function () {
+        resizeNav()
+    });
+
+    $(window).resize(function () {
+        resizeNav()
+    });
+    
+    // Handles the actions executed when switching between mobile and large resolutions
+    function resizeNav() {   
+        // If the window is scaled to mobile, use the hamburger navbar     
+        if ($(window).width() <= 480) {
+            $(".nav-large").hide();
+            $(".nav-smol").show();
+        }
+        // Otherwise, use the default nav bar with page tabs
+        else {
+            $(".nav-large").show();
+            $(".nav-smol").hide();
+        }
+    }
+</script>

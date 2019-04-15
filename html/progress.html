@@ -40,8 +40,7 @@
 <body>
   <nav class="nav bg-primary" id="navbar"></nav>
 
-  <div id="tasks" class="container">
-    <br />
+  <div id="tasks" class="container p-2">    
     <h1>Username</h1>
     <h2>Badge Progress</h2>
 
@@ -64,7 +63,7 @@
     </ul>
 
     <h2>Tasks completed this week</h2>
-
+    <!--List of recent tasks accomlished -->
     <ul style="padding:0px">
 
       <li class="card task-card">
@@ -119,9 +118,11 @@
 </body>
 
 <script>
+  // Loads in the navbar
   $(document).ready(function () {
     $("#navbar").load("navbar.html", function() {
       $("#nav-progress").addClass("nav-active");
+      resizeNav();
     });
   })
 </script>

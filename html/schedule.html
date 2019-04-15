@@ -5,6 +5,7 @@
      These time blocks are separate from the due date, and encourage the user to work on their tasks in a timely mannner.
      This page displays a day view, where all the hours are mapped out and the user is able to select a time to schedule a task.
 -->
+
 <head>
     <base target="_top">
     <meta charset="utf-8">
@@ -17,19 +18,20 @@
         integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="../css/app.css">
-
-    <script src="../js/model.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous">
-        </script>
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
         integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">
-        </script>
+    </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
         integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous">
-        </script>
+    </script>
+
+    <link rel="stylesheet" href="../css/app.css">
+    <script src="../js/model.js"></script>
+    <script src="../js/schedule.js"></script>
 </head>
 
 <body>
@@ -37,9 +39,9 @@
 
     <div id="tasks" class="container page-container">
 
-        <div class='d-flex justify-content-between'>
-            <h1 id="selectedDate">
-            </h1>
+        <h1 id="selectedDate"></h1>
+        <div class='d-flex justify-content-between flex-row' id="scheduleHeader">
+
             <button type="button" class="btn btn-secondary" id="prevDayBtn"
                 style='margin-top:auto; margin-bottom: auto;'>
                 <i class="fas fa-chevron-left"></i>&nbsp;
@@ -50,127 +52,194 @@
                 Next Day&nbsp;
                 <i class="fas fa-chevron-right"></i>
             </button>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#timeblockEditModal"
-                style='margin-top:auto; margin-bottom: auto;'>
-                Schedule Timeblock
-            </button>
+
         </div>
 
         <!-- Modal -->
         <div class="modal fade" id="timeblockEditModal" tabindex="-1" role="dialog"
             aria-labelledby="timeblockModalLabel" aria-hidden="true" style="margin: auto">
             <div class="vertical-alignment-helper">
+
                 <div class="modal-dialog vertical-align-center" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h3 class="modal-title" id="exampleModalLabel">Schedule A Task For A Time Block</h3>
+                            <center style="width:100%;">
+                                <h3 class="modal-title" id="exampleModalLabel">Add/Edit Timeblock BLAH-DITTY-BLAH</h3>
+                            </center>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form>
+                            <form class="d-flex flex-column">
                                 <span class="dropdown" style="float: right; width: 100%;">
-                                    <button class="btn btn-secondary dropdown-toggle task-dropdown" type="button"
-                                        id="taskDropdown" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false" style="width: 100%">
+                                    <button class="btn btn-outline-secondary dropdown-toggle task-dropdown"
+                                        type="button" id="taskDropdown" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false" style="width: 100%; margin-bottom: 8px;">
                                         Select a task...
                                     </button>
                                     <div class="dropdown-menu" id="taskDropdownMenu"
                                         aria-labelledby="dropdownMenuButton"></div>
                                 </span>
+
+                                <span class="d-flex flex-row">
+
+                                    <div class="p-2 flex-grow-1">Start:</div>
+
+                                    <span class="input-group" style="flex-grow: 0; flex-shrink: 0; flex-basis: 8em;">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-outline-secondary input-minus" type="button">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                        <input type="number" min="1" max="12" size="2" value="06"
+                                            class="form-control input-hour input-no-spinner" placeholder="12"
+                                            aria-label="Hour" aria-describedby="basic-addon2" id="inputStartHour">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary input-plus" type="button">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </span>
+
+                                    <center class="p-2">:</center>
+
+                                    <span class="input-group" style="flex-grow: 0; flex-shrink: 0; flex-basis: 8em;">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-outline-secondary input-minus" type="button">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                        <input type="number" min="0" max="45" step="15" size="2"
+                                            class="form-control input-no-spinner" placeholder="Minute"
+                                            aria-label="Minute" aria-describedby="basic-addon2" value="00"
+                                            id="inputStartMinute">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary input-plus" type="button">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </span>
+
+                                    <div class="p-2"></div>
+
+                                    <div class="btn-group btn-group-toggle" data-toggle="buttons"
+                                        style="flex-grow: 0; flex-shrink: 0; flex-basis: 6em;">
+                                        <label class="btn btn-outline-secondary active">
+                                            <input type="radio" name="options" id="optionStartAM" autocomplete="off"
+                                                checked>
+                                            AM
+                                        </label>
+                                        <label class="btn btn-outline-secondary">
+                                            <input type="radio" name="options" id="optionStartPM" autocomplete="off">PM
+                                        </label>
+                                    </div>
+                                </span>
+
+                                <span class="d-flex flex-row">
+                                    <div class="p-2 flex-grow-1">End:</div>
+
+                                    <span class="input-group" style="flex-grow: 0; flex-shrink: 0; flex-basis: 8em;">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-outline-secondary input-minus" type="button">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                        <input type="number" min="1" max="12" size="2" value="06"
+                                            class="form-control input-hour input-no-spinner" placeholder="12"
+                                            aria-label="Hour" aria-describedby="basic-addon2" id="inputEndHour">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary input-plus" type="button">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </span>
+
+                                    <center class="p-2">:</center>
+
+                                    <span class="input-group" style="flex-grow: 0; flex-shrink: 0; flex-basis: 8em;">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-outline-secondary input-minus" type="button">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                        <input type="number" min="0" max="45" step="15" size="2"
+                                            class="form-control input-no-spinner" placeholder="Minute"
+                                            aria-label="Minute" aria-describedby="basic-addon2" value="00"
+                                            id="inputEndMinute">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary input-plus" type="button">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </span>
+
+                                    <div class="p-2"></div>
+
+                                    <div class="btn-group btn-group-toggle" data-toggle="buttons"
+                                        style="flex-grow: 0; flex-shrink: 0; flex-basis: 6em;">
+                                        <label class="btn btn-outline-secondary active">
+                                            <input type="radio" name="options" id="optionEndAM" autocomplete="off"
+                                                checked>
+                                            AM
+                                        </label>
+                                        <label class="btn btn-outline-secondary">
+                                            <input type="radio" name="options" id="optionEndPM" autocomplete="off">PM
+                                        </label>
+                                    </div>
+                                </span>
                             </form>
+
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
-                            <button type="button" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                id="btnDiscard">Discard</button>
+                            <button type="button" input="submit" class="btn btn-primary" id="btnSave"
+                                data-dismiss="modal">Save</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <table style="width: 100%; margin-bottom: 64px;" cellpadding="2">
-            <colgroup width="5%" valign="middle" span="1" align="center"></colgroup>
-            <colgroup width="95%" valign="middle" span="1" align="center"></colgroup>
-            <tbody>
-                <tr bgcolor="#4dc3ff">
-                    <th><h4>Hour</h4></th>
-                    <th><h4>Tasks</h4></th>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table style="width: 100%; margin-bottom: 64px;" cellpadding="2" class="table-sm">
+                <colgroup width="15%" valign="middle" span="1" align="center"></colgroup>
+                <colgroup width="" valign="middle" span="1" align="center"></colgroup>
+                <colgroup width="85%" valign="middle" span="1" align="center"></colgroup>
+                <tbody>
+                    <tr bgcolor="#007bff">
+                        <th>
+                            <h4>Hour</h4>
+                        </th>
+                        <th>
+                            <h4>Min</h4>
+                        </th>
+                        <th>
+                            <h4>Tasks</h4>
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
+        <button type="button" class="btn btn-primary floating-action-btn" data-toggle="modal"
+            data-target="#timeblockEditModal">
+            Schedule Timeblock
+        </button>
+
+        <div class="toast toast-error"  data-delay="10000">
+            <div class="toast-header">
+                <!-- <img src="..." class="rounded mr-2" alt="..."> -->
+                <strong id="toastTitle" class="mr-auto">Bootstrap</strong>
+                <small id="toastSubtitle">11 mins ago</small>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="toastBody" class="toast-body">
+                Hello, world! This is a toast message.
+            </div>
+        </div>
     </div>
 </body>
-
-<script>
-    //load the navbar when the page loads
-    $(document).ready(function () {
-        $("#navbar").load("navbar.html", function() {
-            $("#nav-schedule").addClass("nav-active");
-        });
-        generateTableRows(); //generates tables for the whole 24 hour day
-        loadModalDropdown();
-
-        var today = new Date();
-        $("#selectedDate").html(today.toDateString() + ":");
-    });
-
-
-    // Function to generate rows for a table to make it look like a calendar.
-    // The table will have 24 hours (12AM-11PM) and be broken down into sections of 15 minutes.
-    function generateTableRows() {
-        var rowHTML = "";
-        var time;
-        var meridian = "AM";
-        for (var i = 0; i < 24; i++) {
-            time = (i % 12);
-            if (time == 0)
-                time = 12;
-            if (i >= 12)
-                meridian = "PM"
-
-            rowHTML +=
-                "<tr>" +
-                "<td rowspan=\"4\" scope=\"row\"><span>" + time + ":00" + meridian + "</span></td>" +
-                "<td class=\"empty-task-time\" id=\"time:" + i + ":00" + "\">&nbsp;</td>" +
-                "</tr>" +
-                "<tr><td class=\"empty-task-time\" id=\"time:" + i + ":15" + "\">&nbsp;</td></tr>" +
-                "<tr><td class=\"empty-task-time\" id=\"time:" + i + ":30" + "\">&nbsp;</td></tr>" +
-                "<tr><td class=\"empty-task-time\" id=\"time:" + i + ":45" + "\">&nbsp;</td></tr>";
-        }
-        $("tbody").append(rowHTML);
-    }
-
-    //event handler for when the user clicks on an empty time slot to add a task to.
-    $(document.body).on("click", ".empty-task-time", function (e) {
-        var id = e.target.id;
-        var temp = id.split(':');
-        var hour24 = temp[1];
-        var quarter = temp[2];
-
-        //TODO: input data to the modal related to what the user clicked on.
-
-        $("#timeblockEditModal").modal("show"); //open the modal
-    });
-
-    // Event handler for when the time block editor is opened.
-    function loadModalDropdown() {
-        var tasks = getTaskList();
-        var taskSelectHTML = "";
-
-        tasks.forEach(task => {
-            taskSelectHTML += "<a class='dropdown-item task-dropdown-item' id='task:" + task.id + "'>" + task.title + "</a>";
-            console.log(task);
-        });
-        $("#taskDropdownMenu").html(taskSelectHTML);
-    };
-
-    // Event handler for when a task from the dropdown is clicked.
-    // Updates the text of the dropdown to be the contents of the item that was clicked.
-    $(document.body).on("click", ".task-dropdown-item", function (e) {
-        $("#taskDropdown").html(e.target.innerHTML);
-    });
-
-</script>

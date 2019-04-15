@@ -1,8 +1,25 @@
 /* <!-- CSS definitions for app styles in here --> */
 
 /*////////////////////*/
-/* PAGE STYLES */
+/* APP STYLES */
 /*////////////////////*/
+
+.center-screen {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    padding: 1rem;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: 1.1rem;
+    outline: 0;
+    max-width: 500px;
+}
 
 .page-container {
     height: 100%;
@@ -14,6 +31,67 @@
     position: relative;
 }
 
+td:empty:after {
+    content: "\00a0";
+}
+
+.td-minute {
+    font-size: 8pt;
+}
+
+td.task-time-block {
+    border: 2px solid darkslategray;
+}
+
+/* input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+} */
+
+.input-no-spinner::-webkit-inner-spin-button,
+.input-no-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number].input-no-spinner {
+    -moz-appearance:textfield;
+}
+
+.floating-action-btn {
+    font-size:16pt;
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    border-radius: 30px;
+    box-shadow: 0 6px 14px 0 #555;
+}
+
+.floating-action-btn:hover {
+    box-shadow: 0 6px 14px 0 #777 !important;
+    transform: scale(1.05) !important;
+ }
+
+ .toast-error {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    box-shadow: 0 6px 14px 0 #555;
+}
+
+/*////////////////////*/
+/* LOGIN STYLES */
+/*////////////////////*/
+
+ .google {
+    border-color: #DB4437;
+}
+
+.facebook {
+    border-color: #3C5A99;
+}
+
 /*////////////////////*/
 /* NAV STYLES */
 /*////////////////////*/
@@ -21,6 +99,9 @@
 .nav {
     width:100%;
     z-index: 100;
+}
+
+#navbar {
     box-shadow: 2px 0px 2px grey;
 }
 
@@ -126,9 +207,6 @@
 td, th {
     border: 1px solid lightgrey;
 }
-
-
-
 
 .vertical-alignment-helper {
     display:table;

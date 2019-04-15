@@ -163,7 +163,7 @@ $(document).ready(function () {
 
     /**
      * click event for modal save button
-     * 
+     *
      * gets information from modal and generates a new timeblock using that information
      */
     $("#btnSave").click(function () {
@@ -188,7 +188,7 @@ $(document).ready(function () {
         else {
             endHour += (endIsPM ? 0 : 12);
         }
-        
+
         if(!isTimeValid(startHour, startMinute, endHour, endMinute)) {
             showInvalidTimeToast();
             return;
@@ -265,7 +265,7 @@ $(document).ready(function () {
 
     /**
      * Update the schedule table html to show a task timeblock
-     * 
+     *
      * @param startHour: the hour (24) at which the timeblock begins
      * @param startMinute: the minute (increments of 15) at which the timeblock begins
      * @param nRows: the number of quarter-hour increments the timeblock spans
@@ -274,10 +274,12 @@ $(document).ready(function () {
     function addTaskToPage(startHour, startMinute, nRows, taskId) {
         var tdId = "#time-" + startHour + "-" + startMinute;
         var task = getTask(taskId);
-        $(tdId).prop("rowspan", nRows);
-        $(tdId).removeClass("emty-task-time");
-        $(tdId).addClass("task-time-block");
-        $(tdId).html(task.title);
+        var td = $(tdId);
+        td.prop("rowspan", nRows);
+        td.removeClass("emty-task-time");
+        td.addClass("task-time-block");
+        td.html(task.title);
+        //td.html("<div class='time-block-card' style='margin: 2px; border-radius: 2px;'>"+task.title+"</div>")
         setPriorityColor(tdId, task.priority);
 
         currentHour = startHour;
@@ -301,13 +303,14 @@ $(document).ready(function () {
 
     /**
      * Takes the priority that is stored in the model and displays the correct CSS style for it
-     * 
+     *
      * @param elementId The element ID of the HTML tag we want to style
      * @param priority The priority code retrieved from the model
      */
     function setPriorityColor(elementId, priority) {
         switch (priority) {
             case 0:
+                //$(elementId).children('.time-block-card')[0].addClass("priority-low");
                 $(elementId).addClass("priority-low");
                 break;
             case 1:
@@ -321,7 +324,7 @@ $(document).ready(function () {
 
     /**
      * Checks time range overlaps an existing task timeblock
-     * 
+     *
      * @param hour24 the 24 hour start of the range
      * @param minute the minute start of the range in 15 minute increments
      * @param nRows the number of rows to span (number of 15 minute blocks)

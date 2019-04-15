@@ -60,14 +60,14 @@ Task.getTask = function (tasksDB, taskId, result) {
     _id: new ObjectId(taskId)
   }).toArray(function (err, res) {
     if (err) {
-      resultObj = ResultObj("Error when adding user to database", err);
+      resultObj = ResultObj("Error when adding task to database", err);
       console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
       result(resultObj);
     } else if (res.length == 1) {
-      resultObj = ResultObj("User retrieved", null, true, res[0]._id, res[0]);
+      resultObj = ResultObj("Task retrieved", null, true, res[0]._id, res[0]);
       result(resultObj);
     } else {
-      resultObj = ResultObj("user not found");
+      resultObj = ResultObj("Task not found");
       result(resultObj);
     }
   });
@@ -80,12 +80,12 @@ Task.getTasks = function (tasksDB, userId, result) {
     owner: userId
   }).toArray(function (err, res) {
     if (err) {
-      resultObj = ResultObj("Error when adding user to database", err);
+      resultObj = ResultObj("Error when adding task to database", err);
       console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
       result(resultObj);
     } else {
       console.log(res);
-      resultObj = ResultObj("User retrieved", null, true, userId, res);
+      resultObj = ResultObj("Task retrieved", null, true, userId, res);
       result(resultObj);
     }
   });

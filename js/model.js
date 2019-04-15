@@ -1,3 +1,5 @@
+// import { rejects } from "assert";
+
 /*
     model.js
 
@@ -75,15 +77,22 @@ function getUrlParameter(sParam) {
     }
 };
 
-function getAPITask(id, callback) {
-    var settings = { //object that holds what we need to send information to the server
-        url: "http://localhost:3000/tasks/" + id,
-        method: 'GET',
-        success: getAPITaskCallback
-    };
-    $.ajax(settings); // calls the API server
-};
-
-function getAPITaskCallback(response, status) {
-    return JSON.parse(response); //we need to turn the JSON string into readable JSON object so we can check its data easily.    
+function getAPITask(id) {
+    //return new Promise(function (resolve) {
+    return new Promise(function (resolve) {
+        $.ajax({
+            url: "http://localhost:3000/tasks/" + id,
+            method: 'GET',
+            success: function (data, status) {
+                // console.log("data: " + JSON.stringify(data));
+                // console.log("status: " + status);
+                resolve(data, status);
+            },
+            error: function (data, status) {
+                // console.log("data: " + JSON.stringify(data));
+                // console.log("status: " + status);
+                rejects(data, status);
+            }
+        });
+    });
 }

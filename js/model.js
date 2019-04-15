@@ -4,8 +4,7 @@
     This file is meant to be used to emulate a RESTFUL api call that is made to a separate server to demo the app for milestone1.
 */
 
-var tasks = [
-    {
+var tasks = [{
         id: 2,
         title: "Do some fitness stuff cuz summer beach-bod obvs",
         due: "2019-04-10T23:59:59.999-07:00",
@@ -17,8 +16,20 @@ var tasks = [
             "EXAMPLE WOOOOW"
         ]
     },
-    { id: 0, title: "Do some work stuff cuz deadlines n wutnot", due: "2019-04-14T23:59:59.999-07:00", category: "work", priority: 2 },
-    { id: 1, title: "Do some chore stuff cuz your house is a mess", due: "2019-03-09T23:59:59.999-07:00", category: "home", priority: 1 },
+    {
+        id: 0,
+        title: "Do some work stuff cuz deadlines n wutnot",
+        due: "2019-04-14T23:59:59.999-07:00",
+        category: "work",
+        priority: 2
+    },
+    {
+        id: 1,
+        title: "Do some chore stuff cuz your house is a mess",
+        due: "2019-03-09T23:59:59.999-07:00",
+        category: "home",
+        priority: 1
+    },
 ];
 
 function getTaskList() {
@@ -43,14 +54,13 @@ function updateTask(task) {
     }
     if (i === tasks.length) {
         tasks.push(task);
-    }
-    else {
+    } else {
         tasks[i] = task;
     }
 }
 
 //https://stackoverflow.com/questions/19491336/get-url-parameter-jquery-or-how-to-get-query-string-values-in-js
-var getUrlParameter = function getUrlParameter(sParam) {
+function getUrlParameter(sParam) {
     var sPageURL = window.location.search.substring(1),
         sURLVariables = sPageURL.split('&'),
         sParameterName,
@@ -64,3 +74,16 @@ var getUrlParameter = function getUrlParameter(sParam) {
         }
     }
 };
+
+function getAPITask(id, callback) {
+    var settings = { //object that holds what we need to send information to the server
+        url: "http://localhost:3000/tasks/" + id,
+        method: 'GET',
+        success: getAPITaskCallback
+    };
+    $.ajax(settings); // calls the API server
+};
+
+function getAPITaskCallback(response, status) {
+    return JSON.parse(response); //we need to turn the JSON string into readable JSON object so we can check its data easily.    
+}

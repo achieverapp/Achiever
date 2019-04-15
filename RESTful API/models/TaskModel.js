@@ -93,12 +93,78 @@ Task.getTasks = function (tasksDB, userId, result) {
 
 // TODO: Implement U and D in milestone 3
 
-Task.updateTask = function (Tasks, taskId, result) {
+Task.updateTask = function (tasksDB, taskId, result) {
+  var resultObj;
+  tasksDB.find({
+    _id: new ObjectId(taskId)
+  }).toArray(function (err, res) {
+    if (err) { //Unkown error, return to client and display it in the log.
+      resultObj = ResultObj("Error when checking if user with id " + taskId + " exists in database.", err);
+      console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
+      result(resultObj);
+    } else if (res.length == 0) { //no user with id userId, tell the updater and log it
+      resultObj = ResultObj("Task not in database. ID:" + taskId._Id);
+      console.log(resultObj.statusMsg);
+      result(resultObj);
+    } else {
+      if (taskId.name != null) {
+        updateTaskName(tasksDB, taskId, result).then(function (res) {
+          result(res);
+        })
+      }
+      if (taskId.category != null) {
+        updateTaskCategory(tasksDB, taskId, result).then(function (res) {
+          result(res);
+        })
+      }
+      if (taskId.priority != null) {
+        updateTaskPriority(tasksDB, taskId, result).then(function (res) {
+          result(res);
+        })
+      }
+      if (taskId.timeBlocks != null) {
+        updateTaskTB(tasksDB, taskId, result).then(function (res) {
+          result(res);
+        })
+      }
+    }
+  }
+  )
+}
+//update the task name
+async function updateTaskName(tasksDB, taskId, result) {
+  return new Promise(function (resolve) {
+    tasksDB.updateOne({
+      _id: new ObjectId(taskId._id)
+    }, {
+      $set: { 'name': taskId.name }, function(err) {
+        if (err) { //Unkown error, return to client and display it in the log.
+          resultObj = ResultObj("Error when attempting to change name!", err);
+          console.log(resultObj.statusMsg + ": " + err);
+          resolve(resultObj);
+        } else { //hole updated successfully!
+          resultObj = ResultObj("Name changed to " + taskId.name, null, true);
+          resolve(resultObj);
+        }
+      }
+      })
+
+  })
+}
+//update category
+async function updateTaskCategory(tasksDB, taskId, result) {
 
 }
+//update the priorty
+async function updateTaskPriority(tasksDB, taskId, result) {
 
+}
+//update the timeblock 
+async function updateTaskTB(tasksDB, taskId, result) {
+
+}
 // TODO: Implement U and D in milestone 3 
-Task.deleteTask = function (Tasks, taskId, result) {
+Task.deleteTask = function (tasksDB, taskId, result) {
 
 }
 

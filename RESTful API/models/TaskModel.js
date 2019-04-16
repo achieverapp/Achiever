@@ -45,7 +45,7 @@ Task.addTask = function (tasksDB, taskName, result) {
       console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
       result(resultObj);
     } else {
-      resultObj = ResultObj("Added task " + taskName.name, null, true, taskName._id, taskName);
+      resultObj = ResultObj("Added task " + taskName.title, null, true, taskName._id, taskName);
       result(resultObj);
     }
   });

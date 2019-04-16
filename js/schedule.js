@@ -280,10 +280,10 @@ $(document).ready(function () {
     function addTaskToPage(startHour, startMinute, nRows, taskId) {
         var trId = "#time-" + startHour + "-" + startMinute;
         var task;
-        getTask(taskId, function (response, status) {
-            console.log("response");
+        getTask(taskId, function (response, status) {            
             task = response.data;
             console.log($(trId))
+            console.log(response.data);
             console.log($(trId).children('.task-bucket'))
             var td = $(trId).children('.task-bucket');
             td.prop("rowspan", nRows);
@@ -349,7 +349,7 @@ $(document).ready(function () {
      * @param priority The priority code retrieved from the model
      */
     function setPriorityColor(element, priority) {
-        switch (priority) {
+        switch (Number(priority)) {
             case 0:
                 //$(elementId).children('.time-block-card')[0].addClass("priority-low");
                 element.addClass("priority-low");

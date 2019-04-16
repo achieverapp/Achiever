@@ -100,20 +100,25 @@ $(document).ready(function () {
     // Event handler for when the time block editor is opened.
     // Will query the model for a list of tasks and populate the dropdown with what it recieves.
     function loadModalDropdown() {
-        var tasks = getTaskList();
-        var taskSelectHTML = "";
-
-        //First build html elements for each item in the drop
-        tasks.forEach(task => {
-            taskSelectHTML += "<a class='dropdown-item task-dropdown-item' id='task:" + task.id + "'>" + task
-                .title + "</a>";
+        var tasks, taskSelectHTML = "";
+        getTaskList(function (response, status) {
+            if (status) {
+                tasks = response.data;
+                //First build html elements for each item in the drop
+                tasks.forEach(task => {
+                    console.log(task._id); //not creating the correct ID                   
+                    taskSelectHTML += "<a class='dropdown-item task-dropdown-item' id='task:" + task._id + "'>" + task
+                        .title + "</a>";
+                });
+                $("#taskDropdownMenu").html(taskSelectHTML);
+            }
         });
-        $("#taskDropdownMenu").html(taskSelectHTML);
     };
 
     // Event handler for when a task from the dropdown is clicked.
     // Updates the text of the dropdown to be the contents of the item that was clicked.
     $(document.body).on("click", ".task-dropdown-item", function (e) {
+        console.log((e.target.id).split(':')[1]); //not creating the correct ID
         $("#taskDropdown").html(e.target.innerHTML);
         taskId = (e.target.id).split(':')[1];
         $("#taskDropdown").data("taskId", taskId);
@@ -177,22 +182,20 @@ $(document).ready(function () {
             endMinute = Number($("#inputEndMinute").val()),
             endIsPM = $("#optionEndPM").closest("label").hasClass('active');
 
-        if(startHour != 12) {
+        if (startHour != 12) {
             startHour %= 12;
             startHour += (startIsPM ? 12 : 0);
-        }
-        else {
+        } else {
             startHour += (startIsPM ? 0 : 12);
         }
-        if(endHour != 12) {
+        if (endHour != 12) {
             endHour %= 12;
             endHour += (endIsPM ? 12 : 0);
-        }
-        else {
+        } else {
             endHour += (endIsPM ? 0 : 12);
         }
 
-        if(!isTimeValid(startHour, startMinute, endHour, endMinute)) {
+        if (!isTimeValid(startHour, startMinute, endHour, endMinute)) {
             showInvalidTimeToast();
             return;
         }
@@ -201,8 +204,8 @@ $(document).ready(function () {
             showOverlapToast();
             return;
         }
-        taskId = Number($("#taskDropdown").data("taskId"));
-        if(isNaN(taskId)) {
+        taskId = $("#taskDropdown").data("taskId");
+        if (taskId == null) {
             showNoTaskToast();
             return;
         }
@@ -210,21 +213,21 @@ $(document).ready(function () {
     });
 
     function isTimeValid(startHour, startMinute, endHour, endMinute) {
-        if(startHour >= 24) { // cannot start at or after midnight
+        if (startHour >= 24) { // cannot start at or after midnight
             console.log("startHour >= 24")
             return false;
         }
-        if(endHour >= 24 && endMinute > 0) { // cannot end after midnight
+        if (endHour >= 24 && endMinute > 0) { // cannot end after midnight
             console.log("endHour >= 24 && endMinute > 0")
             return false;
         }
-        if(startHour > endHour) { // starts after it ends
+        if (startHour > endHour) { // starts after it ends
             console.log("startHour > endHour")
             return false;
         }
-        if(startHour == endHour) { // starts and ends in same hour
+        if (startHour == endHour) { // starts and ends in same hour
             console.log("startHour == endHour")
-            if(startMinute >= endMinute) { // start time is >= end time
+            if (startMinute >= endMinute) { // start time is >= end time
                 console.log("startMinute >= endMinute")
                 return false;
             }
@@ -276,30 +279,34 @@ $(document).ready(function () {
      */
     function addTaskToPage(startHour, startMinute, nRows, taskId) {
         var trId = "#time-" + startHour + "-" + startMinute;
-        var task = getTask(taskId);
-        console.log($(trId))
-        console.log($(trId).children('.task-bucket'))
-        var td = $(trId).children('.task-bucket');
-        td.prop("rowspan", nRows);
-        td.removeClass("bucket-empty");
-        td.addClass("bucket-full");
-        td.css('padding', '0px');
-        td.html("<div class='time-block-card' style='height: 100%; width: 100%; display: table;' draggable='true'><span style='display: table-cell; vertical-align: middle; padding-left: 8px'>"+task.title+"</span></div>")
-        setPriorityColor(td.children('.time-block-card'), task.priority);
+        var task;
+        getTask(taskId, function (response, status) {
+            console.log("response");
+            task = response.data;
+            console.log($(trId))
+            console.log($(trId).children('.task-bucket'))
+            var td = $(trId).children('.task-bucket');
+            td.prop("rowspan", nRows);
+            td.removeClass("bucket-empty");
+            td.addClass("bucket-full");
+            td.css('padding', '0px');
+            td.html("<div class='time-block-card' style='height: 100%; width: 100%; display: table;' draggable='true'><span style='display: table-cell; vertical-align: middle; padding-left: 8px'>" + task.title + "</span></div>")
+            setPriorityColor(td.children('.time-block-card'), task.priority);
 
-        var div = (td.children('.time-block-card'))
-        div.height(div.closest('td').height()+1);
-        div.data('nRows', nRows);
-        div.data('taskId', taskId);
-        div.data('parentId', trId);
+            var div = (td.children('.time-block-card'))
+            div.height(div.closest('td').height() + 1);
+            div.data('nRows', nRows);
+            div.data('taskId', taskId);
+            div.data('parentId', trId);
 
-        firstHour = startHour;
-        firstMinute = (startMinute + 15) % 60;
-        if (45 == startMinute) {
-            firstHour++;
-        }
+            firstHour = startHour;
+            firstMinute = (startMinute + 15) % 60;
+            if (45 == startMinute) {
+                firstHour++;
+            }
 
-        removeRows(firstHour, firstMinute, nRows-1);
+            removeRows(firstHour, firstMinute, nRows - 1);
+        });
     }
 
     function removeRows(firstHour, firstMinute, nRows) {
@@ -387,10 +394,10 @@ $(document).ready(function () {
         return false;
     }
 
-    $(document).on('drop', 'tr', function(event) {
-        console.log('drop');
+    $(document).on('drop', 'tr', function (event) {
         var id = event.originalEvent.dataTransfer.getData('text');
-        var id = $(document).data('dragTaskRowId');
+        //var id = $(document).data('dragTaskRowId');
+        var id = event.originalEvent.dataTransfer.getData("text");
         var targetId = $(event.target).closest('tr')[0].id;
         var temp = targetId.split('-');
         var hour = Number(temp[1]);
@@ -401,14 +408,16 @@ $(document).ready(function () {
         addTaskToPage(hour, minute, nRows, taskId);
     })
 
-    $(document).on('dragover', 'tr', function(event) {
-        console.log('dragover');
+    $(document).on('dragover', 'tr', function (event) {
         event.preventDefault();
     })
 
-    $(document).on('drag', '.time-block-card', function(event) {
-        console.log('drag');
-        console.log($(this).data('parentId'))
+    $(document).on('drag', '.time-block-card', function (event) {
+        //event.originalEvent.dataTransfer.setData("text", $(this).data('parentId'));
+        //$(document).data('dragTaskRowId', $(this).data('parentId'))
+    })
+
+    $(document).on('dragstart', '.time-block-card', function (event) {
         event.originalEvent.dataTransfer.setData("text", $(this).data('parentId'));
         $(document).data('dragTaskRowId', $(this).data('parentId'))
     })

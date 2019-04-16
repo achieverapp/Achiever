@@ -216,7 +216,8 @@ async function updatesubTask(tasksDB, newTask, result) {
         $elemMatch:
         {
           //what goes in here? 
-          
+          //subTasks
+          subTasks:newTask.subTasks
         }
       }
       }).toArray(function(err,res)

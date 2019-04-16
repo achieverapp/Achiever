@@ -1,18 +1,26 @@
 //load the navbar when the page loads
 $(document).ready(function () {
-    var task;
     getTask(function (result, status) {
         if (status != "error") {
-            task = result.data;
+            console.log(result);
+            addSubTasks(result.data.subTasks);
+        } else {
+            getTask('0', function (result2, status2) {
+                if (status2 != "error") {
+                    addSubTasks(result2.data.subTasks);
+                } else {
+                    console.log("No task: ");
+                }
+            });
         }
-    });    
+    });
 
     var demoTasks = ["This is an example subtask", "This is another example subtask",
         "This is a test of dynamic adding of tasks", "Hello DROP TABLE"
     ];
 
     $(".dropdown").data("prevPriority", "btn-secondary"); //default style for priority dropdown
-    addSubTasks(demoTasks);
+
 
     $("#navbar").load("navbar.html", function () {
         resizeNav();
@@ -96,6 +104,8 @@ $(document).ready(function () {
 // taks a tasks array that contains an array of subtask strings to add.
 function addSubTasks(tasks) {
     var curId = 1; //since this is at the start, we want our ids to start at 1.
+
+    console.log(tasks);
 
     // inserts each task in the array/object that is passed.
     tasks.forEach(taskDesc => {

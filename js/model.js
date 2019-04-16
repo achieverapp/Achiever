@@ -9,8 +9,6 @@ const currUserId = getUrlParameter('userId');
 const currTaskId = getUrlParameter('taskId');
 const URL = "http://localhost:3000"; //URL of the API server.
 
-console.log(currUserId);
-
 function errorLog(data, status) {
     console.log("ERROR!: " + status);
     console.log(data);

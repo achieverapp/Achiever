@@ -28,10 +28,23 @@ $(document).ready(function () {
             window.location.href = './taskview.html?taskId=' + e.target.id;
         }
     });
-});
 
-$("#btn-newtask").on("click", function () {
-    window.location.href = './taskview.html?taskId=0';
+    $("#btn-newtask").on("click", function () {
+        console.log("test");
+        window.location.href = './taskview.html?taskId=0';
+    });
+
+    $(".sortby-dropdown-item").click(function (e) {
+        //set the title of the button to the dropdown that was selected.
+        $(".sortby-dropdown").each(function () {
+            var element = $(this);
+            element.html(e.target.innerText);
+        });
+        //.html(e.target.innerText);
+    
+        $(".sortby-dropdown").data("sortBy", e.target.id);
+        buildTaskList(e.target.id);
+    });
 });
 
 $(document).on("click", ".task-checkbox", function () {
@@ -44,18 +57,6 @@ $(document).on("click", ".task-checkbox", function () {
     console.log(JSON.stringify(task));
     var sortBy = $("#sortByDropdown").data("sortBy");
     buildTaskList(sortBy);
-});
-
-$(".sortby-dropdown-item").click(function (e) {
-    //set the title of the button to the dropdown that was selected.
-    $(".sortby-dropdown").each(function () {
-        var element = $(this);
-        element.html(e.target.innerText);
-    });
-    //.html(e.target.innerText);
-
-    $(".sortby-dropdown").data("sortBy", e.target.id);
-    buildTaskList(e.target.id);
 });
 
 $(document).on("mouseover", ".task-checkbox", function (e) {

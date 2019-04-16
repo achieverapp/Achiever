@@ -57,6 +57,7 @@ Task.addTask = function (tasksDB, taskName, result) {
 */
 Task.getTask = function (tasksDB, taskId, result) {
   var resultObj;
+  // Need to find when id is 0
   tasksDB.find({
     _id: new ObjectId(taskId)
   }).toArray(function (err, res) {

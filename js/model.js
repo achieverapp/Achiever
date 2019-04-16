@@ -5,29 +5,32 @@
 
     This file will now be used as a standardized interface to the true model backend    
 */
-
+const currUserId = getUrlParameter('userId');
 const URL = "http://localhost:3000"; //URL of the API server.
 
-async function getTaskList(userId) {
-    return new Promise(function (resolve, reject) {
-        $.ajax({
-            url: URL + "/tasks/id/" + userId,
-            method: 'GET',
-            success: resolve,
-            error: reject
-        });
+console.log(currUserId);
+
+function errorLog(data, status) {
+    console.log("ERROR!: " + status);
+    console.log(data);
+}
+
+function getTaskList(callback) {
+    $.ajax({
+        url: URL + "/tasks/id/" + currUserId,
+        method: 'GET',
+        success: callback,
+        error: errorLog
     });
 }
 
 // returns a Promise that contains the result of the API call
-async function getTask(id) {
-    return new Promise(function (resolve, reject) {
-        $.ajax({
-            url: URL + "/tasks/" + id,
-            method: 'GET',
-            success: resolve,
-            error: reject          
-        });
+function getTask(id, callback) {
+    $.ajax({
+        url: URL + "/tasks/" + id,
+        method: 'GET',
+        success: callback,
+        error: errorLog
     });
 }
 
@@ -58,7 +61,3 @@ function getUrlParameter(sParam) {
         }
     }
 };
-
-function getAPITask(id) {
-
-}

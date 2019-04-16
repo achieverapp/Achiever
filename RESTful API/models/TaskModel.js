@@ -56,10 +56,14 @@ Task.addTask = function (tasksDB, taskName, result) {
   if the task is not available then the return an err message,else return the task informationto
 */
 Task.getTask = function (tasksDB, taskId, result) {
-  var resultObj;
-  // Need to find when id is 0
+  var resultObj, id;
+  if (taskId == "default") {
+    id = taskId;
+  } else {
+    id = new ObjectId(taskId);
+  }
   tasksDB.find({
-    _id: new ObjectId(taskId)
+    _id: id
   }).toArray(function (err, res) {
     if (err) {
       resultObj = ResultObj("Error when adding task to database", err);

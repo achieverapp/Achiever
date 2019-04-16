@@ -92,7 +92,12 @@ Task.getTasks = function (tasksDB, userId, result) {
 }
 
 // TODO: Implement U and D in milestone 3
-
+/*update the task for several cases
+-name
+-category
+-priority
+-subtask
+-timeblock?*/ 
 Task.updateTask = function (tasksDB, newTask, result) {
   var resultObj;
   tasksDB.find({
@@ -122,7 +127,7 @@ Task.updateTask = function (tasksDB, newTask, result) {
           result(res);
         })
       }
-      if (newTask.timeBlocks != []) {
+      if (newTask.timeBlocks.length>0) {
         updateTaskTB(tasksDB, newTask, result).then(function (res) {
           result(res);
         })
@@ -145,11 +150,11 @@ async function updateTaskName(tasksDB, newTask, result) {
       _id: new ObjectId(newTask._id)
     }, {
       $set: { 'name': newTask.name }, function(err) {
-        if (err) { //Unkown error, return to client and display it in the log.
+        if (err) { 
           resultObj = ResultObj("Error when attempting to change name!", err);
           console.log(resultObj.statusMsg + ": " + err);
           resolve(resultObj);
-        } else { //hole updated successfully!
+        } else { 
           resultObj = ResultObj("Name changed to " + newTask.name, null, true);
           resolve(resultObj);
         }
@@ -165,11 +170,11 @@ return new Promise(function (resolve) {
       _id: new ObjectId(newTask._id)
     }, {
       $set: { 'category': newTask.category }, function(err) {
-        if (err) { //Unkown error, return to client and display it in the log.
+        if (err) { 
           resultObj = ResultObj("Error when attempting to change name!", err);
           console.log(resultObj.statusMsg + ": " + err);
           resolve(resultObj);
-        } else { //hole updated successfully!
+        } else { 
           resultObj = ResultObj("category changed to " + newTask.category, null, true);
           resolve(resultObj);
         }
@@ -185,7 +190,7 @@ async function updateTaskPriority(tasksDB, newTask, result) {
       _id: new ObjectId(newTask._id)
     }, {
       $set: { 'priority': newTask.priority }, function(err) {
-        if (err) { //Unkown error, return to client and display it in the log.
+        if (err) { 
           resultObj = ResultObj("Error when attempting to change name!", err);
           console.log(resultObj.statusMsg + ": " + err);
           resolve(resultObj);
@@ -198,7 +203,7 @@ async function updateTaskPriority(tasksDB, newTask, result) {
 
   })
 }
-//update the timeblock 
+//update the timeblock debating whether or not timeblocks would need a table of its own
 async function updateTaskTB(tasksDB, newTask, result) {
 return new Promise(function(resolve)
 {
@@ -260,6 +265,7 @@ async function updatesubTask(tasksDB, newTask, result) {
 
 
 // TODO: Implement U and D in milestone 3 
+/*delete a task from the task db*/ 
 Task.deleteTask = function (tasksDB, taskId, result) {
 var resultObj;
 tasksDB.find(

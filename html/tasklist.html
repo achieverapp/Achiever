@@ -24,9 +24,6 @@
 
   <link rel="stylesheet" href="../css/app.css">
 
-  <script src="../js/tasklist.js"></script>
-  <script src="../js/model.js"></script>
-
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"
     integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
     crossorigin="anonymous"></script>
@@ -36,6 +33,9 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
     integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
     crossorigin="anonymous"></script>
+
+  <script src="../js/tasklist.js"></script>
+  <script src="../js/model.js"></script>
 
 </head>
 
@@ -91,58 +91,7 @@
 </body>
 
 <script>
-  $(document).ready(function () {
-    console.log("document ready!");
-    // load the navbar
-    $("#navbar").load("navbar.html", function() {
-      $("#nav-tasklist").addClass("nav-active");
-      resizeNav();
-    });
-
-    // attach task data to body
-    var tasks = getTaskList();
-    $(document.body).data("tasks", tasks);
-
-    buildTaskList("sortByDueDate");
-    $("#nav-tasklist").addClass("nav-active");
-    console.log($("#nav-tasklist"));
-  });
-
-  $("#btn-newtask").on("click", function () {
-    window.location.href = './taskview.html';
-  });
-
-  $(document).on("click", ".task-checkbox", function () {
-    taskCard = $(this).closest('.task-card');
-    id = Number(taskCard[0].id);
-    task = getTask(id);
-    var now = new Date();
-    task.completed = now.toISOString();
-    updateTask(task);
-    console.log(JSON.stringify(task));
-    var sortBy = $("#sortByDropdown").data("sortBy");
-    buildTaskList(sortBy);
-  });
-
-  $(".sortby-dropdown-item").click(function (e) {
-    //set the title of the button to the dropdown that was selected.
-    $(".sortby-dropdown").each(function() {
-      var element = $(this);
-      element.html(e.target.innerText);
-    });
-    //.html(e.target.innerText);
-
-    $(".sortby-dropdown").data("sortBy", e.target.id);
-    buildTaskList(e.target.id);
-  });
-
-  $(document).on("mouseover", ".task-checkbox", function(e) {
-    $(e.target).removeClass("check-incomplete").addClass("check-complete");
-  });
-
-  $(document).on("mouseleave", ".task-checkbox", function(e) {
-    $(e.target).removeClass("check-complete").addClass("check-incomplete");
-  });
+  
 
 </script>
 

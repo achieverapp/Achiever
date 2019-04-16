@@ -1,9 +1,11 @@
 //load the navbar when the page loads
 $(document).ready(function () {
-    getTask('5caf86d6b6f5d336e01829b8')
-        .then(function (data) {
-            console.log(data);
-        });
+    var task;
+    getTask(function (result, status) {
+        if (status != "error") {
+            task = result.data;
+        }
+    });    
 
     var demoTasks = ["This is an example subtask", "This is another example subtask",
         "This is a test of dynamic adding of tasks", "Hello DROP TABLE"

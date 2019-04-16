@@ -4,6 +4,68 @@ var priorityToClassMap = {
     2: "priority-high",
 };
 
+$(document).ready(function () {
+    // load the navbar
+    $("#navbar").load("navbar.html", function () {
+        $("#nav-tasklist").addClass("nav-active");
+        resizeNav();
+    });
+
+    // attach task data to body
+    var tasks = getTaskList();
+    $(document.body).data("tasks", tasks);
+
+    buildTaskList("sortByDueDate");
+    $("#nav-tasklist").addClass("nav-active");
+
+    // Event handler for when a task is clicked on. Should bring the user to the task view page.
+    // Adds a new empty row for the task to allow the user to input another task
+    $(document.body).on("click", ".task-card", function (e) {
+        console.log(e.target);
+        if ($(e.target).hasClass("task-card-container")) {
+            window.location.href = './taskview.html?taskId=' + e.target.parentElement.id;        
+        } else {
+            window.location.href = './taskview.html?taskId=' + e.target.id;
+        }
+    });
+});
+
+$("#btn-newtask").on("click", function () {
+    window.location.href = './taskview.html?taskId=0';
+});
+
+$(document).on("click", ".task-checkbox", function () {
+    taskCard = $(this).closest('.task-card');
+    id = Number(taskCard[0].id);
+    task = getTask(id);
+    var now = new Date();
+    task.completed = now.toISOString();
+    updateTask(task); //need to make this update the task on the server side.
+    console.log(JSON.stringify(task));
+    var sortBy = $("#sortByDropdown").data("sortBy");
+    buildTaskList(sortBy);
+});
+
+$(".sortby-dropdown-item").click(function (e) {
+    //set the title of the button to the dropdown that was selected.
+    $(".sortby-dropdown").each(function () {
+        var element = $(this);
+        element.html(e.target.innerText);
+    });
+    //.html(e.target.innerText);
+
+    $(".sortby-dropdown").data("sortBy", e.target.id);
+    buildTaskList(e.target.id);
+});
+
+$(document).on("mouseover", ".task-checkbox", function (e) {
+    $(e.target).removeClass("check-incomplete").addClass("check-complete");
+});
+
+$(document).on("mouseleave", ".task-checkbox", function (e) {
+    $(e.target).removeClass("check-complete").addClass("check-incomplete");
+});
+
 function buildTaskList() {
     return buildTaskList(null);
 }
@@ -13,7 +75,7 @@ function buildTaskList(sortBy) {
     var overdueUL = document.getElementById("overdue-list");
     var tasks;
     getTaskList(function (result, error) {
-        tasks = result.data        
+        tasks = result.data
 
         if (sortBy === "sortByPriority") {
             tasks.sort(compareTaskByPriorityDescending);
@@ -50,10 +112,10 @@ function buildTaskList(sortBy) {
     });
 }
 
-function buildTaskCard(task) {    
+function buildTaskCard(task) {
     var dueDate = new Date(task.due);
     var taskCardNode = document.createElement("li");
-    taskCardNode.id = task.id;
+    taskCardNode.id = task._id;
     taskCardNode.classList.add("card");
     taskCardNode.classList.add("task-card");
     taskCardNode.classList.add(priorityToClassMap[task.priority]);

@@ -6,6 +6,7 @@
     This file will now be used as a standardized interface to the true model backend    
 */
 const currUserId = getUrlParameter('userId');
+const currTaskId = getUrlParameter('taskId');
 const URL = "http://localhost:3000"; //URL of the API server.
 
 console.log(currUserId);
@@ -28,6 +29,16 @@ function getTaskList(callback) {
 function getTask(id, callback) {
     $.ajax({
         url: URL + "/tasks/" + id,
+        method: 'GET',
+        success: callback,
+        error: errorLog
+    });
+}
+
+// returns a Promise that contains the result of the API call
+function getTask(callback) {
+    $.ajax({
+        url: URL + "/tasks/" + currTaskId,
         method: 'GET',
         success: callback,
         error: errorLog

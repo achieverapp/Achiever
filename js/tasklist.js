@@ -12,7 +12,7 @@ function buildTaskList(sortBy) {
     var upcomingUL = document.getElementById("task-list");
     var overdueUL = document.getElementById("overdue-list");
     var tasks;
-    getTaskList('5caf79c4e1e0be0998dcaa6d').then(function (result, error) {        
+    getTaskList(function (result, error) {
         tasks = result.data        
 
         if (sortBy === "sortByPriority") {

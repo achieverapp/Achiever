@@ -76,7 +76,6 @@ As of milestone 2, the user object is only responsible for storing:
 */
 User.updateUser = function (usersDB, newUser, result) {
   var resultObj;
-  console.log(newUser._id);
   usersDB.find({ //Check if the user is in the database
     _id: new ObjectId(newUser._id)
   }).toArray(function (err, res) {

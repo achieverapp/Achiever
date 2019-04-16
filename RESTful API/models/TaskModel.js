@@ -85,7 +85,6 @@ Task.getTasks = function (tasksDB, userId, result) {
       console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
       result(resultObj);
     } else {
-      console.log(res);
       resultObj = ResultObj("Task retrieved", null, true, userId, res);
       result(resultObj);
     }

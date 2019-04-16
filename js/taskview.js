@@ -1,23 +1,26 @@
+var priorityToClassMap = {
+    0: "priority-low",
+    1: "priority-med",
+    2: "priority-high"
+};
+
+var priorityToName = {
+    0: "Low",
+    1: "Medium",
+    2: "High"
+};
+
 //load the navbar when the page loads
 $(document).ready(function () {
+
+    //updates the task information from the database.
     getTask(function (result, status) {
-        if (status != "error") {
-            console.log(result);
-            addSubTasks(result.data.subTasks);
+        if (result != null && result.success) {
+            setTaskInfo(result.data);
         } else {
-            getTask('0', function (result2, status2) {
-                if (status2 != "error") {
-                    addSubTasks(result2.data.subTasks);
-                } else {
-                    console.log("No task: ");
-                }
-            });
+            console.log(result)
         }
     });
-
-    var demoTasks = ["This is an example subtask", "This is another example subtask",
-        "This is a test of dynamic adding of tasks", "Hello DROP TABLE"
-    ];
 
     $(".dropdown").data("prevPriority", "btn-secondary"); //default style for priority dropdown
 
@@ -29,17 +32,15 @@ $(document).ready(function () {
     // Event handler for the category dropdown menu.
     // When the user clicks a category, the dropdown will change its text to what they selected.
     $(".category-dropdown").click(function (e) {
-        $("#categryDropdown").html(e.target.innerHTML);
+        $("#categoryDropdown").html(e.target.innerHTML);
     });
 
     // Event handler for the priority dropdown menu.
     // When the user clicks a priority level, the dropdown will change its text and style to what they selected
     $(".priority-dropdown").click(function (e) {
-        $("#priorityDropdown").html(e.target
-            .innerText) //set the title of the button to the dropdown that was selected.
+        $("#priorityDropdown").html(e.target.innerText) //set the title of the button to the dropdown that was selected.
 
-        $("#priorityDropdown").toggleClass($(".dropdown").data("prevPriority") + " " + e.target
-            .id); //set the style so it matches the priority
+        $("#priorityDropdown").toggleClass($(".dropdown").data("prevPriority") + " " + e.target.id); //set the style so it matches the priority
         $(".dropdown").data("prevPriority", e.target.id); //save the previous style
     });
 
@@ -96,16 +97,28 @@ $(document).ready(function () {
     // WHen you click on the delete button of a subtask, we need to remove it from the list.
     // In the future there should be some form of confirmation to delete a subtask, (or maybe an undo button?)
     $(document.body).on("click", ".fa-trash-alt", function (e) {
-        e.currentTarget.parentElement
-            .remove(); //traverses the tree and removes the parent html from the document.
+        e.currentTarget.parentElement.remove(); //traverses the tree and removes the parent html from the document.
     });
 });
 
+function setTaskInfo(task) {
+    var date = new Date(task.due).toISOString();
+    var day = date.substr(0, 10);
+    var time = date.substr(11, 5);    
+    // var due = date.getMonth() + "/" + date.getDay() + "/" + date.getFullYear();
+    console.log(time);
+    $("#taskHeader").html(task.title);
+    $("#categoryDropdown").html(task.category);
+    $("#priorityDropdown").html(priorityToName[task.priority]);
+    $("#priorityDropdown").addClass(priorityToClassMap[task.priority]);
+    $("#datepicker").val(day);
+    $("#timepicker").val(time);
+    addSubTasks(task.subTasks);
+}
+
 // taks a tasks array that contains an array of subtask strings to add.
 function addSubTasks(tasks) {
-    var curId = 1; //since this is at the start, we want our ids to start at 1.
-
-    console.log(tasks);
+    var curId = 1; //since this is at the start, we want our ids to start at 1.    
 
     // inserts each task in the array/object that is passed.
     tasks.forEach(taskDesc => {

@@ -20,18 +20,19 @@ $(document).ready(function () {
 
     // Event handler for when a task is clicked on. Should bring the user to the task view page.
     // Adds a new empty row for the task to allow the user to input another task
-    $(document.body).on("click", ".task-card", function (e) {
-        console.log(e.target);
+    $(document.body).on("click", ".task-card", function (e) {            
         if ($(e.target).hasClass("task-card-container")) {
+            console.log('./taskview.html?taskId=' + e.target.parentElement.id);
             window.location.href = './taskview.html?taskId=' + e.target.parentElement.id;        
         } else {
+            console.log('./taskview.html?taskId=' + e.target.id);
             window.location.href = './taskview.html?taskId=' + e.target.id;
         }
     });
 
     $("#btn-newtask").on("click", function () {
         console.log("test");
-        window.location.href = './taskview.html?taskId=0';
+        window.location.href = './taskview.html?taskId=default';
     });
 
     $(".sortby-dropdown-item").click(function (e) {

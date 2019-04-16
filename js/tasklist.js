@@ -11,46 +11,47 @@ function buildTaskList() {
 function buildTaskList(sortBy) {
     var upcomingUL = document.getElementById("task-list");
     var overdueUL = document.getElementById("overdue-list");
-    var tasks = getTaskList();
-    if(sortBy === "sortByPriority") {
-        tasks.sort(compareTaskByPriorityDescending);
-    }
-    else if(sortBy === "sortByDueDate") {
-        tasks.sort(compareTaskByDateAscending);
-    }
-    var overdue = [];
+    var tasks;
+    getTaskList('5caf6fcbe1e0be0998dcaa6b').then(function (result, error) {        
+        tasks = result.data        
 
-    while (upcomingUL.firstChild) {
-        upcomingUL.removeChild(upcomingUL.firstChild);
-    }
-    while (overdueUL.firstChild) {
-        overdueUL.removeChild(overdueUL.firstChild);
-    }
+        if (sortBy === "sortByPriority") {
+            tasks.sort(compareTaskByPriorityDescending);
+        } else if (sortBy === "sortByDueDate") {
+            tasks.sort(compareTaskByDateAscending);
+        }
+        var overdue = [];
 
-    tasks.forEach(task => {
-        if (task.completed == null) {
-            var due = new Date(task.due);
-            var today = new Date();
-            if (today > due) {
-                overdue.push(task);
-                overdueUL.appendChild(buildTaskCard(task))
+        while (upcomingUL.firstChild) {
+            upcomingUL.removeChild(upcomingUL.firstChild);
+        }
+        while (overdueUL.firstChild) {
+            overdueUL.removeChild(overdueUL.firstChild);
+        }
+
+        tasks.forEach(task => {
+            if (task.completed == null) {
+                var due = new Date(task.due);
+                var today = new Date();
+                if (today > due) {
+                    overdue.push(task);
+                    overdueUL.appendChild(buildTaskCard(task))
+                } else {
+                    upcomingUL.appendChild(buildTaskCard(task));
+                }
             }
-            else {
-                upcomingUL.appendChild(buildTaskCard(task));
-            }
+        });
+        if (overdue.length == 0) {
+            $("#overdue-div").hide();
+            $("#sortByDropdown2").show();
+        } else {
+            $("#sortByDropdown2").hide();
         }
     });
-    if (overdue.length == 0) {
-        $("#overdue-div").hide();
-        $("#sortByDropdown2").show();
-    }
-    else {
-        $("#sortByDropdown2").hide();
-    }
 }
 
-function buildTaskCard(task) {
-    var dueDate = new Date(task.due)
+function buildTaskCard(task) {    
+    var dueDate = new Date(task.due);
     var taskCardNode = document.createElement("li");
     taskCardNode.id = task.id;
     taskCardNode.classList.add("card");
@@ -76,20 +77,20 @@ function compareTaskByDateAscending(lhs, rhs) {
     var lhsDate = new Date(lhs.due),
         rhsDate = new Date(rhs.due);
 
-    if(lhs.due === rhs.due) {
+    if (lhs.due === rhs.due) {
         return lhs.priority - rhs.priority;
     }
-    if(lhsDate > rhsDate) {
+    if (lhsDate > rhsDate) {
         return 1;
     }
-    if(lhsDate < rhsDate) {
+    if (lhsDate < rhsDate) {
         return -1;
     }
     return 0;
 }
 
 function compareTaskByPriorityDescending(lhs, rhs) {
-    if(lhs.priority === rhs.priority) {
+    if (lhs.priority === rhs.priority) {
         return compareTaskByDateAscending(lhs, rhs);
     }
     return rhs.priority - lhs.priority;

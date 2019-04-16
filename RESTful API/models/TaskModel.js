@@ -8,11 +8,12 @@ var ObjectId = require('mongodb').ObjectId;
 
 var Task = function (task) {
   this.owner = task.owner == null ? null : task.owner;
-  this.name = task.name == null ? null : task.name;;
+  this.title = task.title == null ? null : task.title;
   this.category = task.category == null ? none : task.category;;
   this.priority = task.priority == null ? 0 : task.priority;
   this.subTasks = task.subTasks == null ? [] : task.subTasks;
   this.timeBlocks = task.timeBlocks == null ? [] : task.timeBlocks;
+  this.due = task.due == null ? new Date() : task.due;
 }
 
 /*

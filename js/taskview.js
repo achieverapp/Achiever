@@ -1,6 +1,6 @@
 //load the navbar when the page loads
 $(document).ready(function () {
-    getAPITask('5caf86d6b6f5d336e01829b8')
+    getTask('5caf86d6b6f5d336e01829b8')
         .then(function (data) {
             console.log(data);
         });

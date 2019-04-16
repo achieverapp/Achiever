@@ -394,9 +394,29 @@ $(document).ready(function () {
         return false;
     }
 
-    $(document).on('drop', 'tr', function (event) {
+    function removeTaskFromPage(rowId) {
+        var div = $(rowId).children().find('.time-block-card');
+        var td = div.parent('td');
+        var nRows = div.data('nRows');
+        var taskId = div.data('taskId');
+        var temp = rowId.split('-');
+        var hour = Number(temp[1]);
+        var minute = Number(temp[2]);
+        td.addClass("bucket-empty");
+        td.removeClass("bucket-full");
+        td.prop("rowspan", 1)
+        td.html("");
+        firstHour = hour;
+        firstMinute = (minute + 15) % 60;
+        if (45 == minute) {
+            firstHour++;
+        }
+        addRows(firstHour, firstMinute, nRows-1);
+    }
+
+    $(document).on('drop', 'tr', function(event) {
+        event.preventDefault();
         var id = event.originalEvent.dataTransfer.getData('text');
-        //var id = $(document).data('dragTaskRowId');
         var id = event.originalEvent.dataTransfer.getData("text");
         var targetId = $(event.target).closest('tr')[0].id;
         var temp = targetId.split('-');
@@ -405,20 +425,21 @@ $(document).ready(function () {
         var nRows = $(id).children().find('.time-block-card').data('nRows');
         var taskId = $(id).children().find('.time-block-card').data('taskId');
 
-        addTaskToPage(hour, minute, nRows, taskId);
+        if(!hasOverlaps(hour, minute, nRows)) {
+            removeTaskFromPage(id);
+            addTaskToPage(hour, minute, nRows, taskId);
+        }
+        
     })
 
-    $(document).on('dragover', 'tr', function (event) {
+    $(document).on('dragover', 'tr', function(event) {
         event.preventDefault();
     })
 
-    $(document).on('drag', '.time-block-card', function (event) {
-        //event.originalEvent.dataTransfer.setData("text", $(this).data('parentId'));
-        //$(document).data('dragTaskRowId', $(this).data('parentId'))
+    $(document).on('drag', '.time-block-card', function(event) {
     })
 
-    $(document).on('dragstart', '.time-block-card', function (event) {
+    $(document).on('dragstart', '.time-block-card', function(event) {
         event.originalEvent.dataTransfer.setData("text", $(this).data('parentId'));
-        $(document).data('dragTaskRowId', $(this).data('parentId'))
     })
 });

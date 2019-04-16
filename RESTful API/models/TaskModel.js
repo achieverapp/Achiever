@@ -93,10 +93,10 @@ Task.getTasks = function (tasksDB, userId, result) {
 
 // TODO: Implement U and D in milestone 3
 
-Task.updateTask = function (tasksDB, taskId, result) {
+Task.updateTask = function (tasksDB, newTask, result) {
   var resultObj;
   tasksDB.find({
-    _id: new ObjectId(taskId)
+    _id: new ObjectId(newTask._id)
   }).toArray(function (err, res) {
     if (err) { //Unkown error, return to client and display it in the log.
       resultObj = ResultObj("Error when checking if user with id " + taskId + " exists in database.", err);
@@ -107,23 +107,30 @@ Task.updateTask = function (tasksDB, taskId, result) {
       console.log(resultObj.statusMsg);
       result(resultObj);
     } else {
-      if (taskId.name != null) {
-        updateTaskName(tasksDB, taskId, result).then(function (res) {
+      if (newTask.name != null) {
+        updateTaskName(tasksDB, newTask, result).then(function (res) {
           result(res);
         })
       }
-      if (taskId.category != null) {
-        updateTaskCategory(tasksDB, taskId, result).then(function (res) {
+      if (newTask.category != null) {
+        updateTaskCategory(tasksDB, newTask, result).then(function (res) {
           result(res);
         })
       }
-      if (taskId.priority != null) {
-        updateTaskPriority(tasksDB, taskId, result).then(function (res) {
+      if (newTask.priority != null) {
+        updateTaskPriority(tasksDB, newTask, result).then(function (res) {
           result(res);
         })
       }
-      if (taskId.timeBlocks != null) {
-        updateTaskTB(tasksDB, taskId, result).then(function (res) {
+      if (newTask.timeBlocks != []) {
+        updateTaskTB(tasksDB, newTask, result).then(function (res) {
+          result(res);
+        })
+      }
+      if(newTask.subTasks.length>0)
+      {
+        updatesubTask(tasksDB, newTask, result).then(function(res)
+        {
           result(res);
         })
       }
@@ -132,18 +139,18 @@ Task.updateTask = function (tasksDB, taskId, result) {
   )
 }
 //update the task name
-async function updateTaskName(tasksDB, taskId, result) {
+async function updateTaskName(tasksDB, newTask, result) {
   return new Promise(function (resolve) {
     tasksDB.updateOne({
-      _id: new ObjectId(taskId._id)
+      _id: new ObjectId(newTask._id)
     }, {
-      $set: { 'name': taskId.name }, function(err) {
+      $set: { 'name': newTask.name }, function(err) {
         if (err) { //Unkown error, return to client and display it in the log.
           resultObj = ResultObj("Error when attempting to change name!", err);
           console.log(resultObj.statusMsg + ": " + err);
           resolve(resultObj);
         } else { //hole updated successfully!
-          resultObj = ResultObj("Name changed to " + taskId.name, null, true);
+          resultObj = ResultObj("Name changed to " + newTask.name, null, true);
           resolve(resultObj);
         }
       }
@@ -152,20 +159,136 @@ async function updateTaskName(tasksDB, taskId, result) {
   })
 }
 //update category
-async function updateTaskCategory(tasksDB, taskId, result) {
+async function updateTaskCategory(tasksDB, newTask, result) {
+return new Promise(function (resolve) {
+    tasksDB.updateOne({
+      _id: new ObjectId(newTask._id)
+    }, {
+      $set: { 'category': newTask.category }, function(err) {
+        if (err) { //Unkown error, return to client and display it in the log.
+          resultObj = ResultObj("Error when attempting to change name!", err);
+          console.log(resultObj.statusMsg + ": " + err);
+          resolve(resultObj);
+        } else { //hole updated successfully!
+          resultObj = ResultObj("category changed to " + newTask.category, null, true);
+          resolve(resultObj);
+        }
+      }
+      })
 
+  })
 }
 //update the priorty
-async function updateTaskPriority(tasksDB, taskId, result) {
+async function updateTaskPriority(tasksDB, newTask, result) {
+  return new Promise(function (resolve) {
+    tasksDB.updateOne({
+      _id: new ObjectId(newTask._id)
+    }, {
+      $set: { 'priority': newTask.priority }, function(err) {
+        if (err) { //Unkown error, return to client and display it in the log.
+          resultObj = ResultObj("Error when attempting to change name!", err);
+          console.log(resultObj.statusMsg + ": " + err);
+          resolve(resultObj);
+        } else { 
+          resultObj = ResultObj("priority changed to " + newTask.priority, null, true);
+          resolve(resultObj);
+        }
+      }
+      })
 
+  })
 }
 //update the timeblock 
-async function updateTaskTB(tasksDB, taskId, result) {
-
+async function updateTaskTB(tasksDB, newTask, result) {
+return Promise(function(resolve)
+{
+  
+})
 }
+//update the subtask
+async function updatesubTask(tasksDB, newTask, result) {
+  return new Promise(function(resolve)
+  {
+    tasksDB.find({
+      _id: new ObjectId(newTask._id),
+      subTasks:
+      {
+        $elemMatch:
+        {
+          //what goes in here? 
+          
+        }
+      }
+      }).toArray(function(err,res)
+      {
+        if(err)
+        {
+          resultObj = ResultObj("Error when locating subtask", err);
+          console.log(resultObj.statusMsg + ": " + err);
+          resolve(statusObj);
+        }
+        else if(res.length==0)
+        {
+          tasksDB.updateOne(
+            {
+              _id: new ObjectId(newTask._id)
+            },{
+              $push: {
+                subTasks:
+                {$each:newTask.subTasks}
+              },
+            },function(err2)
+            {
+              if (err2) { //Unkown error, return to client and display it in the log.
+                resultObj = ResultObj("Error when attempting to save task ID: " + newTask.subTasks + " for user " + newUser.userName, err2);
+                console.log(resultObj.statusMsg + ": " + err2);
+                resolve(resultObj);
+              } else { //Task was added successfully!
+                resultObj = ResultObj("Task saved as template for user " + newUser.userName, null, true);
+                resolve(resultObj);
+              }
+            }
+          )
+        }
+      })
+    })
+  
+}
+
+
+
+
 // TODO: Implement U and D in milestone 3 
 Task.deleteTask = function (tasksDB, taskId, result) {
-
+var resultObj;
+tasksDB.find(
+  {_id:new ObjectId(taskId)}
+).toArray(function(err)
+{
+  if(err)
+  {
+    resultObj = ResultObj("Error when attempting to delete task!", err);
+    console.log(resultObj.statusMsg + ": " + err);
+    resolve(resultObj);
+  }
+  else{
+    tasksDB.deleteOne(
+      {_id:new ObjectId(taskId)}
+      ).toArray(function(err2)
+      {
+        if(err2)
+        {
+          resultObj = ResultObj("Error when attempting to delete task!", err);
+          console.log(resultObj.statusMsg + ": " + err);
+          resolve(resultObj);
+        }
+        else{
+          resultObj=ResultObj("user with"+taskId.name+"deleted");
+          resultObj(resultObj);
+        }
+      })
+  }
+})
 }
 
 module.exports = Task;

@@ -17,12 +17,12 @@ module.exports = function (app) {
         .delete(TMuser.deleteUser);
 
     app.route('/tasks')
-        .post(Task.addTask);
-    //.put(Task.updateTask);
+        .post(Task.addTask)
+        .put(Task.updateTask);
 
     app.route('/tasks/:id')
-        .get(Task.getTask);
-    //.delete(Task.deleteTask);
+        .get(Task.getTask)
+        .delete(Task.deleteTask);
 
     app.route('/tasks/id/:id')
         .get(Task.getTasks);

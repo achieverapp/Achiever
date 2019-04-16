@@ -1,5 +1,10 @@
 //load the navbar when the page loads
 $(document).ready(function () {
+    getTask('5caf86d6b6f5d336e01829b8')
+        .then(function (data) {
+            console.log(data);
+        });
+
     var demoTasks = ["This is an example subtask", "This is another example subtask",
         "This is a test of dynamic adding of tasks", "Hello DROP TABLE"
     ];
@@ -45,7 +50,7 @@ $(document).ready(function () {
     // Event handler for when the enter key is pressed on one of the text input forms.
     // Adds a new empty row for the task to allow the user to input another task
     $(document.body).on("keydown", ".empty-task", function (e) {
-        if (/*e.which == 13 && */$(".empty-task").val() != "") { //if the enter key is pressed.
+        if ( /*e.which == 13 && */ $(".empty-task").val() != "") { //if the enter key is pressed.
             // console.log($(".empty-task").attr("id").match(/\d+/)[0]);
 
             //regex to find only the number at the end of the id

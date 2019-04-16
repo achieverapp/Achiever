@@ -8,11 +8,12 @@ var ObjectId = require('mongodb').ObjectId;
 
 var Task = function (task) {
   this.owner = task.owner == null ? null : task.owner;
-  this.name = task.name == null ? null : task.name;;
+  this.title = task.title == null ? null : task.title;
   this.category = task.category == null ? none : task.category;;
   this.priority = task.priority == null ? 0 : task.priority;
   this.subTasks = task.subTasks == null ? [] : task.subTasks;
   this.timeBlocks = task.timeBlocks == null ? [] : task.timeBlocks;
+  this.due = task.due == null ? new Date() : task.due;
 }
 
 /*
@@ -44,7 +45,7 @@ Task.addTask = function (tasksDB, taskName, result) {
       console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
       result(resultObj);
     } else {
-      resultObj = ResultObj("Added task " + taskName.name, null, true, taskName._id, taskName);
+      resultObj = ResultObj("Added task " + taskName.title, null, true, taskName._id, taskName);
       result(resultObj);
     }
   });
@@ -60,14 +61,14 @@ Task.getTask = function (tasksDB, taskId, result) {
     _id: new ObjectId(taskId)
   }).toArray(function (err, res) {
     if (err) {
-      resultObj = ResultObj("Error when adding user to database", err);
+      resultObj = ResultObj("Error when adding task to database", err);
       console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
       result(resultObj);
     } else if (res.length == 1) {
-      resultObj = ResultObj("User retrieved", null, true, res[0]._id, res[0]);
+      resultObj = ResultObj("Task retrieved", null, true, res[0]._id, res[0]);
       result(resultObj);
     } else {
-      resultObj = ResultObj("user not found");
+      resultObj = ResultObj("Task not found");
       result(resultObj);
     }
   });
@@ -80,12 +81,12 @@ Task.getTasks = function (tasksDB, userId, result) {
     owner: userId
   }).toArray(function (err, res) {
     if (err) {
-      resultObj = ResultObj("Error when adding user to database", err);
+      resultObj = ResultObj("Error when adding task to database", err);
       console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
       result(resultObj);
     } else {
       console.log(res);
-      resultObj = ResultObj("User retrieved", null, true, userId, res);
+      resultObj = ResultObj("Task retrieved", null, true, userId, res);
       result(resultObj);
     }
   });

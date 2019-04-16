@@ -5,6 +5,7 @@
 */
 
 const express = require('express'); //we are using express.js to process GET and POST requests
+const cors = require('cors') //used to allow cross-origin support
 const app = express(); //instantiate an express app.
 const MongoClient = require('mongodb').MongoClient;
 
@@ -15,6 +16,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 })); //init body parser
 app.use(bodyParser.json());
+app.use(cors());
 
 var routes = require("./routes/routes"); //Define routes
 //var routesTask=require("./routes/taskRoutes")

@@ -200,7 +200,7 @@ async function updateTaskPriority(tasksDB, newTask, result) {
 }
 //update the timeblock 
 async function updateTaskTB(tasksDB, newTask, result) {
-return Promise(function(resolve)
+return new Promise(function(resolve)
 {
   
 })
@@ -241,11 +241,11 @@ async function updatesubTask(tasksDB, newTask, result) {
             },function(err2)
             {
               if (err2) { //Unkown error, return to client and display it in the log.
-                resultObj = ResultObj("Error when attempting to save task ID: " + newTask.subTasks + " for user " + newUser.userName, err2);
+                resultObj = ResultObj("Error when attempting to save task ID: " + newTask.subTasks + " for task " + newTask.name, err2);
                 console.log(resultObj.statusMsg + ": " + err2);
                 resolve(resultObj);
               } else { //Task was added successfully!
-                resultObj = ResultObj("Task saved as template for user " + newUser.userName, null, true);
+                resultObj = ResultObj("Task saved as template for user " + newTask.name, null, true);
                 resolve(resultObj);
               }
             }

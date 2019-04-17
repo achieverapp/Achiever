@@ -74,13 +74,9 @@ class User {
         //  User updates their name
         //  User updates thier other information (Not implemented yet)
         if (newUser.name != null)
-          updateName(usersDB, newUser, resultObj).then(function (res1) {
-            result(res1);
-          });
+          updateName(usersDB, newUser, resultObj).then(result);
         if (newUser.savedTasks.length > 0)
-          updateSavedTasks(usersDB, newUser, resultObj).then(function (res1) {
-            result(res1);
-          });
+          updateSavedTasks(usersDB, newUser, resultObj).then(result);
       }
     });
   }

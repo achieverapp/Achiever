@@ -18,18 +18,6 @@ $(document).ready(function () {
     buildTaskList("sortByDueDate");
     $("#nav-tasklist").addClass("nav-active");
 
-    // Event handler for when a task is clicked on. Should bring the user to the task view page.
-    // Adds a new empty row for the task to allow the user to input another task
-    $(document.body).on("click", ".task-card", function (e) {            
-        if ($(e.target).hasClass("task-card-container")) {
-            console.log('./taskview.html?taskId=' + e.target.parentElement.id);
-            window.location.href = './taskview.html?taskId=' + e.target.parentElement.id;        
-        } else {
-            console.log('./taskview.html?taskId=' + e.target.id);
-            window.location.href = './taskview.html?taskId=' + e.target.id;
-        }
-    });
-
     $("#btn-newtask").on("click", function () {
         console.log("test");
         window.location.href = './taskview.html?taskId=default';
@@ -42,7 +30,7 @@ $(document).ready(function () {
             element.html(e.target.innerText);
         });
         //.html(e.target.innerText);
-    
+
         $(".sortby-dropdown").data("sortBy", e.target.id);
         buildTaskList(e.target.id);
     });
@@ -110,6 +98,16 @@ function buildTaskList(sortBy) {
             $("#sortByDropdown2").show();
         } else {
             $("#sortByDropdown2").hide();
+        }
+    });
+
+    // Event handler for when a task is clicked on. Should bring the user to the task view page.
+    // Adds a new empty row for the task to allow the user to input another task
+    $(document.body).on("click", ".task-card", function (e) {
+        if ($(e.target).hasClass("task-card-container")) {            
+            window.location.href = './taskview.html?taskId=' + e.target.parentElement.id;
+        } else {            
+            window.location.href = './taskview.html?taskId=' + e.target.id;
         }
     });
 }

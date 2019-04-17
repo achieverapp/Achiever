@@ -57,7 +57,7 @@ Task.addTask = function (tasksDB, taskName, result) {
 */
 Task.getTask = function (tasksDB, taskId, result) {
   var resultObj, id;
-  if (taskId == "default") {
+  if (taskId == "default") { // If the id is 'default' then we cannot create an ObjectId with it and mus tjust pass it as a string.
     id = taskId;
   } else {
     id = new ObjectId(taskId);

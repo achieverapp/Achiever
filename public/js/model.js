@@ -71,7 +71,7 @@ function getTask(callback) {
 
 function updateTask(task, callback) {
     $.ajax({
-        url: URL + "/api/tasks/" + task._id,
+        url: URL + "/api/tasks/",
         data: task,
         method: 'PUT',
         success: callback,

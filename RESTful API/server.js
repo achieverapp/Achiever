@@ -42,22 +42,3 @@ client.connect(err => {
 
     console.log('Achiever API running on port: ' + port);
 });
-
-
-// MongoClient.connect("mongodb+srv://Achiever:HEAIj6ZA0Wvsx7X5@achiever-7tkct.mongodb.net/test?retryWrites=true", {
-//     useNewUrlParser: true
-// }).then(client => {
-//     const db = client.db('Achiever');
-
-//     //get the collections
-//     const users = db.collection('Users');
-//     const tasks = db.collection('Tasks');
-
-//     //for milestone 2 we are focusing on is users and task
-//     app.locals.users = users; //store users
-//     app.locals.tasks = tasks; //store tasks.
-
-//     app.listen(port); //Listens for requests (asynchronous!)
-
-//     console.log('Achiever API running on port: ' + port);
-// }).catch(error => console.error(error));

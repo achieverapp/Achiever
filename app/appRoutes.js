@@ -33,22 +33,6 @@ module.exports = function (app) {
     app.get('/tasklist', Controller.getTasklist)
     app.get('/taskview', Controller.getTaskview)
 
-
-    app.route('/achievements')
-        .get(App.getAchievements);
-
-    app.route('/progress')
-        .get();
-
-    app.route('/schedule')
-        .get();
-
-    app.route('/tasklist')
-        .get();
-
-    app.route('/taskview')
-        .get();
-
     ////////////////////////////
     // FILE ROUTES
     ////////////////////////////

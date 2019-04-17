@@ -12,6 +12,8 @@ var priorityToName = {
 
 //load the navbar when the page loads
 $(document).ready(function () {
+    $("#categoryDropdown").data("changed", false); // flags to show whether data from a dropdown was changed;
+    $("#priorityDropdown").data("changed", false);
 
     //updates the task information from the database.
     getTask(function (result, status) {
@@ -154,17 +156,15 @@ function addSubTasks(tasks) {
     //Trying to create a task object that can get sent to the server for saving
     $("#saveTaskBtn").click(function () {
         console.log($("#datepicker").val(), $("#timepicker").val())
-        var date = new Date($("#datepicker").val()).getTime(); // Need to figure out how to add these two times so they can be sent to the server.
-        var time = new Date($("#timepicker").val()).getTime();
-        var dueDate = new Date();        
-        dueDate.setTime(date + time);
-        console.log(dueDate);
+
+        var date = new Date($("#datepicker").val()).toISOString().substr(0, 10); // Need to figure out how to add these two times so they can be sent to the server.
+        var time = $("#timepicker").val();
+        var dueDate = new Date(date + "T" + time + ":00.000Z");
+
         var task = {
             _id: currTaskId,
             subTasks: [],
-            // priority: $("#priorityDropdown").html(),
-            // category: $("#categoryDropdown").html(),
-            // due: $("#datepicker").val
+            due: dueDate.toISOString()
         }
 
         if ($("#taskCheckBox").hasClass("fa-check-square")) {
@@ -174,6 +174,12 @@ function addSubTasks(tasks) {
             task.checked = false; //save that the task was completed.
             task.completedOn = null; //save the time that the task was not completed
         }
+
+        if ($("#priorityDropdown").data("changed")) //send the new priority only if it is changed
+            task.priority = $("#priorityDropdown").html();
+
+        if ($("#categoryDropdown").data("changed")) //send the new category only if it is changed
+            task.priority = $("#categoryDropdown").html();
 
         $(".subtask-display").each(function () {
             if ($(this).children("textarea").val() != "") {

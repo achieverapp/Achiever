@@ -262,7 +262,7 @@ async function updateTaskPriority(tasksDB, newTask) {
 //update the timeblock debating whether or not timeblocks would need a table of its own
 async function updateTaskTB(tasksDB, newTask) {
   return new Promise(function (resolve) {
-
+    
   })
 }
 

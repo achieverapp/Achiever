@@ -49,5 +49,5 @@ exports.updateTask = function (req, res) {
 }
 
 exports.deleteTask = function (req, res) {
-
+  Task.getTasks(req.app.locals.tasks, req.params.id);
 }

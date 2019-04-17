@@ -1,0 +1,110 @@
+<!-- CptS 489, Spring 2019
+     Project: Task Tracker
+     File: taskview.html
+     This file is responsible for allowing the user to manage the subtasks of the selected task.
+     The user is able to add, remove, and edit subtasks with ease as well as change the title.
+     The user can also check off tasks as they complete them.
+     The user can set the category of the task, as well as the priority. And set a due date.
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Import External stylesheets and libraries using 'CDN' (content delivery network) links: -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+        integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="../css/app.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous">
+    </script>
+    <script src="../js/autosize.min.js"></script>
+    <script src="../js/taskview.js"></script>
+
+    <!-- Including the model for the parameter retrieval function -->
+    <script src="../js/model.js"></script>
+</head>
+
+<body>
+    <nav class="nav bg-primary" id="navbar"></nav>
+
+    <div id="tasks" class="container p-2">
+
+        <div class="card task">
+            <div class="card-header">
+                <span class="task-textbox">
+                    <h2 class="far fa-square" id="taskCheckBox" style="display: inline; padding-top: 14px">&nbsp;</h2>
+                    <textarea class="form-control task-title border-0" id="taskHeader" type="text"
+                        rows="1">Task title goes here</textarea>
+                </span>
+            </div>
+            <div class="card-body">
+                <form class="subtask-list">
+                    <div class="form-inline"></div>
+                </form>
+            </div>
+            <div class="card-footer d-flex flex-sm-wrap">
+                <div class="justify-content-between flex-grow-0">
+                    <span class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle p-2" type="button" id="categoryDropdown"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Category
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item category-dropdown" id="fitnessDropdown">Fitness</a>
+                            <a class="dropdown-item category-dropdown" id="workSchoolDropdown">Work/School</a>
+                            <a class="dropdown-item category-dropdown" id="homeDropdown">Home</a>
+                        </div>
+                    </span>
+                    <span class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle p-2" type="button" id="priorityDropdown"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Priority
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item priority-dropdown" id="priority-low">Low</a>
+                            <a class="dropdown-item priority-dropdown" id="priority-med">Medium</a>
+                            <a class="dropdown-item priority-dropdown" id="priority-high">High</a>
+                        </div>
+                    </span>
+                </div>
+
+                <div class="p-2 flex-lg-grow-1"></div>
+
+                <div class="float-right flex-sm-column">
+                    <span style="width: 14em">
+                        <label for="datepicker" style="display: inline-block">Due Date:&nbsp;</label>
+                        <input type="date" class="form-control" id="datepicker"
+                            style="max-width: 10.15rem; display: inline-block;"></input>
+                    </span>
+                    <span style="width: 15em; display: inline-block">
+                        <label for="timepicker" style="display: inline-block">Time Due:&nbsp;</label>
+                        <input type="time" class="form-control" id="timepicker"
+                            style="max-width: 9.2rem; display: inline-block"></input>
+                    </span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary floating-action-btn" data-toggle="modal" id="saveTaskBtn">
+        Save TimeBlock
+    </button>
+</body>
+
+</html>

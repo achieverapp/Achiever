@@ -5,7 +5,7 @@
 'use strict';
 
 module.exports = function (app) {
-    var Controller = require('appController')
+    var Controller = require('./appController')
 
     ////////////////////////////
     // API ROUTES

@@ -19,8 +19,10 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static(__dirname + '/public'));
 
-var routes = require("./RESTful API/routes/routes"); //Define routes
+var routes = require("./api/routes/routes"); //Define routes
 routes(app); //Register routes with the app
+var appRoutes = require('./app/appRoutes')
+appRoutes(app);
 
 const uri = "mongodb+srv://Achiever:HEAIj6ZA0Wvsx7X5@achiever-7tkct.mongodb.net/test?retryWrites=true";
 const client = new MongoClient(uri, {

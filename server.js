@@ -5,6 +5,7 @@
 */
 
 const express = require('express'); //we are using express.js to process GET and POST requests
+const cors = require('cors') //used to allow cross-origin support
 const app = express(); //instantiate an express app.
 const MongoClient = require('mongodb').MongoClient;
 
@@ -15,25 +16,29 @@ app.use(bodyParser.urlencoded({
     extended: true
 })); //init body parser
 app.use(bodyParser.json());
+app.use(cors());
+app.use(express.static(__dirname + '/public'));
 
-var routes = require("./routes/routes"); //Define routes
-//var routesTask=require("./routes/taskRoutes")
+var routes = require("./api/routes/routes"); //Define routes
 routes(app); //Register routes with the app
-//routesTask(app);
-MongoClient.connect("mongodb://localhost:27017/Achiever", {
+var appRoutes = require('./app/appRoutes')
+appRoutes(app);
+
+const uri = "mongodb+srv://Achiever:HEAIj6ZA0Wvsx7X5@achiever-7tkct.mongodb.net/test?retryWrites=true";
+const client = new MongoClient(uri, {
     useNewUrlParser: true
-}).then(client => {
+});
+client.connect(err => {
     const db = client.db('Achiever');
 
     //get the collections
     const users = db.collection('Users');
     const tasks = db.collection('Tasks');
-
-    //for milestone 2 we are focusing on is users and task
+    
     app.locals.users = users; //store users
     app.locals.tasks = tasks; //store tasks.
 
     app.listen(port); //Listens for requests (asynchronous!)
 
     console.log('Achiever API running on port: ' + port);
-}).catch(error => console.error(error));
+});

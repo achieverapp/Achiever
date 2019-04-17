@@ -23,22 +23,22 @@ $(document).ready(function () {
                 meridian = "PM"
 
             rowHTML +=
-                "<tr style='line-height:10px'>" +
+                "<tr class='empty-task-time' style='line-height:10px' id='time-" + i + "-0" + "'>" +
                 "    <td rowspan='4' scope='row'><span>" + time + ":00 " + meridian + "</span></td>" +
                 "    <td class='td-minute'>00</td>" +
-                "    <td class='empty-task-time' id='time-" + i + "-0" + "' ></td>" +
+                "    <td class='task-bucket bucket-empty'></td>" +
                 "</tr>" +
-                "<tr style='line-height:10px'>" +
+                "<tr class='empty-task-time' style='line-height:10px' id='time-" + i + "-15" + "'>" +
                 "    <td class='td-minute'>15</td>" +
-                "    <td class='empty-task-time' id='time-" + i + "-15" + "' ></td>" +
+                "    <td class='task-bucket bucket-empty'></td>" +
                 "</tr>" +
-                "<tr style='line-height:10px'>" +
+                "<tr class='empty-task-time' style='line-height:10px' id='time-" + i + "-30" + "'>" +
                 "    <td class='td-minute'>30</td>" +
-                "    <td class='empty-task-time' id='time-" + i + "-30" + "' ></td>" +
+                "    <td class='task-bucket bucket-empty'></td>" +
                 "</tr>" +
-                "<tr style='line-height:10px'>" +
+                "<tr class='empty-task-time' style='line-height:10px' id='time-" + i + "-45" + "'>" +
                 "    <td class='td-minute'>45</td>" +
-                "    <td class='empty-task-time' id='time-" + i + "-45" + "' ></td>" +
+                "    <td class='task-bucket bucket-empty'></td>" +
                 "</tr>";
         }
         $("tbody").append(rowHTML);
@@ -47,12 +47,12 @@ $(document).ready(function () {
     //event handler for when the user clicks on an empty time slot to add a task to.
     //It will show them the schedule time block modal and populate it with an hour
     //time block from where they clicked.
-    $(document.body).on("click", ".empty-task-time", function (e) {
-        var temp = e.target.id.split('-'); // empty time block's ids are displayed as times in 24hr format
+    $(document.body).on("click", ".bucket-empty", function (e) {
+        var id = $(this).closest('tr')[0].id;
+        var temp = id.split('-'); // empty time block's ids are displayed as times in 24hr format
         var hour24 = parseInt(temp[1]);
         var hour = hour24 % 12;
-        var endHour = hour +
-            1; //by default we would schedule a time block as 1 hour long for simplicity for the user.
+        var endHour = hour + 1; // default timeblock length is 1 hour.
         var quarter = parseInt(temp[2]);
 
         // Showing whether the time selected is AM or PM
@@ -73,20 +73,25 @@ $(document).ready(function () {
             $("#optionEndPM").parent().removeClass("active");
         }
 
+        hour = (hour % 12 == 0) ? 12 : hour;
+        endHour = (endHour % 12 == 0) ? 12 : endHour;
+
         // Padding times that are less than 10 with a 0 to make them uniform
         if (quarter < 10) {
             quarter = "0" + quarter.toString();
         }
         if (hour < 10) {
             hour = "0" + hour.toString();
+            console.log(hour);
+            console.log(hour % 12);
         }
         if (endHour < 10) {
             endHour = "0" + endHour.toString();
         }
 
         // setting the actual start and end times in the modal.
-        $("#inputStartHour").val(hour % 12 == 0 ? '12' : hour % 12);
-        $("#inputEndHour").val(endHour % 12 == 0 ? '12' : endHour % 12);
+        $("#inputStartHour").val(hour);
+        $("#inputEndHour").val(endHour);
         $("#inputEndMinute").val(quarter);
         $("#inputStartMinute").val(quarter);
         $("#timeblockEditModal").modal("show"); //open the modal
@@ -95,20 +100,25 @@ $(document).ready(function () {
     // Event handler for when the time block editor is opened.
     // Will query the model for a list of tasks and populate the dropdown with what it recieves.
     function loadModalDropdown() {
-        var tasks = getTaskList();
-        var taskSelectHTML = "";
-
-        //First build html elements for each item in the drop
-        tasks.forEach(task => {
-            taskSelectHTML += "<a class='dropdown-item task-dropdown-item' id='task:" + task.id + "'>" + task
-                .title + "</a>";
+        var tasks, taskSelectHTML = "";
+        getTaskList(function (response, status) {
+            if (status) {
+                tasks = response.data;
+                //First build html elements for each item in the drop
+                tasks.forEach(task => {
+                    console.log(task._id); //not creating the correct ID                   
+                    taskSelectHTML += "<a class='dropdown-item task-dropdown-item' id='task:" + task._id + "'>" + task
+                        .title + "</a>";
+                });
+                $("#taskDropdownMenu").html(taskSelectHTML);
+            }
         });
-        $("#taskDropdownMenu").html(taskSelectHTML);
     };
 
     // Event handler for when a task from the dropdown is clicked.
     // Updates the text of the dropdown to be the contents of the item that was clicked.
     $(document.body).on("click", ".task-dropdown-item", function (e) {
+        console.log((e.target.id).split(':')[1]); //not creating the correct ID
         $("#taskDropdown").html(e.target.innerHTML);
         taskId = (e.target.id).split(':')[1];
         $("#taskDropdown").data("taskId", taskId);
@@ -145,7 +155,6 @@ $(document).ready(function () {
         var newVal = currentVal;
         var max = Number($(input).prop("max"))
         var step = Number($(input).prop("step"))
-
         if (currentVal < max || null == max) {
             if (step) {
                 newVal += step;
@@ -153,7 +162,6 @@ $(document).ready(function () {
                 newVal++;
             }
         }
-
         if (newVal < 10) {
             newVal = "0" + newVal;
         }
@@ -163,7 +171,7 @@ $(document).ready(function () {
 
     /**
      * click event for modal save button
-     * 
+     *
      * gets information from modal and generates a new timeblock using that information
      */
     $("#btnSave").click(function () {
@@ -174,22 +182,20 @@ $(document).ready(function () {
             endMinute = Number($("#inputEndMinute").val()),
             endIsPM = $("#optionEndPM").closest("label").hasClass('active');
 
-        if(startHour != 12) {
+        if (startHour != 12) {
             startHour %= 12;
             startHour += (startIsPM ? 12 : 0);
-        }
-        else {
+        } else {
             startHour += (startIsPM ? 0 : 12);
         }
-        if(endHour != 12) {
+        if (endHour != 12) {
             endHour %= 12;
             endHour += (endIsPM ? 12 : 0);
-        }
-        else {
+        } else {
             endHour += (endIsPM ? 0 : 12);
         }
-        
-        if(!isTimeValid(startHour, startMinute, endHour, endMinute)) {
+
+        if (!isTimeValid(startHour, startMinute, endHour, endMinute)) {
             showInvalidTimeToast();
             return;
         }
@@ -198,8 +204,8 @@ $(document).ready(function () {
             showOverlapToast();
             return;
         }
-        taskId = Number($("#taskDropdown").data("taskId"));
-        if(isNaN(taskId)) {
+        taskId = $("#taskDropdown").data("taskId");
+        if (taskId == null) {
             showNoTaskToast();
             return;
         }
@@ -207,21 +213,21 @@ $(document).ready(function () {
     });
 
     function isTimeValid(startHour, startMinute, endHour, endMinute) {
-        if(startHour >= 24) { // cannot start at or after midnight
+        if (startHour >= 24) { // cannot start at or after midnight
             console.log("startHour >= 24")
             return false;
         }
-        if(endHour >= 24 && endMinute > 0) { // cannot end after midnight
+        if (endHour >= 24 && endMinute > 0) { // cannot end after midnight
             console.log("endHour >= 24 && endMinute > 0")
             return false;
         }
-        if(startHour > endHour) { // starts after it ends
+        if (startHour > endHour) { // starts after it ends
             console.log("startHour > endHour")
             return false;
         }
-        if(startHour == endHour) { // starts and ends in same hour
+        if (startHour == endHour) { // starts and ends in same hour
             console.log("startHour == endHour")
-            if(startMinute >= endMinute) { // start time is >= end time
+            if (startMinute >= endMinute) { // start time is >= end time
                 console.log("startMinute >= endMinute")
                 return false;
             }
@@ -265,31 +271,68 @@ $(document).ready(function () {
 
     /**
      * Update the schedule table html to show a task timeblock
-     * 
+     *
      * @param startHour: the hour (24) at which the timeblock begins
      * @param startMinute: the minute (increments of 15) at which the timeblock begins
      * @param nRows: the number of quarter-hour increments the timeblock spans
      * @param taskId: the id of the task to fill the timeblock
      */
     function addTaskToPage(startHour, startMinute, nRows, taskId) {
-        var tdId = "#time-" + startHour + "-" + startMinute;
-        var task = getTask(taskId);
-        $(tdId).prop("rowspan", nRows);
-        $(tdId).removeClass("emty-task-time");
-        $(tdId).addClass("task-time-block");
-        $(tdId).html(task.title);
-        setPriorityColor(tdId, task.priority);
+        var trId = "#time-" + startHour + "-" + startMinute;
+        var task;
+        getTask(taskId, function (response, status) {            
+            task = response.data;
+            console.log($(trId))
+            console.log(response.data);
+            console.log($(trId).children('.task-bucket'))
+            var td = $(trId).children('.task-bucket');
+            td.prop("rowspan", nRows);
+            td.removeClass("bucket-empty");
+            td.addClass("bucket-full");
+            td.css('padding', '0px');
+            td.html("<div class='time-block-card' style='height: 100%; width: 100%; display: table;' draggable='true'><span style='display: table-cell; vertical-align: middle; padding-left: 8px'>" + task.title + "</span></div>")
+            setPriorityColor(td.children('.time-block-card'), task.priority);
 
-        currentHour = startHour;
-        currentMinute = (startMinute + 15) % 60;
-        if (45 == startMinute) {
-            currentHour++;
+            var div = (td.children('.time-block-card'))
+            div.height(div.closest('td').height() + 1);
+            div.data('nRows', nRows);
+            div.data('taskId', taskId);
+            div.data('parentId', trId);
+
+            firstHour = startHour;
+            firstMinute = (startMinute + 15) % 60;
+            if (45 == startMinute) {
+                firstHour++;
+            }
+
+            removeRows(firstHour, firstMinute, nRows - 1);
+        });
+    }
+
+    function removeRows(firstHour, firstMinute, nRows) {
+        var currentHour = firstHour;
+        var currentMinute = firstMinute;
+        var trId;
+        for (var i = 0; i < nRows; i++) {
+            trId = "#time-" + currentHour + "-" + currentMinute;
+            console.log("removing : " + trId);
+            $(trId).children('.task-bucket').remove();
+            if (currentMinute == 45) {
+                currentMinute = 0;
+                currentHour++;
+            } else {
+                currentMinute += 15;
+            }
         }
+    }
 
-        for (var i = 0; i < nRows - 1; i++) {
-            console.log(tdId)
-            tdId = "#time-" + currentHour + "-" + currentMinute;
-            $(tdId).remove();
+    function addRows(firstHour, firstMinute, nRows) {
+        var currentHour = firstHour;
+        var currentMinute = firstMinute;
+        var trId;
+        for (var i = 0; i < nRows; i++) {
+            trId = "#time-" + currentHour + "-" + currentMinute;
+            $(trId).append("<td class='task-bucket bucket-empty'></td>");
             if (currentMinute == 45) {
                 currentMinute = 0;
                 currentHour++;
@@ -301,27 +344,28 @@ $(document).ready(function () {
 
     /**
      * Takes the priority that is stored in the model and displays the correct CSS style for it
-     * 
+     *
      * @param elementId The element ID of the HTML tag we want to style
      * @param priority The priority code retrieved from the model
      */
-    function setPriorityColor(elementId, priority) {
-        switch (priority) {
+    function setPriorityColor(element, priority) {
+        switch (Number(priority)) {
             case 0:
-                $(elementId).addClass("priority-low");
+                //$(elementId).children('.time-block-card')[0].addClass("priority-low");
+                element.addClass("priority-low");
                 break;
             case 1:
-                $(elementId).addClass("priority-med");
+                element.addClass("priority-med");
                 break;
             case 2:
-                $(elementId).addClass("priority-high");
+                element.addClass("priority-high");
                 break;
         }
     }
 
     /**
      * Checks time range overlaps an existing task timeblock
-     * 
+     *
      * @param hour24 the 24 hour start of the range
      * @param minute the minute start of the range in 15 minute increments
      * @param nRows the number of rows to span (number of 15 minute blocks)
@@ -330,9 +374,9 @@ $(document).ready(function () {
     function hasOverlaps(hour24, minute, nRows) {
         var currentHour = hour24,
             currentMinute = minute,
-            tdId = "#time-" + currentHour + "-" + currentMinute;
+            trId = "#time-" + currentHour + "-" + currentMinute;
 
-        if ($(tdId).hasClass("task-time-block")) {
+        if ($(trId).children('.bucket-full').length > 0) {
             return true;
         }
         for (var i = 0; i < nRows - 1; i++) {
@@ -342,11 +386,60 @@ $(document).ready(function () {
             } else {
                 currentMinute += 15;
             }
-            tdId = "#time-" + currentHour + "-" + currentMinute;
-            if ($(tdId).hasClass("task-time-block")) {
+            trId = "#time-" + currentHour + "-" + currentMinute;
+            if ($(trId).children('.bucket-full').length > 0) {
                 return true;
             }
         }
         return false;
     }
+
+    function removeTaskFromPage(rowId) {
+        var div = $(rowId).children().find('.time-block-card');
+        var td = div.parent('td');
+        var nRows = div.data('nRows');
+        var taskId = div.data('taskId');
+        var temp = rowId.split('-');
+        var hour = Number(temp[1]);
+        var minute = Number(temp[2]);
+        td.addClass("bucket-empty");
+        td.removeClass("bucket-full");
+        td.prop("rowspan", 1)
+        td.html("");
+        firstHour = hour;
+        firstMinute = (minute + 15) % 60;
+        if (45 == minute) {
+            firstHour++;
+        }
+        addRows(firstHour, firstMinute, nRows-1);
+    }
+
+    $(document).on('drop', 'tr', function(event) {
+        event.preventDefault();
+        var id = event.originalEvent.dataTransfer.getData('text');
+        var id = event.originalEvent.dataTransfer.getData("text");
+        var targetId = $(event.target).closest('tr')[0].id;
+        var temp = targetId.split('-');
+        var hour = Number(temp[1]);
+        var minute = Number(temp[2]);
+        var nRows = $(id).children().find('.time-block-card').data('nRows');
+        var taskId = $(id).children().find('.time-block-card').data('taskId');
+
+        if(!hasOverlaps(hour, minute, nRows)) {
+            removeTaskFromPage(id);
+            addTaskToPage(hour, minute, nRows, taskId);
+        }
+        
+    })
+
+    $(document).on('dragover', 'tr', function(event) {
+        event.preventDefault();
+    })
+
+    $(document).on('drag', '.time-block-card', function(event) {
+    })
+
+    $(document).on('dragstart', '.time-block-card', function(event) {
+        event.originalEvent.dataTransfer.setData("text", $(this).data('parentId'));
+    })
 });

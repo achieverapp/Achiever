@@ -36,7 +36,8 @@
     <script src="../js/autosize.min.js"></script>
     <script src="../js/taskview.js"></script>
 
-
+    <!-- Including the model for the parameter retrieval function -->
+    <script src="../js/model.js"></script>
 </head>
 
 <body>
@@ -57,10 +58,10 @@
                     <div class="form-inline"></div>
                 </form>
             </div>
-            <div class="card-footer d-flex justify-content-between flex-sm-wrap">
-                <div>
+            <div class="card-footer d-flex flex-sm-wrap">
+                <div class="justify-content-between flex-grow-0">
                     <span class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle p-2" type="button" id="categryDropdown"
+                        <button class="btn btn-secondary dropdown-toggle p-2" type="button" id="categoryDropdown"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Category
                         </button>
@@ -83,18 +84,18 @@
                     </span>
                 </div>
 
-                <div class="p-2 flex-grow-1 hidden-sm hidden-md"></div>
+                <div class="p-2 flex-lg-grow-1"></div>
 
-                <div class="flex-column">
-                    <span>
-                        <label for="datepicker" style="display: inline-block;">Due Date:&nbsp;</label>
+                <div class="float-right flex-sm-column">
+                    <span style="width: 14em">
+                        <label for="datepicker" style="display: inline-block">Due Date:&nbsp;</label>
                         <input type="date" class="form-control" id="datepicker"
                             style="max-width: 10.15rem; display: inline-block;"></input>
                     </span>
-                    <span>
+                    <span style="width: 15em; display: inline-block">
                         <label for="timepicker" style="display: inline-block">Time Due:&nbsp;</label>
                         <input type="time" class="form-control" id="timepicker"
-                            style="max-width: 7.2rem; display: inline-block"></input>
+                            style="max-width: 9.2rem; display: inline-block"></input>
                     </span>
                 </div>
 

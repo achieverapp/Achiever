@@ -1,0 +1,107 @@
+<!-- CptS 489, Spring 2019
+     Project: Task Tracker
+     File: tasklist.html
+     This file is responsible for displaying the achievements that are possible for the user to attain and the requirements to reach those goals
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Import External stylesheets and libraries using 'CDN' (content delivery network) links: -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+    integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+  <link rel="stylesheet" href="../css/app.css">
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+    integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+    integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous">
+  </script>
+
+</head>
+
+<style>
+  /* Include CSS here */
+</style>
+
+<body>
+    <nav class="nav bg-primary" id="navbar"></nav>
+  <!-- basic list of acievements -->
+  <div id="achievements" class="container p-2">    
+    <h1>Achievements</h1>
+    <!-- start of a list of achievements-->
+    <ul style="padding:0px">
+      <li class="card">
+        <div class="card-header" id="achievemnts-header">
+          <header class="container">
+            <span>
+              <h2 class="fas fa-trophy" style="display: inline; border-color: white">&nbsp;</h2>
+              <h2 class="card-title" style="display: inline">&nbsp;achievements name</h2>
+
+            </span>
+          </header>
+        </div>
+        <!--achievements card with a trophy icon and a genaric description -->
+        <div class="container">
+          <p>
+            genearic description for achievements
+            <br>
+            this achievement is achieved by...........
+          </p>
+          <span>
+            <h2 style="font-size: 20px;display: inherit">&nbsp;Recieved:</h2>
+            <h2 id="recieved-counter" style="font-size: 20px;display: inherit">&nbsp;0</h2>
+          </span>
+        </div>
+
+      </li>
+      <!--2nd achievements card with a trophy icon and a genaric description -->
+      <li class="card">
+        <div class="card-header" id="achievemnts-header">
+          <header class="container">
+            <span>
+              <h2 class="fas fa-trophy" style="display: inline; border-color: white">&nbsp;</h2>
+              <h2 class="card-title" style="display: inline">&nbsp;achievements name2</h2>
+            </span>
+          </header>
+        </div>
+        <div class="container">
+          <p>
+            generic description for acheivement2
+            <br>
+            this achievement is achieved by...........
+          </p>
+          <span>
+            <h2 style="font-size: 20px;display: inherit">&nbsp;Recieved:</h2>
+            <h2 id="recieved-counter" style="font-size: 20px;display: inherit">&nbsp;0</h2>
+          </span>
+        </div>
+
+      </li>
+  </div>
+  </ul>
+</body>
+<script>
+  $(document).ready(function () {
+    $("#navbar").load("navbar.html", function() {
+      $("#nav-achievements").addClass("nav-active");
+      resizeNav();
+    });
+  });
+</script>
+
+</html>

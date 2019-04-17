@@ -30,11 +30,9 @@ exports.getTask = function (req, res) {
 
 exports.getTasks = function (req, res) {
   Task.getTasks(req.app.locals.tasks, req.params.id, function (err, result) {
-    if (err) {
-      console.log(err)
+    if (err) {    
       res.send(err);
-    } else {
-      console.log(result)
+    } else {      
       res.json(result);
     }
   });

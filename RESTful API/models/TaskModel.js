@@ -16,6 +16,10 @@ var Task = function (task) {
   this.subTasks = task.subTasks == null ? [] : task.subTasks;
   this.timeBlocks = task.timeBlocks == null ? [] : task.timeBlocks;
   this.due = task.due == null ? new Date() : task.due;
+
+
+  this.startDate=timeBlocks.startDate==null? new Date() : timeBlocks.startDate;
+  this.startDate=timeBlocks.endDate==null? new Date() : timeBlocks.endDate;
 }
 
 

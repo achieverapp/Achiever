@@ -6,6 +6,8 @@
 
 var ObjectId = require('mongodb').ObjectId;
 
+var timeblock=require('./TimeBlock.js').default;
+
 var Task = function (task) {
   this.owner = task.owner == null ? null : task.owner;
   this.name = task.name == null ? null : task.name;;
@@ -13,7 +15,9 @@ var Task = function (task) {
   this.priority = task.priority == null ? 0 : task.priority;
   this.subTasks = task.subTasks == null ? [] : task.subTasks;
   this.timeBlocks = task.timeBlocks == null ? [] : task.timeBlocks;
+  this.due = task.due == null ? new Date() : task.due;
 }
+
 
 /*
   ResultObj constructor function. Since we need to create a different return object for many different possible scenarios, all this functionality
@@ -207,7 +211,51 @@ async function updateTaskPriority(tasksDB, newTask, result) {
 async function updateTaskTB(tasksDB, newTask, result) {
 return new Promise(function(resolve)
 {
-  
+  tasksDB.find(
+    {
+      _id: new ObjectId(newTask._id),
+      timeBlocks:
+      {
+        $elemMatch:
+        {
+          timeBlocks:newTask.timeBlocks
+        }
+      }
+    }).toArray(function(err,res)
+    {
+        if(err)
+        {
+        resultObj = ResultObj("Error when locating specified timeblock", err);
+        console.log(resultObj.statusMsg + ": " + err);
+        resolve(statusObj);
+        }
+        else if(res.length==0)
+        {
+          tasksDB.updateOne(
+            {
+              _id: new ObjectId(newTask._id)
+            },{
+              $set:
+              {
+                timeblocks:newTask.timeBlocks
+              },function(err2)
+              {
+                if(err2)
+                {
+                  resultObj = ResultObj("Error when locating specified timeblock", err);
+                  console.log(resultObj.statusMsg + ": " + err);
+                  resolve(statusObj);
+                }
+                else{
+                  resultObj = ResultObj("Task updated", null, true);
+                  resolve(resultObj);
+                }
+              }
+            }
+          )
+        }
+    }
+  )
 })
 }
 //update the subtask

@@ -7,11 +7,11 @@
 var path = require('path')
 
 exports.getAchievements = function (req, res) {
-  res.sendFile(path.resolve('private/html/achievements.html'));
+  res.sendFile(path.resolve('app/private/html/achievements.html'));
 };
 
 exports.getLogin = function (req, res) {
-  res.sendFile(path.resolve('public/html/login.html'));
+  res.sendFile(path.resolve('app/public/html/login.html'));
 };
 
 exports.getProgress = function (req, res) {

@@ -1,7 +1,7 @@
 /*
     CptS 489, Spring 2019
     Project: Task Tracker
-    File: server.js    
+    File: server.js
 */
 
 const express = require('express'); //we are using express.js to process GET and POST requests
@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({
 })); //init body parser
 app.use(bodyParser.json());
 app.use(cors());
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/app/public'));
 
 var routes = require("./api/routes/routes"); //Define routes
 routes(app); //Register routes with the app
@@ -34,7 +34,7 @@ client.connect(err => {
     //get the collections
     const users = db.collection('Users');
     const tasks = db.collection('Tasks');
-    
+
     app.locals.users = users; //store users
     app.locals.tasks = tasks; //store tasks.
 

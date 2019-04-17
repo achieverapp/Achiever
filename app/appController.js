@@ -15,17 +15,17 @@ exports.getLogin = function (req, res) {
 };
 
 exports.getProgress = function (req, res) {
-  res.sendFile(path.resolve('private/html/progress.html'));
+  res.sendFile(path.resolve('app/private/html/progress.html'));
 };
 
 exports.getSchedule = function (req, res) {
-  res.sendFile(path.resolve('private/html/schedule.html'));
+  res.sendFile(path.resolve('app/private/html/schedule.html'));
 };
 
 exports.getTasklist = function (req, res) {
-  res.sendFile(path.resolve('private/html/tasklist.html'));
+  res.sendFile(path.resolve('app/private/html/tasklist.html'));
 };
 
 exports.getTaskview = function (req, res) {
-  res.sendFile(path.resolve('private/html/taskview.html'));
+  res.sendFile(path.resolve('app/private/html/taskview.html'));
 };

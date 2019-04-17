@@ -156,19 +156,11 @@ function addSubTasks(tasks) {
     //Trying to create a task object that can get sent to the server for saving
     $("#saveTaskBtn").click(function () {
         console.log($("#datepicker").val(), $("#timepicker").val())
-<<<<<<< HEAD
-        var date = new Date($("#datepicker").val()).getTime(); // Need to figure out how to add these two times so they can be sent to the server.
-        var time = new Date($("#timepicker").val()).getTime();
-        var dueDate = new Date();
-        dueDate.setTime(date + time);
-        console.log(dueDate);
-=======
 
         var date = new Date($("#datepicker").val()).toISOString().substr(0, 10); // Need to figure out how to add these two times so they can be sent to the server.
         var time = $("#timepicker").val();
         var dueDate = new Date(date + "T" + time + ":00.000Z");
 
->>>>>>> 2b30ab094389b9b44487a55a1daaad3fd33be6eb
         var task = {
             _id: currTaskId,
             subTasks: [],

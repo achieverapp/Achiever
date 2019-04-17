@@ -86,13 +86,9 @@
         }
     }
 
-
     function setQueryParams() {
         var url = window.location.href;
         var userId = url.split('userId=')[1].split('&')[0]
-        console.log(userId)
-
-
         $('.nav-link').attr('href', function (i, h) {
             return h + (h.indexOf('?') != -1 ? "&userId=" : "?userId=" + userId);
         });

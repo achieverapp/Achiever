@@ -17,8 +17,9 @@ app.use(bodyParser.urlencoded({
 })); //init body parser
 app.use(bodyParser.json());
 app.use(cors());
+app.use(express.static(__dirname + '/public'));
 
-var routes = require("./routes/routes"); //Define routes
+var routes = require("./RESTful API/routes/routes"); //Define routes
 //var routesTask=require("./routes/taskRoutes")
 routes(app); //Register routes with the app
 //routesTask(app);

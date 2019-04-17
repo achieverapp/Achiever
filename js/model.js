@@ -1,9 +1,7 @@
-// import { rejects } from "assert";
-
 /*
     model.js
 
-    This file will now be used as a standardized interface to the true model backend    
+    This file will now be used as a standardized interface to the true model backend.
 */
 const currUserId = getUrlParameter('userId');
 const currTaskId = getUrlParameter('taskId');
@@ -14,29 +12,36 @@ function errorLog(data, status) {
     console.log(data);
 }
 
+// call this function with a callback to recieve all tasks for the user in the query parameter from the API
+// Will return details in the response object of the callback function
+// status object will return the status of the ajax call
 function getTaskList(callback) {
     $.ajax({
-        url: URL + "/tasks/id/" + currUserId,
+        url: URL + "/api/tasks/id/" + currUserId,
         method: 'GET',
         success: callback,
         error: errorLog
     });
 }
 
-// returns a Promise that contains the result of the API call
+// call this function with a callback to recieve a task from the API
+// Will return details in the response object of the callback function
+// status object will return the status of the ajax call
 function getTask(id, callback) {
     $.ajax({
-        url: URL + "/tasks/" + id,
+        url: URL + "/api/tasks/" + id,
         method: 'GET',
         success: callback,
         error: errorLog
     });
 }
 
-// returns a Promise that contains the result of the API call
+// call this function with a callback to recieve the task in the queryparameter from the API
+// Will return details in the response object of the callback function
+// status object will return the status of the ajax call
 function getTask(callback) {
     $.ajax({
-        url: URL + "/tasks/" + currTaskId,
+        url: URL + "/api/tasks/" + currTaskId,
         method: 'GET',
         success: callback,
         error: errorLog

@@ -271,11 +271,7 @@ async function updatesubTask(tasksDB, newTask, result) {
         tasksDB.updateOne({
           _id: new ObjectId(newTask._id)
         }, {
-          $push: {
-            subTasks: {
-              $each: newTask.subTasks
-            }
-          },
+          subTasks: newTask.subTasks
         }, function (err2, res2) {
           if (err2) { //Unkown error, return to client and display it in the log.
             resultObj = ResultObj("Error when attempting to save task ID: " + newTask.subTasks + " for task " + newTask.title, err2);

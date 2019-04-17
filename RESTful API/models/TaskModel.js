@@ -16,6 +16,8 @@ class Task {
     this.subTasks = task.subTasks == null ? [] : task.subTasks;
     this.timeBlocks = task.timeBlocks == null ? [] : task.timeBlocks;
     this.due = task.due == null ? new Date() : task.due;
+    this.completedOn = task.completedOn == null ? null : task.completedOn; 
+    this.checked = task.checked == null ? false : task.checked; 
   }
   /*
     add a task to the task database

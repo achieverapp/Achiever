@@ -84,6 +84,15 @@ $(document).ready(function () {
     $(document.body).on("click", ".subtask-checkbox", function (e) {
         this.classList.toggle("fa-square");
         this.classList.toggle("fa-check-square");
+        if (!$(".subtask-checkbox.fa-square")[0]) { //if there are not any boxes that are unchecked
+            console.log("all checkBoxes checked");
+            $("#taskCheckBox").addClass("fa-check-square"); //add the check to the title
+            $("#taskCheckBox").removeClass("fa-square");
+        } else { //There are some unchecked boxes
+            console.log("some checkBoxes unchecked");
+            $("#taskCheckBox").removeClass("fa-check-square"); //remove the check from the title
+            $("#taskCheckBox").addClass("fa-square");
+        }
     });
 
     // WHen you click on the delete button of a subtask, we need to remove it from the list.
@@ -113,8 +122,8 @@ function addSubTasks(tasks) {
     var curId = 1; //since this is at the start, we want our ids to start at 1.    
 
     // inserts each task in the array/object that is passed.
-    tasks.forEach(task => {        
-        t = new SubTask(task);        
+    tasks.forEach(task => {
+        t = new SubTask(task);
         $(".task").children(".card-body").children(".subtask-list")
             .append( // add a new empty task to the end of the current list
                 "<div class=\"form-inline subtask-display\">" +
@@ -158,7 +167,7 @@ function addEndTask(curId) {
     $(".task").children(".card-body").children(".subtask-list")
         .append( // add a new empty task to the end of the current list            
             "<div class=\"form-inline subtask-display\">" +
-            "   <span class=\"far fa-square subtask-checkbox\" id=\"checkbox" + curId + "\"></span>" +
+            "   <span class=\"far fa-square\" id=\"checkbox" + curId + "\"></span>" +
             "   <textarea class=\"form-control task-textbox border-0 empty-task\" id=\"textbox" + curId + "\"" +
             "       type=\"text\" rows=\"1\"></textarea>" +
             "</div>"

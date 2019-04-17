@@ -39,7 +39,13 @@ exports.getTasks = function (req, res) {
 }
 
 exports.updateTask = function (req, res) {
-
+  Task.updateTask(req.app.locals.tasks, req.body, function (err, result) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.json(result);
+    }
+  });
 }
 
 exports.deleteTask = function (req, res) {

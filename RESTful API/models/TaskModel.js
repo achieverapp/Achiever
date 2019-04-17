@@ -98,7 +98,7 @@ class Task {
         console.log(resultObj.statusMsg);
         result(resultObj);
       } else {
-        if (newTask.name != null) {
+        if (newTask.title != null) {
           updateTaskName(tasksDB, newTask, result).then(function (res) {
             result(res);
           });
@@ -113,12 +113,12 @@ class Task {
             result(res);
           });
         }
-        if (newTask.timeBlocks.length > 0) {
+        if (newTask.timeBlocks != null && newTask.timeBlocks.length > 0) {
           updateTaskTB(tasksDB, newTask, result).then(function (res) {
             result(res);
           });
         }
-        if (newTask.subTasks.length > 0) {
+        if (newTask.subTasks != null && newTask.subTasks.length > 0) {
           updatesubTask(tasksDB, newTask, result).then(function (res) {
             result(res);
           });
@@ -146,7 +146,7 @@ class Task {
             console.log(resultObj.statusMsg + ": " + err);
             resolve(resultObj);
           } else {
-            resultObj = ResultObj("user with" + taskId.name + "deleted");
+            resultObj = ResultObj("user with" + taskId.title + "deleted");
             resultObj(resultObj);
           }
         });
@@ -179,7 +179,7 @@ async function updateTaskName(tasksDB, newTask, result) {
       _id: new ObjectId(newTask._id)
     }, {
       $set: {
-        'name': newTask.name
+        'title': newTask.title
       },
       function (err) {
         if (err) {
@@ -187,7 +187,7 @@ async function updateTaskName(tasksDB, newTask, result) {
           console.log(resultObj.statusMsg + ": " + err);
           resolve(resultObj);
         } else {
-          resultObj = ResultObj("Name changed to " + newTask.name, null, true);
+          resultObj = ResultObj("Name changed to " + newTask.title, null, true);
           resolve(resultObj);
         }
       }
@@ -247,6 +247,9 @@ async function updateTaskTB(tasksDB, newTask, result) {
 
   })
 }
+
+
+//STATUS: Currently always just adds any new subtasks on to the end. I think we just want it to replace all the subtasks with whatever gets send by the webpage
 //update the subtask
 async function updatesubTask(tasksDB, newTask, result) {
   return new Promise(function (resolve) {
@@ -273,13 +276,13 @@ async function updatesubTask(tasksDB, newTask, result) {
               $each: newTask.subTasks
             }
           },
-        }, function (err2) {
+        }, function (err2, res2) {
           if (err2) { //Unkown error, return to client and display it in the log.
-            resultObj = ResultObj("Error when attempting to save task ID: " + newTask.subTasks + " for task " + newTask.name, err2);
+            resultObj = ResultObj("Error when attempting to save task ID: " + newTask.subTasks + " for task " + newTask.title, err2);
             console.log(resultObj.statusMsg + ": " + err2);
             resolve(resultObj);
           } else { //Task was added successfully!
-            resultObj = ResultObj("Task saved as template for user " + newTask.name, null, true);
+            resultObj = ResultObj("Task updated", null, true);
             resolve(resultObj);
           }
         })

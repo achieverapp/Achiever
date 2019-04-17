@@ -16,8 +16,8 @@ class Task {
     this.subTasks = task.subTasks == null ? [] : task.subTasks;
     this.timeBlocks = task.timeBlocks == null ? [] : task.timeBlocks;
     this.due = task.due == null ? new Date() : task.due;
-    this.completedOn = task.completedOn == null ? null : task.completedOn; 
-    this.checked = task.checked == null ? false : task.checked; 
+    this.completedOn = task.completedOn == null ? null : task.completedOn;
+    this.checked = task.checked == null ? false : task.checked;
   }
   /*
     add a task to the task database
@@ -101,36 +101,29 @@ class Task {
         result(resultObj);
       } else {
         if (newTask.title != null) {
-          updateTaskName(tasksDB, newTask, result).then(function (res) {
-            result(res);
-          });
+          updateTaskName(tasksDB, newTask, result).then(result);
         }
         if (newTask.category != null) {
-          updateTaskCategory(tasksDB, newTask, result).then(function (res) {
-            result(res);
-          });
+          updateTaskCategory(tasksDB, newTask, result).then(result);
         }
         if (newTask.priority != null) {
-          updateTaskPriority(tasksDB, newTask, result).then(function (res) {
-            result(res);
-          });
+          updateTaskPriority(tasksDB, newTask, result).then(result);
         }
         if (newTask.timeBlocks != null && newTask.timeBlocks.length > 0) {
-          updateTaskTB(tasksDB, newTask, result).then(function (res) {
-            result(res);
-          });
+          updateTaskTB(tasksDB, newTask, result).then(result);
         }
         if (newTask.subTasks != null && newTask.subTasks.length > 0) {
-          updatesubTask(tasksDB, newTask, result).then(function (res) {
-            result(res);
-          });
+          updatesubTask(tasksDB, newTask, result).then(result);
+        }
+        if (newTask.checked != null && newTask.completedOn != null) {
+          updateTaskChecked(tasksDB, newTask, result).then(result);
         }
       }
     });
   }
   // TODO: Implement U and D in milestone 3 
   /*delete a task from the task db*/
-  static deleteTask(tasksDB, taskId, result) {
+  static deleteTask(tasksDB, taskId) {
     var resultObj;
     tasksDB.find({
       _id: new ObjectId(taskId)
@@ -174,8 +167,32 @@ function ResultObj(statusMsg = "", statusObj = null, success = false, id = null,
   return returnObj;
 }
 
+//update the priorty
+async function updateTaskChecked(tasksDB, newTask) {
+  return new Promise(function (resolve) {
+    tasksDB.updateOne({
+      _id: new ObjectId(newTask._id)
+    }, {
+      $set: {
+        'checked': newTask.checked,
+        'completedOn': newTask.completedOn
+      },
+      function (err) {
+        if (err) {
+          resultObj = ResultObj("Error when attempting to check off task!", err);
+          console.log(resultObj.statusMsg + ": " + err);
+          resolve(resultObj);
+        } else {
+          resultObj = ResultObj("Task checked changed to " + newTask.checked, null, true);
+          resolve(resultObj);
+        }
+      }
+    })
+  })
+}
+
 //update the task name
-async function updateTaskName(tasksDB, newTask, result) {
+async function updateTaskName(tasksDB, newTask) {
   return new Promise(function (resolve) {
     tasksDB.updateOne({
       _id: new ObjectId(newTask._id)
@@ -198,7 +215,7 @@ async function updateTaskName(tasksDB, newTask, result) {
   })
 }
 //update category
-async function updateTaskCategory(tasksDB, newTask, result) {
+async function updateTaskCategory(tasksDB, newTask) {
   return new Promise(function (resolve) {
     tasksDB.updateOne({
       _id: new ObjectId(newTask._id)
@@ -221,7 +238,7 @@ async function updateTaskCategory(tasksDB, newTask, result) {
   })
 }
 //update the priorty
-async function updateTaskPriority(tasksDB, newTask, result) {
+async function updateTaskPriority(tasksDB, newTask) {
   return new Promise(function (resolve) {
     tasksDB.updateOne({
       _id: new ObjectId(newTask._id)
@@ -240,11 +257,10 @@ async function updateTaskPriority(tasksDB, newTask, result) {
         }
       }
     })
-
   })
 }
 //update the timeblock debating whether or not timeblocks would need a table of its own
-async function updateTaskTB(tasksDB, newTask, result) {
+async function updateTaskTB(tasksDB, newTask) {
   return new Promise(function (resolve) {
 
   })
@@ -253,7 +269,7 @@ async function updateTaskTB(tasksDB, newTask, result) {
 
 //STATUS: Currently always just adds any new subtasks on to the end. I think we just want it to replace all the subtasks with whatever gets send by the webpage
 //update the subtask
-async function updatesubTask(tasksDB, newTask, result) {
+async function updatesubTask(tasksDB, newTask) {
   return new Promise(function (resolve) {
     tasksDB.find({
       _id: new ObjectId(newTask._id),
@@ -287,7 +303,6 @@ async function updatesubTask(tasksDB, newTask, result) {
       }
     })
   })
-
 }
 
 module.exports = Task;

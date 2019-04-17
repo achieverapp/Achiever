@@ -84,6 +84,7 @@ class User {
       }
     });
   }
+
   /*delete a user from the database
   searching for the userId(for now we will find by userId) and remove them from the database
   */

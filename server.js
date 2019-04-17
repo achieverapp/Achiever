@@ -20,9 +20,7 @@ app.use(cors());
 app.use(express.static(__dirname + '/public'));
 
 var routes = require("./RESTful API/routes/routes"); //Define routes
-//var routesTask=require("./routes/taskRoutes")
 routes(app); //Register routes with the app
-//routesTask(app);
 
 const uri = "mongodb+srv://Achiever:HEAIj6ZA0Wvsx7X5@achiever-7tkct.mongodb.net/test?retryWrites=true";
 const client = new MongoClient(uri, {
@@ -34,8 +32,7 @@ client.connect(err => {
     //get the collections
     const users = db.collection('Users');
     const tasks = db.collection('Tasks');
-
-    //for milestone 2 we are focusing on is users and task
+    
     app.locals.users = users; //store users
     app.locals.tasks = tasks; //store tasks.
 

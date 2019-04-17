@@ -1,6 +1,6 @@
 //load the navbar when the page loads
 $(document).ready(function () {
-    $("#navbar").load("navbar.html", function () {
+    $("#navbar").load("/html/navbar.html", function () {
         $("#nav-schedule").addClass("nav-active");
         resizeNav();
     });
@@ -106,7 +106,7 @@ $(document).ready(function () {
                 tasks = response.data;
                 //First build html elements for each item in the drop
                 tasks.forEach(task => {
-                    console.log(task._id); //not creating the correct ID                   
+                    console.log(task._id); //not creating the correct ID
                     taskSelectHTML += "<a class='dropdown-item task-dropdown-item' id='task:" + task._id + "'>" + task
                         .title + "</a>";
                 });
@@ -280,7 +280,7 @@ $(document).ready(function () {
     function addTaskToPage(startHour, startMinute, nRows, taskId) {
         var trId = "#time-" + startHour + "-" + startMinute;
         var task;
-        getTask(taskId, function (response, status) {            
+        getTask(taskId, function (response, status) {
             task = response.data;
             console.log($(trId))
             console.log(response.data);
@@ -429,7 +429,7 @@ $(document).ready(function () {
             removeTaskFromPage(id);
             addTaskToPage(hour, minute, nRows, taskId);
         }
-        
+
     })
 
     $(document).on('dragover', 'tr', function(event) {

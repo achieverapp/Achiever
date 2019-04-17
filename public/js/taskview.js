@@ -25,7 +25,7 @@ $(document).ready(function () {
     $(".dropdown").data("prevPriority", "btn-secondary"); //default style for priority dropdown
 
 
-    $("#navbar").load("navbar.html", function () {
+    $("#navbar").load("/html/navbar.html", function () {
         resizeNav();
     });
 
@@ -118,10 +118,10 @@ function setTaskInfo(task) {
     $("#datepicker").val(day);
     $("#timepicker").val(time);
 
-    if (task.checked == "true") { //if the task is checked     
+    if (task.checked == "true") { //if the task is checked
         $("#taskCheckBox").addClass("fa-check-square"); //add the check to the title
         $("#taskCheckBox").removeClass("fa-square");
-    } else { //There are some unchecked boxes        
+    } else { //There are some unchecked boxes
         $("#taskCheckBox").removeClass("fa-check-square"); //remove the check from the title
         $("#taskCheckBox").addClass("fa-square");
     }
@@ -131,7 +131,7 @@ function setTaskInfo(task) {
 
 // taks a tasks array that contains an array of subtask strings to add.
 function addSubTasks(tasks) {
-    var curId = 1; //since this is at the start, we want our ids to start at 1.    
+    var curId = 1; //since this is at the start, we want our ids to start at 1.
 
     // inserts each task in the array/object that is passed.
     tasks.forEach(task => {
@@ -156,7 +156,7 @@ function addSubTasks(tasks) {
         console.log($("#datepicker").val(), $("#timepicker").val())
         var date = new Date($("#datepicker").val()).getTime(); // Need to figure out how to add these two times so they can be sent to the server.
         var time = new Date($("#timepicker").val()).getTime();
-        var dueDate = new Date();        
+        var dueDate = new Date();
         dueDate.setTime(date + time);
         console.log(dueDate);
         var task = {
@@ -195,7 +195,7 @@ function addSubTasks(tasks) {
 function addEndTask(curId) {
     //add an empty task to the end of the list so that the user can add more.
     $(".task").children(".card-body").children(".subtask-list")
-        .append( // add a new empty task to the end of the current list            
+        .append( // add a new empty task to the end of the current list
             "<div class=\"form-inline subtask-display\">" +
             "   <span class=\"far fa-square\" id=\"checkbox" + curId + "\"></span>" +
             "   <textarea class=\"form-control task-textbox border-0 empty-task\" id=\"textbox" + curId + "\"" +

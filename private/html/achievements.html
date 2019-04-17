@@ -41,7 +41,7 @@
 <body>
     <nav class="nav bg-primary" id="navbar"></nav>
   <!-- basic list of acievements -->
-  <div id="achievements" class="container p-2">    
+  <div id="achievements" class="container p-2">
     <h1>Achievements</h1>
     <!-- start of a list of achievements-->
     <ul style="padding:0px">
@@ -97,7 +97,7 @@
 </body>
 <script>
   $(document).ready(function () {
-    $("#navbar").load("navbar.html", function() {
+    $("#navbar").load("/html/navbar.html", function() {
       $("#nav-achievements").addClass("nav-active");
       resizeNav();
     });

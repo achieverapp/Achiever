@@ -4,22 +4,28 @@
 
 'use strict'
 
+var path = require('path')
+
 exports.getAchievements = function (req, res) {
-  res.sendFile(__dirname, 'private/html/achievements.html');
+  res.sendFile(path.resolve('private/html/achievements.html'));
+};
+
+exports.getLogin = function (req, res) {
+  res.sendFile(path.resolve('public/html/login.html'));
 };
 
 exports.getProgress = function (req, res) {
-  res.sendFile(__dirname, 'private/html/progress.html');
+  res.sendFile(path.resolve('private/html/progress.html'));
 };
 
 exports.getSchedule = function (req, res) {
-  res.sendFile(__dirname, 'private/html/schedule.html');
+  res.sendFile(path.resolve('private/html/schedule.html'));
 };
 
 exports.getTasklist = function (req, res) {
-  res.sendFile(__dirname, 'private/html/tasklist.html');
+  res.sendFile(path.resolve('private/html/tasklist.html'));
 };
 
 exports.getTaskview = function (req, res) {
-  res.sendFile(__dirname, 'private/html/taskview.html');
+  res.sendFile(path.resolve('private/html/taskview.html'));
 };

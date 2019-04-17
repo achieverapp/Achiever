@@ -6,7 +6,7 @@ var priorityToClassMap = {
 
 $(document).ready(function () {
     // load the navbar
-    $("#navbar").load("navbar.html", function () {
+    $("#navbar").load("/html/navbar.html", function () {
         $("#nav-tasklist").addClass("nav-active");
         resizeNav();
     });
@@ -104,9 +104,9 @@ function buildTaskList(sortBy) {
     // Event handler for when a task is clicked on. Should bring the user to the task view page.
     // Adds a new empty row for the task to allow the user to input another task
     $(document.body).on("click", ".task-card", function (e) {
-        if ($(e.target).hasClass("task-card-container")) {            
+        if ($(e.target).hasClass("task-card-container")) {
             window.location.href = './taskview.html?taskId=' + e.target.parentElement.id;
-        } else {            
+        } else {
             window.location.href = './taskview.html?taskId=' + e.target.id;
         }
     });

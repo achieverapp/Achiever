@@ -28,6 +28,7 @@ module.exports = function (app) {
     ////////////////////////////
 
     app.get('/achievements', Controller.getAchievements)
+    app.get('/login', Controller.getLogin)
     app.get('/progress', Controller.getProgress)
     app.get('/schedule', Controller.getSchedule)
     app.get('/tasklist', Controller.getTasklist)

@@ -4,6 +4,26 @@
     This file will now be used as a standardized interface to the true model backend.
 */
 
+// Need to find a way to get all these constructors into one file
+class SubTask {
+    constructor(subTask) {
+        this.checked = subTask.checked == null ? false : subTask.checked;
+        this.title = subTask.title == null ? false : subTask.title;
+    }
+}
+
+class Task {
+    constructor(task) {
+        this.owner = task.owner == null ? null : task.owner;
+        this.title = task.title == null ? null : task.title;
+        this.category = task.category == null ? none : task.category;;
+        this.priority = task.priority == null ? 0 : task.priority;
+        this.subTasks = task.subTasks == null ? [] : task.subTasks;
+        this.timeBlocks = task.timeBlocks == null ? [] : task.timeBlocks;
+        this.due = task.due == null ? new Date() : task.due;
+    }
+}
+
 const currUserId = getUrlParameter('userId');
 const currTaskId = getUrlParameter('taskId');
 const URL = "http://localhost:3000"; //URL of the API server.
@@ -49,16 +69,14 @@ function getTask(callback) {
     });
 }
 
-function updateTask(task) {
-    var i = 0;
-    while (tasks[i].id !== task.id && i < tasks.length) {
-        i++;
-    }
-    if (i === tasks.length) {
-        tasks.push(task);
-    } else {
-        tasks[i] = task;
-    }
+function updateTask(task, callback) {
+    $.ajax({
+        url: URL + "/api/tasks/" + task._id,
+        data: task,
+        method: 'PUT',
+        success: callback,
+        error: errorLog
+    });
 }
 
 //https://stackoverflow.com/questions/19491336/get-url-parameter-jquery-or-how-to-get-query-string-values-in-js

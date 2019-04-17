@@ -10,14 +10,6 @@ var priorityToName = {
     2: "High"
 };
 
-// Need to find a way to get all these constructors into one file
-class SubTask {
-    constructor(subTask) {
-        this.checked = subTask.checked == null ? false : subTask.checked;
-        this.title = subTask.title == null ? false : subTask.title;
-    }
-}
-
 //load the navbar when the page loads
 $(document).ready(function () {
 
@@ -125,7 +117,7 @@ function addSubTasks(tasks) {
         t = new SubTask(task);
         $(".task").children(".card-body").children(".subtask-list")
             .append( // add a new empty task to the end of the current list
-                "<div class=\"form-inline\">" +
+                "<div class=\"form-inline subtask-display\">" +
                 "   <span class=\"far fa-" + t.checked ? "check=" : "" + "square subtask-checkbox\" id=\"checkbox" + curId + "\"></span>" +
                 "   <textarea class=\"form-control task-textbox border-0\" id=\"textbox" + curId + "\"" +
                 "       type=\"text\" rows=\"1\">" + t.title + "</textarea>" +
@@ -138,9 +130,26 @@ function addSubTasks(tasks) {
     addEndTask(curId);
     autosize($('textarea'));
 
-    //Placeholder for now since this is not yet attached to any data.
+    //Trying to create a task object that can get sent to the server for saving
     $("#saveTaskBtn").click(function () {
-        window.location.href = './tasklist.html';
+        var task = {
+            _id: currTaskId,
+            subTasks: []
+        }
+        $(".subtask-display").each(function () {
+            if ($(this).children("textarea").val() != "") {
+                task.subTasks.push(new SubTask({
+                    checked: $(this).children("span.far").hasClass("fa-check-square"),
+                    title: $(this).children("textarea").val()
+                }));
+            }
+        });
+        console.log(task);
+
+        updateTask(task, function (response, status) {
+            console.log(response);
+        });
+        // window.location.href = './tasklist.html';
     });
 }
 
@@ -148,7 +157,7 @@ function addEndTask(curId) {
     //add an empty task to the end of the list so that the user can add more.
     $(".task").children(".card-body").children(".subtask-list")
         .append( // add a new empty task to the end of the current list            
-            "<div class=\"form-inline\">" +
+            "<div class=\"form-inline subtask-display\">" +
             "   <span class=\"far fa-square subtask-checkbox\" id=\"checkbox" + curId + "\"></span>" +
             "   <textarea class=\"form-control task-textbox border-0 empty-task\" id=\"textbox" + curId + "\"" +
             "       type=\"text\" rows=\"1\"></textarea>" +

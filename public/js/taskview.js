@@ -145,6 +145,15 @@ function addSubTasks(tasks) {
             _id: currTaskId,
             subTasks: []
         }
+
+        if ($("#taskCheckBox").hasClass("fa-check-square")) {
+            task.checked = true; //save that the task was completed.
+            task.completedOn = new Date().toISOString(); //save the time that the task was completed on.
+        } else {
+            task.checked = false; //save that the task was completed.
+            task.completedOn = null; //save the time that the task was not completed
+        }
+
         $(".subtask-display").each(function () {
             if ($(this).children("textarea").val() != "") {
                 task.subTasks.push(new SubTask({

@@ -33,6 +33,7 @@ $(document).ready(function () {
     // When the user clicks a category, the dropdown will change its text to what they selected.
     $(".category-dropdown").click(function (e) {
         $("#categoryDropdown").html(e.target.innerHTML);
+        $("#categoryDropdown").data("changed", true);
     });
 
     // Event handler for the priority dropdown menu.
@@ -42,6 +43,8 @@ $(document).ready(function () {
 
         $("#priorityDropdown").toggleClass($(".dropdown").data("prevPriority") + " " + e.target.id); //set the style so it matches the priority
         $(".dropdown").data("prevPriority", e.target.id); //save the previous style
+
+        $("#priorityDropdown").data("changed", true);
     });
 
     // A nice feature might be that when we click the big checkbox
@@ -114,6 +117,15 @@ function setTaskInfo(task) {
     $("#priorityDropdown").addClass(priorityToClassMap[task.priority]);
     $("#datepicker").val(day);
     $("#timepicker").val(time);
+
+    if (task.checked == "true") { //if the task is checked     
+        $("#taskCheckBox").addClass("fa-check-square"); //add the check to the title
+        $("#taskCheckBox").removeClass("fa-square");
+    } else { //There are some unchecked boxes        
+        $("#taskCheckBox").removeClass("fa-check-square"); //remove the check from the title
+        $("#taskCheckBox").addClass("fa-square");
+    }
+
     addSubTasks(task.subTasks);
 }
 
@@ -127,7 +139,7 @@ function addSubTasks(tasks) {
         $(".task").children(".card-body").children(".subtask-list")
             .append( // add a new empty task to the end of the current list
                 "<div class=\"form-inline subtask-display\">" +
-                "   <span class=\"far fa-" + (t.checked ? "check-" : "") + "square subtask-checkbox\" id=\"checkbox" + curId + "\"></span>" +
+                "   <span class=\"far fa-" + (t.checked == "true" ? "check-" : "") + "square subtask-checkbox\" id=\"checkbox" + curId + "\"></span>" +
                 "   <textarea class=\"form-control task-textbox border-0\" id=\"textbox" + curId + "\"" +
                 "       type=\"text\" rows=\"1\">" + t.title + "</textarea>" +
                 "   <span class=\"far fa-trash-alt\" id=\"trash" + curId + "\" style=\"float: right\"></span>" +
@@ -141,9 +153,18 @@ function addSubTasks(tasks) {
 
     //Trying to create a task object that can get sent to the server for saving
     $("#saveTaskBtn").click(function () {
+        console.log($("#datepicker").val(), $("#timepicker").val())
+        var date = new Date($("#datepicker").val()).getTime(); // Need to figure out how to add these two times so they can be sent to the server.
+        var time = new Date($("#timepicker").val()).getTime();
+        var dueDate = new Date();        
+        dueDate.setTime(date + time);
+        console.log(dueDate);
         var task = {
             _id: currTaskId,
-            subTasks: []
+            subTasks: [],
+            // priority: $("#priorityDropdown").html(),
+            // category: $("#categoryDropdown").html(),
+            // due: $("#datepicker").val
         }
 
         if ($("#taskCheckBox").hasClass("fa-check-square")) {
@@ -164,9 +185,9 @@ function addSubTasks(tasks) {
         });
         console.log(task);
 
-        updateTask(task, function (response, status) {
-            console.log(response);
-        });
+        // updateTask(task, function (response, status) {
+        //     console.log(response);
+        // });
         // window.location.href = './tasklist.html';
     });
 }

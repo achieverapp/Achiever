@@ -259,10 +259,42 @@ async function updateTaskPriority(tasksDB, newTask) {
     })
   })
 }
+
 //update the timeblock debating whether or not timeblocks would need a table of its own
-async function updateTaskTB(tasksDB, newTask) {
+async function updateTaskTB(tasksDB, newTask, result) {
   return new Promise(function (resolve) {
-    
+    tasksDB.find({
+      _id: new ObjectId(newTask._id),
+      timeBlocks: {
+        $elemMatch: {
+          timeBlocks: newTask.timeBlocks
+        }
+      }
+    }).toArray(function (err, res) {
+      if (err) {
+        resultObj = ResultObj("Error when locating specified timeblock", err);
+        console.log(resultObj.statusMsg + ": " + err);
+        resolve(statusObj);
+      } else if (res.length == 0) {
+        tasksDB.updateOne({
+          _id: new ObjectId(newTask._id)
+        }, {
+          $set: {
+            timeblocks: newTask.timeBlocks
+          },
+          function (err2) {
+            if (err2) {
+              resultObj = ResultObj("Error when locating specified timeblock", err);
+              console.log(resultObj.statusMsg + ": " + err);
+              resolve(statusObj);
+            } else {
+              resultObj = ResultObj("Task updated", null, true);
+              resolve(resultObj);
+            }
+          }
+        })
+      }
+    })
   })
 }
 

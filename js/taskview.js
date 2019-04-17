@@ -10,6 +10,14 @@ var priorityToName = {
     2: "High"
 };
 
+// Need to find a way to get all these constructors into one file
+class SubTask {
+    constructor(subTask) {
+        this.checked = subTask.checked == null ? false : subTask.checked;
+        this.title = subTask.title == null ? false : subTask.title;
+    }
+}
+
 //load the navbar when the page loads
 $(document).ready(function () {
 
@@ -61,8 +69,8 @@ $(document).ready(function () {
     // Event handler for when the enter key is pressed on one of the text input forms.
     // Adds a new empty row for the task to allow the user to input another task
     $(document.body).on("keydown", ".empty-task", function (e) {
-        if ( /*e.which == 13 && */ $(".empty-task").val() != "") { //if the enter key is pressed.
-            // console.log($(".empty-task").attr("id").match(/\d+/)[0]);
+        if ($(".empty-task").val() != "") { //if the enter key is pressed.
+            console.log("TEST");
 
             //regex to find only the number at the end of the id
             var curId = parseInt($(".empty-task").attr("id").match(/\d+/)[0]) + 1;
@@ -74,15 +82,7 @@ $(document).ready(function () {
 
             $(".empty-task").removeClass("empty-task"); //first remove the empty-task class from the old task
 
-            $(".task").children(".card-body").children(".subtask-list")
-                .append( // add a new empty task to the end of the current list
-                    "<div class=\"form-inline\">\
-                    <span class=\"far fa-square\" id=\"checkbox" +
-                    curId +
-                    "\"></span>" +
-                    "<textarea class=\"form-control task-textbox border-0 empty-task\" id=\"textbox" + curId +
-                    "\"type=\"text\" rows=\"1\"></textarea></div>"
-                );
+            addEndTask(curId);
             autosize($('.empty-task'));
             // return false;
         }
@@ -104,7 +104,7 @@ $(document).ready(function () {
 function setTaskInfo(task) {
     var date = new Date(task.due).toISOString();
     var day = date.substr(0, 10);
-    var time = date.substr(11, 5);    
+    var time = date.substr(11, 5);
     // var due = date.getMonth() + "/" + date.getDay() + "/" + date.getFullYear();
     console.log(time);
     $("#taskHeader").html(task.title);
@@ -121,35 +121,37 @@ function addSubTasks(tasks) {
     var curId = 1; //since this is at the start, we want our ids to start at 1.    
 
     // inserts each task in the array/object that is passed.
-    tasks.forEach(taskDesc => {
+    tasks.forEach(task => {
+        t = new SubTask(task);
         $(".task").children(".card-body").children(".subtask-list")
             .append( // add a new empty task to the end of the current list
-                "<div class=\"form-inline\">\
-                    <span class=\"far fa-square subtask-checkbox\" id=\"checkbox" +
-                curId +
-                "\"></span>" +
-                "<textarea class=\"form-control task-textbox border-0\" id=\"textbox" + curId +
-                "\"type=\"text\" rows=\"1\">" + taskDesc + "</textarea>\
-                    <span class=\"far fa-trash-alt\" id=\"trash" + curId +
-                "\" style=\"float: right\"></span></div>"
+                "<div class=\"form-inline\">" +
+                "   <span class=\"far fa-" + t.checked ? "check=" : "" + "square subtask-checkbox\" id=\"checkbox" + curId + "\"></span>" +
+                "   <textarea class=\"form-control task-textbox border-0\" id=\"textbox" + curId + "\"" +
+                "       type=\"text\" rows=\"1\">" + t.title + "</textarea>" +
+                "   <span class=\"far fa-trash-alt\" id=\"trash" + curId + "\" style=\"float: right\"></span>" +
+                "</div>"
             );
         curId++; //increment the id for each new task that we will add
     });
 
-    //add an empty task to the end of the list so that the user can add more.
-    $(".task").children(".card-body").children(".subtask-list")
-        .append( // add a new empty task to the end of the current list
-            "<div class=\"form-inline\">\
-                    <span class=\"far fa-square\" id=\"checkbox" +
-            curId +
-            "\"></span>" +
-            "<textarea class=\"form-control task-textbox border-0 empty-task\" id=\"textbox" + curId +
-            "\"type=\"text\" rows=\"1\"></textarea></div>"
-        );
+    addEndTask(curId);
     autosize($('textarea'));
 
     //Placeholder for now since this is not yet attached to any data.
     $("#saveTaskBtn").click(function () {
         window.location.href = './tasklist.html';
     });
+}
+
+function addEndTask(curId) {
+    //add an empty task to the end of the list so that the user can add more.
+    $(".task").children(".card-body").children(".subtask-list")
+        .append( // add a new empty task to the end of the current list            
+            "<div class=\"form-inline\">" +
+            "   <span class=\"far fa-square subtask-checkbox\" id=\"checkbox" + curId + "\"></span>" +
+            "   <textarea class=\"form-control task-textbox border-0 empty-task\" id=\"textbox" + curId + "\"" +
+            "       type=\"text\" rows=\"1\"></textarea>" +
+            "</div>"
+        );
 }

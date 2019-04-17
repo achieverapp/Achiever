@@ -113,12 +113,12 @@ function addSubTasks(tasks) {
     var curId = 1; //since this is at the start, we want our ids to start at 1.    
 
     // inserts each task in the array/object that is passed.
-    tasks.forEach(task => {
-        t = new SubTask(task);
+    tasks.forEach(task => {        
+        t = new SubTask(task);        
         $(".task").children(".card-body").children(".subtask-list")
             .append( // add a new empty task to the end of the current list
                 "<div class=\"form-inline subtask-display\">" +
-                "   <span class=\"far fa-" + t.checked ? "check=" : "" + "square subtask-checkbox\" id=\"checkbox" + curId + "\"></span>" +
+                "   <span class=\"far fa-" + (t.checked ? "check-" : "") + "square subtask-checkbox\" id=\"checkbox" + curId + "\"></span>" +
                 "   <textarea class=\"form-control task-textbox border-0\" id=\"textbox" + curId + "\"" +
                 "       type=\"text\" rows=\"1\">" + t.title + "</textarea>" +
                 "   <span class=\"far fa-trash-alt\" id=\"trash" + curId + "\" style=\"float: right\"></span>" +

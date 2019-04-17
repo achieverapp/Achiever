@@ -3,9 +3,12 @@
 
     This file will now be used as a standardized interface to the true model backend.
 */
+
 const currUserId = getUrlParameter('userId');
 const currTaskId = getUrlParameter('taskId');
 const URL = "http://localhost:3000"; //URL of the API server.
+var Task = require('../Constructors.js').Task;
+var User = require('../Constructors.js').User;
 
 function errorLog(data, status) {
     console.log("ERROR!: " + status);

@@ -5,16 +5,7 @@
 'user strict';
 
 var ObjectId = require('mongodb').ObjectId;
-
-var Task = function (task) {
-  this.owner = task.owner == null ? null : task.owner;
-  this.title = task.title == null ? null : task.title;
-  this.category = task.category == null ? none : task.category;;
-  this.priority = task.priority == null ? 0 : task.priority;
-  this.subTasks = task.subTasks == null ? [] : task.subTasks;
-  this.timeBlocks = task.timeBlocks == null ? [] : task.timeBlocks;
-  this.due = task.due == null ? new Date() : task.due;
-}
+var Task = require('../../Constructors.js').Task;
 
 /*
   ResultObj constructor function. Since we need to create a different return object for many different possible scenarios, all this functionality

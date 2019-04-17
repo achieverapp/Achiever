@@ -5,12 +5,7 @@
 'use strict';
 //var noSql = require('./noSqlDb.js');
 var ObjectId = require('mongodb').ObjectId;
-
-var User = function (user) {
-  this.name = user.name == null ? null : user.name;
-  this._id = user._id == null ? null : user._id;
-  this.savedTasks = user.savedTasks == null ? [] : user.savedTasks;
-}
+var User = require('../../Constructors.js').User;
 
 /*
   ResultObj constructor function. Since we need to create a different return object for many different possible scenarios, all this functionality

@@ -35,9 +35,11 @@ client.connect(err => {
     //get the collections
     const users = db.collection('Users');
     const tasks = db.collection('Tasks');
+    const timeblocks = db.collection('TimeBlocks');
 
     app.locals.users = users; //store users
     app.locals.tasks = tasks; //store tasks.
+    app.locals.timeblocks = timeblocks; //store timeBlocks.
 
     app.listen(port); //Listens for requests (asynchronous!)
 

@@ -2,7 +2,7 @@
     Project: Task Tracker
     File: UserModel.js    */
 
-'user strict';
+'use strict';
 
 var ObjectId = require('mongodb').ObjectId;
 var SubTask = require('./SubTask.js').default;
@@ -11,11 +11,11 @@ class Task {
   constructor(task) {
     this.owner = task.owner == null ? null : task.owner;
     this.title = task.title == null ? null : task.title;
-    this.category = task.category == null ? null : task.category;;
+    this.category = task.category == null ? null : task.category;
     this.priority = task.priority == null ? 0 : task.priority;
     this.subTasks = task.subTasks == null ? [] : task.subTasks;
     this.timeBlocks = task.timeBlocks == null ? [] : task.timeBlocks;
-    this.due = task.due == null ? new Date() : task.due;
+    this.due = task.due == null ? new Date().toISOString() : task.due;
     this.completedOn = task.completedOn == null ? null : task.completedOn;
     this.checked = task.checked == null ? false : task.checked;
   }
@@ -63,6 +63,7 @@ class Task {
       }
     });
   }
+
   //get all tasks for a specific user
   static getTasks(tasksDB, userId, result) {
     var resultObj;
@@ -261,15 +262,15 @@ async function updateTaskPriority(tasksDB, newTask) {
 }
 
 //update the timeblock debating whether or not timeblocks would need a table of its own
-async function updateTaskTB(tasksDB, newTask, result) {
+async function updateTaskTB(tasksDB, newTask) {
   return new Promise(function (resolve) {
     tasksDB.find({
-      _id: new ObjectId(newTask._id),
-      timeBlocks: {
-        $elemMatch: {
-          timeBlocks: newTask.timeBlocks
-        }
-      }
+      _id: new ObjectId(newTask._id)
+      // timeBlocks: { // for now we are just going to update everything each time we have to update timeblocks
+      //   $elemMatch: {
+      //     timeBlocks: newTask.timeBlocks
+      //   }
+      // }
     }).toArray(function (err, res) {
       if (err) {
         resultObj = ResultObj("Error when locating specified timeblock", err);

@@ -49,6 +49,7 @@ function getTaskList(callback) {
 // Will return details in the response object of the callback function
 // status object will return the status of the ajax call
 function getTask(id, callback) {
+    console.log("getTask1");
     $.ajax({
         url: URL + "/api/tasks/" + id,
         method: 'GET',
@@ -57,17 +58,18 @@ function getTask(id, callback) {
     });
 }
 
-// call this function with a callback to recieve the task in the queryparameter from the API
-// Will return details in the response object of the callback function
-// status object will return the status of the ajax call
-function getTask(callback) {
-    $.ajax({
-        url: URL + "/api/tasks/" + currTaskId,
-        method: 'GET',
-        success: callback,
-        error: errorLog
-    });
-}
+// // call this function with a callback to recieve the task in the queryparameter from the API
+// // Will return details in the response object of the callback function
+// // status object will return the status of the ajax call
+// function getTask(callback) {
+//     console.log("getTask2");
+//     $.ajax({
+//         url: URL + "/api/tasks/" + currTaskId,
+//         method: 'GET',
+//         success: callback,
+//         error: errorLog
+//     });
+// }
 
 function updateTask(task, callback) {
     $.ajax({

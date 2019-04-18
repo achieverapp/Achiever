@@ -411,10 +411,10 @@ $(document).ready(function () {
         if (45 == minute) {
             firstHour++;
         }
-        addRows(firstHour, firstMinute, nRows-1);
+        addRows(firstHour, firstMinute, nRows - 1);
     }
 
-    $(document).on('drop', 'tr', function(event) {
+    $(document).on('drop', 'tr', function (event) {
         event.preventDefault();
         var id = event.originalEvent.dataTransfer.getData('text');
         var id = event.originalEvent.dataTransfer.getData("text");
@@ -425,21 +425,20 @@ $(document).ready(function () {
         var nRows = $(id).children().find('.time-block-card').data('nRows');
         var taskId = $(id).children().find('.time-block-card').data('taskId');
 
-        if(!hasOverlaps(hour, minute, nRows)) {
+        if (!hasOverlaps(hour, minute, nRows)) {
             removeTaskFromPage(id);
             addTaskToPage(hour, minute, nRows, taskId);
         }
 
     })
 
-    $(document).on('dragover', 'tr', function(event) {
+    $(document).on('dragover', 'tr', function (event) {
         event.preventDefault();
     })
 
-    $(document).on('drag', '.time-block-card', function(event) {
-    })
+    $(document).on('drag', '.time-block-card', function (event) {})
 
-    $(document).on('dragstart', '.time-block-card', function(event) {
+    $(document).on('dragstart', '.time-block-card', function (event) {
         event.originalEvent.dataTransfer.setData("text", $(this).data('parentId'));
     })
 });

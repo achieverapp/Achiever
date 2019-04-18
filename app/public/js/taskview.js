@@ -17,6 +17,7 @@ $(document).ready(function () {
 
     //updates the task information from the database.
     getTask(function (result, status) {
+        console.log(result);
         if (result != null && result.success) {
             setTaskInfo(result.data);
         } else {
@@ -108,17 +109,20 @@ $(document).ready(function () {
 });
 
 function setTaskInfo(task) {
-    var date = new Date(task.due).toISOString();
+    var date = task.due == null ? new Date().toISOString() : new Date(task.due).toISOString();
     var day = date.substr(0, 10);
     var time = date.substr(11, 5);
-    // var due = date.getMonth() + "/" + date.getDay() + "/" + date.getFullYear();
-    console.log(time);
-    $("#taskHeader").html(task.title);
-    $("#categoryDropdown").html(task.category);
-    $("#priorityDropdown").html(priorityToName[task.priority]);
-    $("#priorityDropdown").addClass(priorityToClassMap[task.priority]);
-    $("#datepicker").val(day);
+
+    $("#datepicker").val(day); //set the dau and time inputs to contain the values retrieved from the API
     $("#timepicker").val(time);
+
+    $("#taskHeader").html(task.title); // set the title to the one from the API
+    if (task.category != null) // If the category is saved, show it
+        $("#categoryDropdown").html(task.category);
+    if (task.priority != null) { // If the priority is saved, show it
+        $("#priorityDropdown").html(priorityToName[task.priority]);
+        $("#priorityDropdown").addClass(priorityToClassMap[task.priority]);
+    }
 
     if (task.checked == "true") { //if the task is checked
         $("#taskCheckBox").addClass("fa-check-square"); //add the check to the title
@@ -128,7 +132,7 @@ function setTaskInfo(task) {
         $("#taskCheckBox").addClass("fa-square");
     }
 
-    addSubTasks(task.subTasks);
+    addSubTasks(task.subTasks); // Add the subtasks to the list
 }
 
 // taks a tasks array that contains an array of subtask strings to add.
@@ -163,6 +167,8 @@ function addSubTasks(tasks) {
 
         var task = {
             _id: currTaskId,
+            owner: currUserId,
+            title: $("#taskHeader").html(), // Right now we always send the title, but we should change this in the future.
             subTasks: [],
             due: dueDate.toISOString()
         }
@@ -172,7 +178,7 @@ function addSubTasks(tasks) {
             task.completedOn = new Date().toISOString(); //save the time that the task was completed on.
         } else {
             task.checked = false; //save that the task was completed.
-            task.completedOn = null; //save the time that the task was not completed
+            // task.completedOn = null; //save the time that the task was not completed
         }
 
         if ($("#priorityDropdown").data("changed")) //send the new priority only if it is changed
@@ -191,9 +197,9 @@ function addSubTasks(tasks) {
         });
         console.log(task);
 
-        // updateTask(task, function (response, status) {
-        //     console.log(response);
-        // });
+        updateTask(task, function (response, status) {
+            console.log(response);
+        });
         // window.location.href = './tasklist.html';
     });
 }

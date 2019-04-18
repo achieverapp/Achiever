@@ -118,6 +118,15 @@ input[type=number].input-no-spinner {
     border-top: 4px solid white;
 }
 
+.nav-large {
+    font-size: 16pt !important;
+}
+
+.nav-title {
+    font-size: 16pt;
+}
+
+
 /*////////////////////*/
 /* TASK STYLES */
 /*////////////////////*/

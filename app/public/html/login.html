@@ -11,6 +11,8 @@
     <base target="_top">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achiever</title>
+
     <!-- Import External stylesheets and libraries using 'CDN' (content delivery network) links: -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
         integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
@@ -38,8 +40,10 @@
 </style>
 
 <body>
-    <div class="col-sm-4 mx-auto page-container">
-        <div class="card center-screen">
+    <nav class="nav bg-primary" id="navbar"></nav>
+
+    <div class="mx-auto page-container" style="padding-left: 16px; padding-right: 16px;">
+        <div class="card center-screen" style='margin:auto;'>
             <article class="card-body">
                 <a href="" class="float-right btn btn-outline-primary">Sign up</a>
                 <h4 class="card-title mb-4 mt-1">Sign in</h4>
@@ -77,8 +81,9 @@
 
 <script>
     $(document).ready(function () {
-        $("#navbar").load("navbar.html", function () {
+        $("#navbar").load("/html/navbar.html", function () {
             $("#nav-progress").addClass("nav-active");
+            resizeNav();
         });
     })
 </script>

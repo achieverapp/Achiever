@@ -6,26 +6,32 @@
 <nav class="nav bg-dark" id="navbar">
     <div class="nav-large">
         <ul class="nav">
-            <li class="nav-item bg-primary">
-                <a class="nav-link text-white" href="tasklist" id="nav-tasklist">
+            <li class="nav-item bg-primary logged-out" style='display:none;'>
+                <a class="nav-link text-white nav-large" href="" id="nav-home">
+                    <i class="fas fa-check-double"></i>&nbsp;
+                    Achiever
+                </a>
+            </li>
+            <li class="nav-item bg-primary logged-in">
+                <a class="nav-link text-white nav-large" href="tasklist" id="nav-tasklist">
                     <i class="fas fa-check-double"></i>&nbsp;
                     Tasks
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" href="schedule" id="nav-schedule">
+            <li class="nav-item logged-in">
+                <a class="nav-link text-white nav-large" href="schedule" id="nav-schedule">
                     <!-- <i class="fas fa-calendar"></i>&nbsp; -->
                     Schedule
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" href="progress" id="nav-progress">
+            <li class="nav-item logged-in">
+                <a class="nav-link text-white nav-large" href="progress" id="nav-progress">
                     <!-- <i class="fas fa-tasks"></i>&nbsp; -->
                     Progress
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" href="achievements" id="nav-achievements">
+            <li class="nav-item logged-in">
+                <a class="nav-link text-white nav-large" href="achievements" id="nav-achievements">
                     <!-- <i class="fas fa-trophy"></i>&nbsp; -->
                     Achievements
                 </a>
@@ -37,13 +43,13 @@
         <div class="pos-f-t">
             <div class="collapse" id="navbarToggleExternalContent">
                 <div class="nav-item bg-dark">
-                    <a class="nav-link text-white bg-primary" href="tasklist.html" id="nav-tasklist"><i
+                    <a class="nav-link text-white bg-primary" href="tasklist" id="nav-tasklist"><i
                             class="fas fa-check-double"></i>&nbsp;Tasks</a>
-                    <a class="nav-link text-white" href="schedule.html" id="nav-schedule"><i
+                    <a class="nav-link text-white" href="schedule" id="nav-schedule"><i
                             class="fas fa-calendar"></i>&nbsp;Schedule</a>
-                    <a class="nav-link text-white" href="progress.html" id="nav-progress"><i
+                    <a class="nav-link text-white" href="progress" id="nav-progress"><i
                             class="fas fa-tasks"></i>&nbsp;Progress</a>
-                    <a class="nav-link text-white" href="achievements.html" id="nav-achievements"><i
+                    <a class="nav-link text-white" href="achievements" id="nav-achievements"><i
                             class="fas fa-trophy"></i>&nbsp;Achievements</a>
                 </div>
             </div>
@@ -51,9 +57,9 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
                     aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="fas fa-bars text-white" style="font-size: 18pt"></span>
+                    <span class="fas fa-bars text-white" style="font-size: 18pt" id='navIconMobile'></span>
                 </button>
-                <div class="text-white" style="margin-left: 10px; font-size: 14pt">
+                <div class="text-white nav-title" style="margin-left: 10px;">
                     Achiever
                 </div>
                 <div class="p-2 flex-grow-1"></div>
@@ -63,9 +69,22 @@
 </nav>
 
 <script>
+    var loggedIn = false;
     $(document).ready(function () {
         resizeNav()
-        setQueryParams();
+        setQueryParams()
+        var userId = getQueryParam("userId")
+        console.log(userId)
+        if ("" !== userId && null !== userId && typeof userId !== 'undefined') {
+            loggedIn = true;
+            setCurrentPageTitle();
+        }
+        else {
+            console.log("here i am")
+            $('.logged-in').hide();
+            $('.logged-out').show();
+            disableMenu();
+        }
     });
 
     $(window).resize(function () {
@@ -75,7 +94,7 @@
     // Handles the actions executed when switching between mobile and large resolutions
     function resizeNav() {
         // If the window is scaled to mobile, use the hamburger navbar
-        if ($(window).width() <= 480) {
+        if ($(window).width() <= 640) {
             $(".nav-large").hide();
             $(".nav-smol").show();
         }
@@ -88,9 +107,32 @@
 
     function setQueryParams() {
         var url = window.location.href;
+        var temp = url.split('userId=')[1]
+        if(typeof temp === 'undefined') {
+            return
+        }
         var userId = url.split('userId=')[1].split('&')[0]
         $('.nav-link').attr('href', function (i, h) {
             return h + (h.indexOf('?') != -1 ? "&userId=" : "?userId=" + userId);
         });
+    }
+
+    function getQueryParam(param) {
+        var url = window.location.href
+        console.log(window.location.href)
+        temp = url.split(`${param}=`)[1]
+        if(typeof temp === 'undefined') {
+            return null
+        }
+        return url.split(`${param}=`)[1].split('&')[0]
+    }
+
+    function setCurrentPageTitle() {
+        $('.nav-title').html(document.title);
+    }
+
+    function disableMenu() {
+        $('.navbar-toggler').removeAttr('data-toggle')
+        $("#navIconMobile").removeClass('fa-bars').addClass('fa-check-double')
     }
 </script>

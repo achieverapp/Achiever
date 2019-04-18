@@ -102,6 +102,20 @@ function getTimeBlock(timeBlock, callback) {
     });
 }
 
+function getTimeBlocks(timeBlock, callback) {
+    var sendObj = {
+        owner: timeBlock.owner,
+        day: timeBlock.day
+    }
+    $.ajax({
+        url: URL + "/api/timeblocks/day/" + JSON.stringify(sendObj),
+        data: timeBlock,
+        method: 'GET',
+        success: callback,
+        error: errorLog
+    });
+}
+
 
 //https://stackoverflow.com/questions/19491336/get-url-parameter-jquery-or-how-to-get-query-string-values-in-js
 function getQueryParam(sParam) {

@@ -93,11 +93,11 @@ class Task {
       _id: new ObjectId(newTask._id)
     }).toArray(function (err, res) {
       if (err) { //Unkown error, return to client and display it in the log.
-        resultObj = ResultObj("Error when checking if user with id " + taskId + " exists in database.", err);
+        resultObj = ResultObj("Error when checking if user with id " + newTask._id + " exists in database.", err);
         console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
         result(resultObj);
       } else if (res.length == 0) { //no user with id userId, tell the updater and log it
-        resultObj = ResultObj("Task not in database. ID:" + taskId._Id);
+        resultObj = ResultObj("Task not in database. ID:" + newTask._id);
         console.log(resultObj.statusMsg);
         result(null, resultObj);
       } else {

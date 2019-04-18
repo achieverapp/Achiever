@@ -40,12 +40,25 @@ $(document).ready(function () {
 
 $(document).on("click", ".task-checkbox", function () {
     taskCard = $(this).closest('.task-card');
-    id = Number(taskCard[0].id);
-    task = getTask(id);
-    var now = new Date();
-    task.completed = now.toISOString();
-    updateTask(task); //need to make this update the task on the server side.
-    console.log(JSON.stringify(task));
+    console.log(JSON.stringify(taskCard[0].id));
+    id = taskCard[0].id;
+    console.log(id);
+    var task;
+    getTask(id, function (result, status) {
+        if (result != null && result.success) {
+            task = result.data;
+            now = new Date();
+            task.completedOn = now.toISOString();
+            task.checked = false;
+            console.log(JSON.stringify(result.data));
+            updateTask(task, function (response, status) {
+                console.log(response);
+            });
+        } else {
+            console.log(result)
+        }
+    });;
+    
     var sortBy = $("#sortByDropdown").data("sortBy");
     buildTaskList(sortBy);
 });
@@ -84,7 +97,7 @@ function buildTaskList(sortBy) {
         }
 
         tasks.forEach(task => {
-            if (task.completed == null) {
+            if (task.completed == null && task.checked) {
                 var due = new Date(task.due);
                 var today = new Date();
                 if (today > due) {
@@ -105,12 +118,12 @@ function buildTaskList(sortBy) {
 
     // Event handler for when a task is clicked on. Should bring the user to the task view page.
     // Adds a new empty row for the task to allow the user to input another task
-    $(document.body).on("click", ".task-card", function (e) {
+    $(document).on("click", ".task-card", function (e) {
         var userId = getQueryParam('userId')
         if ($(e.target).hasClass("task-card-container")) {
             window.location.href = `/taskview?taskId=${e.target.parentElement.id}&userId=${userId}`;
         } else {
-            window.location.href = `/taskview?taskId=${e.target.id}&userId=${userId}`;
+            //window.location.href = `/taskview?taskId=${e.target.id}&userId=${userId}`;
         }
     });
 }
@@ -159,6 +172,10 @@ function compareTaskByPriorityDescending(lhs, rhs) {
         return compareTaskByDateAscending(lhs, rhs);
     }
     return rhs.priority - lhs.priority;
+}
+
+function updateTask(taskCard){
+
 }
 
 function getQueryParam(param) {

@@ -209,8 +209,32 @@ $(document).ready(function () {
             showNoTaskToast();
             return;
         }
-        addTaskToPage(startHour, startMinute, nRows, taskId);
+
+        addEndHour = Number(endHour) < 10 ? "0" + endHour : endHour;
+        addEndMinute = Number(endMinute) < 10 ? "0" + endMinute : endMinute;
+        addStartHour = Number(startHour) < 10 ? "0" + startHour : startHour;
+        addStartMinute = Number(startMinute) < 10 ? "0" + startMinute : startMinute;
+
+        var timeBlockObj = createTimeBlockObject(addStartHour + ":" + addStartMinute, addEndHour + ":" + addEndMinute, taskId);
+        addTimeBlock(timeBlockObj, function (response, status) {
+            console.log(response); //Debug
+            if (response.success)
+                addTaskToPage(startHour, startMinute, nRows, taskId, response.data._id);
+        });
     });
+
+    function createTimeBlockObject(startTime, endTime, taskId) {
+        var blockDay = today.toISOString().substr(0, 10);
+        var start = blockDay + "T" + startTime + ":00.000Z";
+        var end = blockDay + "T" + endTime + ":00.000Z";
+        return {
+            owner: currUserId,
+            task: taskId,
+            day: blockDay,
+            startDate: start,
+            endDate: end
+        }
+    }
 
     function isTimeValid(startHour, startMinute, endHour, endMinute) {
         if (startHour >= 24) { // cannot start at or after midnight
@@ -277,7 +301,7 @@ $(document).ready(function () {
      * @param nRows: the number of quarter-hour increments the timeblock spans
      * @param taskId: the id of the task to fill the timeblock
      */
-    function addTaskToPage(startHour, startMinute, nRows, taskId) {
+    function addTaskToPage(startHour, startMinute, nRows, taskId, timeBlockId) {
         var trId = "#time-" + startHour + "-" + startMinute;
         var task;
         getTask(taskId, function (response, status) {
@@ -290,7 +314,7 @@ $(document).ready(function () {
             td.removeClass("bucket-empty");
             td.addClass("bucket-full");
             td.css('padding', '0px');
-            td.html("<div class='time-block-card' style='height: 100%; width: 100%; display: table;' draggable='true'><span style='display: table-cell; vertical-align: middle; padding-left: 8px'>" + task.title + "</span></div>")
+            td.html("<div id='" + timeBlockId + "'class='time-block-card' style='height: 100%; width: 100%; display: table;' draggable='true'><span style='display: table-cell; vertical-align: middle; padding-left: 8px'>" + task.title + "</span></div>")
             setPriorityColor(td.children('.time-block-card'), task.priority);
 
             var div = (td.children('.time-block-card'))
@@ -416,18 +440,39 @@ $(document).ready(function () {
 
     $(document).on('drop', 'tr', function (event) {
         event.preventDefault();
-        var id = event.originalEvent.dataTransfer.getData('text');
         var id = event.originalEvent.dataTransfer.getData("text");
+        var taskId = $(id).children().find('.time-block-card');
         var targetId = $(event.target).closest('tr')[0].id;
+        var timeBlockID = $(id).children().find('.time-block-card')[0].id; //Gets the id of the timeblock which is stored as the div id
         var temp = targetId.split('-');
         var hour = Number(temp[1]);
         var minute = Number(temp[2]);
         var nRows = $(id).children().find('.time-block-card').data('nRows');
         var taskId = $(id).children().find('.time-block-card').data('taskId');
 
+        console.log(timeBlockID);
+
         if (!hasOverlaps(hour, minute, nRows)) {
             removeTaskFromPage(id);
-            addTaskToPage(hour, minute, nRows, taskId);
+            addTaskToPage(hour, minute, nRows, taskId, timeBlockID);
+
+            var endHour = Number(hour) + Math.floor(nRows / 4); //calculate the end times
+            var endMinute = Number(minute) + ((nRows % 4) * 15);
+
+            endHour = endHour < 10 ? "0" + endHour : endHour; // pad all times with a 0 if they need it
+            endMinute = endMinute < 10 ? "0" + endMinute : endMinute;
+            var startHour = Number(hour) < 10 ? "0" + hour : hour;
+            var startMinute = Number(minute) < 10 ? "0" + minute : minute;
+
+            console.log(startHour + ":" + startMinute, endHour + ":" + endMinute);
+
+            var timeBlockObj = createTimeBlockObject(startHour + ":" + startMinute, endHour + ":" + endMinute, taskId); //create a new timeBLock with those times
+            timeBlockObj._id = timeBlockID; //add the timeBLock ID
+            console.log(timeBlockObj);
+
+            updateTimeBlock(timeBlockObj, function (response, status) { //update it on the server side.
+                console.log(response); //Debug
+            });
         }
 
     })

@@ -5,18 +5,21 @@
 'use strict';
 
 module.exports = function (app) {
-    var TMuser = require('../controllers/UserController')
+    var User = require('../controllers/UserController')
     var Task = require('../controllers/TaskController')
     var Auth = require('../controllers/AuthController')
+    var TimeBlock = require('../controllers/TimeBlockController')
 
+    //  User Routes
     app.route('/api/users')
-        .post(TMuser.addUser)
-        .put(TMuser.updateUser);
+        .post(User.addUser)
+        .put(User.updateUser);
 
     app.route('/api/users/:id')
-        .get(TMuser.getUser)
-        .delete(TMuser.deleteUser);
+        .get(User.getUser)
+        .delete(User.deleteUser);
 
+    //  Task Routes
     app.route('/api/tasks')
         .post(Task.addTask)
         .put(Task.updateTask);
@@ -28,5 +31,18 @@ module.exports = function (app) {
     app.route('/api/tasks/id/:id')
         .get(Task.getTasks);
 
+    //  TimeBlock Routes
+    app.route('/api/timeblocks')
+        .post(TimeBlock.addTimeBlock)
+        .put(TimeBlock.updateTimeBlock);
+
+    app.route('/api/timeblocks/:taskStartObj') //takes an object that contains a task id and a start time
+        .get(TimeBlock.getTimeBlock)
+        .delete(TimeBlock.deleteTimeBlock);
+
+    app.route('/api/timeblocks/day/:userDayObj') //takes an object that contains a task id and day
+        .get(TimeBlock.getTimeBlocks);
+
+    // OAuth Routes
     app.get('/api/oauth/redirect', Auth.authenticate)
 }

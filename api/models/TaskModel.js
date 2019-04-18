@@ -29,10 +29,10 @@ class Task {
       if (err) { //Unkown error, return to client and display it in the log.
         resultObj = ResultObj("Error when adding new Task to database", err);
         console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
-        result(null,resultObj);
+        result(null, resultObj);
       } else {
         resultObj = ResultObj("Added task " + task.title, null, true, task._id, task);
-        result(null,resultObj);
+        result(null, resultObj);
       }
     });
   }
@@ -53,13 +53,13 @@ class Task {
       if (err) {
         resultObj = ResultObj("Error when adding task to database", err);
         console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
-        result(null,resultObj);
+        result(null, resultObj);
       } else if (res.length == 1) {
         resultObj = ResultObj("Task retrieved", null, true, res[0]._id, res[0]);
-        result(null,resultObj);
+        result(null, resultObj);
       } else {
         resultObj = ResultObj("Task not found");
-        result(null,resultObj);
+        result(null, resultObj);
       }
     });
   }
@@ -73,10 +73,10 @@ class Task {
       if (err) {
         resultObj = ResultObj("Error when adding task to database", err);
         console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
-        result(null,resultObj);
+        result(null, resultObj);
       } else {
         resultObj = ResultObj("Task retrieved", null, true, userId, res);
-        result(null,resultObj);
+        result(null, resultObj);
       }
     });
   }
@@ -99,7 +99,7 @@ class Task {
       } else if (res.length == 0) { //no user with id userId, tell the updater and log it
         resultObj = ResultObj("Task not in database. ID:" + taskId._Id);
         console.log(resultObj.statusMsg);
-        result(null,resultObj);
+        result(null, resultObj);
       } else {
         if (newTask.title != null) {
           updateTaskName(tasksDB, newTask, result).then(result);
@@ -171,6 +171,7 @@ function ResultObj(statusMsg = "", statusObj = null, success = false, id = null,
 //update the priorty
 async function updateTaskChecked(tasksDB, newTask) {
   return new Promise(function (resolve) {
+    var resultObj;
     tasksDB.updateOne({
       _id: new ObjectId(newTask._id)
     }, {
@@ -195,6 +196,7 @@ async function updateTaskChecked(tasksDB, newTask) {
 //update the task name
 async function updateTaskName(tasksDB, newTask) {
   return new Promise(function (resolve) {
+    var resultObj;
     tasksDB.updateOne({
       _id: new ObjectId(newTask._id)
     }, {
@@ -218,6 +220,7 @@ async function updateTaskName(tasksDB, newTask) {
 //update category
 async function updateTaskCategory(tasksDB, newTask) {
   return new Promise(function (resolve) {
+    var resultObj;
     tasksDB.updateOne({
       _id: new ObjectId(newTask._id)
     }, {
@@ -241,6 +244,7 @@ async function updateTaskCategory(tasksDB, newTask) {
 //update the priorty
 async function updateTaskPriority(tasksDB, newTask) {
   return new Promise(function (resolve) {
+    var resultObj;
     tasksDB.updateOne({
       _id: new ObjectId(newTask._id)
     }, {
@@ -264,6 +268,7 @@ async function updateTaskPriority(tasksDB, newTask) {
 //update the timeblock debating whether or not timeblocks would need a table of its own
 async function updateTaskTB(tasksDB, newTask) {
   return new Promise(function (resolve) {
+    var resultObj;
     tasksDB.find({
       _id: new ObjectId(newTask._id)
       // timeBlocks: { // for now we are just going to update everything each time we have to update timeblocks
@@ -304,6 +309,7 @@ async function updateTaskTB(tasksDB, newTask) {
 //update the subtask
 async function updatesubTask(tasksDB, newTask) {
   return new Promise(function (resolve) {
+    var resultObj;
     tasksDB.find({
       _id: new ObjectId(newTask._id),
       subTasks: {

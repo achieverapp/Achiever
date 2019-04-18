@@ -58,19 +58,6 @@ function getTask(id, callback) {
     });
 }
 
-// // call this function with a callback to recieve the task in the queryparameter from the API
-// // Will return details in the response object of the callback function
-// // status object will return the status of the ajax call
-// function getTask(callback) {
-//     console.log("getTask2");
-//     $.ajax({
-//         url: URL + "/api/tasks/" + currTaskId,
-//         method: 'GET',
-//         success: callback,
-//         error: errorLog
-//     });
-// }
-
 function updateTask(task, callback) {
     $.ajax({
         url: URL + "/api/tasks/",
@@ -80,6 +67,41 @@ function updateTask(task, callback) {
         error: errorLog
     });
 }
+
+function addTimeBlock(timeBlock, callback) {
+    $.ajax({
+        url: URL + "/api/timeblocks",
+        data: timeBlock,
+        method: 'POST',
+        success: callback,
+        error: errorLog
+    });
+}
+
+function updateTimeBlock(timeBlock, callback) {
+    $.ajax({
+        url: URL + "/api/timeblocks",
+        data: timeBlock,
+        method: 'PUT',
+        success: callback,
+        error: errorLog
+    });
+}
+
+function getTimeBlock(timeBlock, callback) {
+    var sendObj = {
+        task: timeBlock.task,
+        startDate: timeBlock.startDate
+    }
+    $.ajax({
+        url: URL + "/api/timeblocks/" + JSON.stringify(sendObj),
+        data: timeBlock,
+        method: 'GET',
+        success: callback,
+        error: errorLog
+    });
+}
+
 
 //https://stackoverflow.com/questions/19491336/get-url-parameter-jquery-or-how-to-get-query-string-values-in-js
 function getQueryParam(sParam) {

@@ -23,16 +23,16 @@ class Task {
     add a task to the task database
     if the task can't be added then just return an err message
   */
-  static addTask(tasksDB, taskName, result) {
+  static addTask(tasksDB, task, result) {
     var resultObj;
-    tasksDB.insertOne(taskName, function (err, res) {
+    tasksDB.insertOne(task, function (err, res) {
       if (err) { //Unkown error, return to client and display it in the log.
         resultObj = ResultObj("Error when adding new Task to database", err);
         console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
-        result(resultObj);
+        result(null,resultObj);
       } else {
-        resultObj = ResultObj("Added task " + taskName.title, null, true, taskName._id, taskName);
-        result(resultObj);
+        resultObj = ResultObj("Added task " + task.title, null, true, task._id, task);
+        result(null,resultObj);
       }
     });
   }
@@ -53,13 +53,13 @@ class Task {
       if (err) {
         resultObj = ResultObj("Error when adding task to database", err);
         console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
-        result(resultObj);
+        result(null,resultObj);
       } else if (res.length == 1) {
         resultObj = ResultObj("Task retrieved", null, true, res[0]._id, res[0]);
-        result(resultObj);
+        result(null,resultObj);
       } else {
         resultObj = ResultObj("Task not found");
-        result(resultObj);
+        result(null,resultObj);
       }
     });
   }
@@ -73,10 +73,10 @@ class Task {
       if (err) {
         resultObj = ResultObj("Error when adding task to database", err);
         console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
-        result(resultObj);
+        result(null,resultObj);
       } else {
         resultObj = ResultObj("Task retrieved", null, true, userId, res);
-        result(resultObj);
+        result(null,resultObj);
       }
     });
   }
@@ -99,7 +99,7 @@ class Task {
       } else if (res.length == 0) { //no user with id userId, tell the updater and log it
         resultObj = ResultObj("Task not in database. ID:" + taskId._Id);
         console.log(resultObj.statusMsg);
-        result(resultObj);
+        result(null,resultObj);
       } else {
         if (newTask.title != null) {
           updateTaskName(tasksDB, newTask, result).then(result);
@@ -122,7 +122,7 @@ class Task {
       }
     });
   }
-  // TODO: Implement U and D in milestone 3 
+  // TODO: Implement U and D in milestone 3
   /*delete a task from the task db*/
   static deleteTask(tasksDB, taskId) {
     var resultObj;
@@ -154,7 +154,7 @@ class Task {
 /*
   ResultObj constructor function. Since we need to create a different return object for many different possible scenarios, all this functionality
   can be put in one function.
-    
+
   The most common parameters are closer to the start of the list while the ones that rarely get called are towards the end.
 */
 function ResultObj(statusMsg = "", statusObj = null, success = false, id = null, data = null) { //what will be returned to the requester when the function completes

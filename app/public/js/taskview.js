@@ -163,6 +163,10 @@ function addSubTasks(tasks) {
 
     //Trying to create a task object that can get sent to the server for saving
     $("#saveTaskBtn").click(function () {
+        if($("#taskHeader").val() == "") {
+            showBlankTitleToast();
+            return;
+        }
         var date = new Date($("#datepicker").val()).toISOString().substr(0, 10); // Need to figure out how to add these two times so they can be sent to the server.
         var time = $("#timepicker").val();
         var dueDate = new Date(date + "T" + time + ":00.000Z");
@@ -199,12 +203,10 @@ function addSubTasks(tasks) {
                 }));
             }
         });
-        console.log(task);
 
         updateTask(task, function (response, status) {
-            console.log(response);
         });
-        // window.location.href = './tasklist.html';
+        window.location.href = `/tasklist?userId=${currUserId}`;
     });
 }
 
@@ -218,4 +220,15 @@ function addEndTask(curId) {
             `       type='text' rows='1' placeholder='Add a subtask here...'></textarea>` +
             "</div>"
         );
+}
+
+/**
+ * Show a toast notifying the user that the timeblock could not be created
+ * due to a time conflict with another timeblock
+ */
+function showBlankTitleToast() {
+    $("#toastTitle").html("There was a problem saving your task");
+    $("#toastSubtitle").html("");
+    $("#toastBody").html("Cannot save tasks without a title. Please enter a description of your task in the title box.");
+    $('.toast').toast('show');
 }

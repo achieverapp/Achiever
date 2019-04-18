@@ -24,8 +24,8 @@ class Task {
     }
 }
 
-const currUserId = getUrlParameter('userId');
-const currTaskId = getUrlParameter('taskId');
+const currUserId = getQueryParam('userId');
+const currTaskId = getQueryParam('taskId');
 const URL = "http://localhost:3000"; //URL of the API server.
 
 function errorLog(data, status) {
@@ -82,7 +82,7 @@ function updateTask(task, callback) {
 }
 
 //https://stackoverflow.com/questions/19491336/get-url-parameter-jquery-or-how-to-get-query-string-values-in-js
-function getUrlParameter(sParam) {
+function getQueryParam(sParam) {
     var sPageURL = window.location.search.substring(1),
         sURLVariables = sPageURL.split('&'),
         sParameterName,
@@ -96,3 +96,8 @@ function getUrlParameter(sParam) {
         }
     }
 };
+
+// function getQueryParam(param) {
+//     var url = window.location.href;
+//     return url.split(`${param}=`)[1].split('&')[0]
+// }

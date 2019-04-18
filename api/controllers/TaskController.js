@@ -41,18 +41,16 @@ exports.getTasks = function (req, res) {
 exports.updateTask = function (req, res) {
   if (req.body._id == "default") { //When we are adding a new task, the ID will be default    
     delete req.body._id; //remove the ID from the task object
-    var newTask = new Task(req.body);
-
-    console.log(req.body);
+    var newTask = new Task(req.body); //turn it into a task object  
     console.log(newTask);
 
-    // Task.addTask(req.app.locals.tasks, newTask, function (err, result) {
-    //   if (err) {
-    //     res.send(err);
-    //   } else {
-    //     res.json(result);
-    //   }
-    // });
+    Task.addTask(req.app.locals.tasks, newTask, function (err, result) { //call the addTask function to deal with the rest.
+      if (err) {
+        res.send(err);
+      } else {
+        res.json(result);
+      }
+    });
   } else {
     Task.updateTask(req.app.locals.tasks, req.body, function (err, result) {
       if (err) {

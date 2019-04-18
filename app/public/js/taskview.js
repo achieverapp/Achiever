@@ -10,6 +10,12 @@ var priorityToName = {
     2: "High"
 };
 
+var nameToPriority = {
+    "Low": 0,
+    "Medium": 1,
+    "High": 2
+}
+
 //load the navbar when the page loads
 $(document).ready(function () {
     $("#categoryDropdown").data("changed", false); // flags to show whether data from a dropdown was changed;
@@ -17,9 +23,9 @@ $(document).ready(function () {
 
     //updates the task information from the database.
     getTask(function (result, status) {
-        console.log(result);
         if (result != null && result.success) {
             setTaskInfo(result.data);
+            console.log(result);
         } else {
             console.log(result)
         }
@@ -67,9 +73,7 @@ $(document).ready(function () {
     // Event handler for when the enter key is pressed on one of the text input forms.
     // Adds a new empty row for the task to allow the user to input another task
     $(document.body).on("keydown", ".empty-task", function (e) {
-        if ($(".empty-task").val() != "") { //if the enter key is pressed.
-            console.log("TEST");
-
+        if ($(".empty-task").val() != "") { //if the enter key is pressed.        
             //regex to find only the number at the end of the id
             var curId = parseInt($(".empty-task").attr("id").match(/\d+/)[0]) + 1;
 
@@ -91,11 +95,11 @@ $(document).ready(function () {
         this.classList.toggle("fa-square");
         this.classList.toggle("fa-check-square");
         if (!$(".subtask-checkbox.fa-square")[0]) { //if there are not any boxes that are unchecked
-            console.log("all checkBoxes checked");
+            // console.log("all checkBoxes checked");
             $("#taskCheckBox").addClass("fa-check-square"); //add the check to the title
             $("#taskCheckBox").removeClass("fa-square");
         } else { //There are some unchecked boxes
-            console.log("some checkBoxes unchecked");
+            // console.log("some checkBoxes unchecked");
             $("#taskCheckBox").removeClass("fa-check-square"); //remove the check from the title
             $("#taskCheckBox").addClass("fa-square");
         }
@@ -159,8 +163,6 @@ function addSubTasks(tasks) {
 
     //Trying to create a task object that can get sent to the server for saving
     $("#saveTaskBtn").click(function () {
-        console.log($("#datepicker").val(), $("#timepicker").val())
-
         var date = new Date($("#datepicker").val()).toISOString().substr(0, 10); // Need to figure out how to add these two times so they can be sent to the server.
         var time = $("#timepicker").val();
         var dueDate = new Date(date + "T" + time + ":00.000Z");
@@ -168,7 +170,7 @@ function addSubTasks(tasks) {
         var task = {
             _id: currTaskId,
             owner: currUserId,
-            title: $("#taskHeader").html(), // Right now we always send the title, but we should change this in the future.
+            title: $("#taskHeader").val(), // Right now we always send the title, but we should change this in the future.
             subTasks: [],
             due: dueDate.toISOString()
         }
@@ -181,11 +183,13 @@ function addSubTasks(tasks) {
             // task.completedOn = null; //save the time that the task was not completed
         }
 
+        console.log($("#priorityDropdown").data("changed"), $("#categoryDropdown").data("changed"))
+
         if ($("#priorityDropdown").data("changed")) //send the new priority only if it is changed
-            task.priority = $("#priorityDropdown").html();
+            task.priority = nameToPriority[$("#priorityDropdown").html()];
 
         if ($("#categoryDropdown").data("changed")) //send the new category only if it is changed
-            task.priority = $("#categoryDropdown").html();
+            task.category = $("#categoryDropdown").html();
 
         $(".subtask-display").each(function () {
             if ($(this).children("textarea").val() != "") {

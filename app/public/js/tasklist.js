@@ -2,6 +2,9 @@ var priorityToClassMap = {
     0: "priority-low",
     1: "priority-med",
     2: "priority-high",
+    "0": "priority-low",
+    "1": "priority-med",
+    "2": "priority-high",
 };
 
 $(document).ready(function () {
@@ -25,12 +28,10 @@ $(document).ready(function () {
     });
 
     $(".sortby-dropdown-item").click(function (e) {
-        //set the title of the button to the dropdown that was selected.
-        $(".sortby-dropdown").each(function () {
+        $(".sortby-dropdown").each(function () { //set the title of the button to the dropdown that was selected.
             var element = $(this);
             element.html(e.target.innerText);
         });
-        //.html(e.target.innerText);
 
         $(".sortby-dropdown").data("sortBy", e.target.id);
         buildTaskList(e.target.id);

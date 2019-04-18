@@ -9,6 +9,7 @@ var ObjectId = require('mongodb').ObjectId;
 // Task + startDate combinations will always be unique
 class TimeBlock {
     constructor(timeBlocks) {
+        this._id = timeBlocks._id == null ? null : timeBlocks._id;
         this.task = timeBlocks.task == null ? null : timeBlocks.task;
         this.owner = timeBlocks.owner == null ? null : timeBlocks.owner;
         this.day = timeBlocks.day == null ? new Date().toISOString().split("T")[0] : timeBlocks.day; //if there is no day, then use today. makes a new date and then splits on "T" which should give only month, day, and year
@@ -76,11 +77,10 @@ class TimeBlock {
     /*
     updatetimeBlock function is responsible for updating anything that may be stored in a timeBlock object.
     */
-    static updateTimeBlock(timeBlockDB, newtimeBlock, result) {
+    static updateTimeBlock(timeBlockDB, newTimeBlock, result) {
         var resultObj;
         timeBlockDB.find({
-            task: newtimeBlock.task,
-            startDate: newtimeBlock.startDate
+            _id: new ObjectId(newTimeBlock._id)
         }).toArray(function (err, res) {
             if (err) { //Unkown error, return to client and display it in the log.
                 resultObj = ResultObj("Error when checking if timeBlock is available.", err);
@@ -91,7 +91,7 @@ class TimeBlock {
                 console.log(resultObj.statusMsg);
                 result(resultObj);
             } else { //timeBlock is in the database!          
-                updateDate(timeBlockDB, newtimeBlock, resultObj).then(result); //change these to things we need later                
+                updateDate(timeBlockDB, newTimeBlock, resultObj).then(result); //change these to things we need later                
             }
         });
     }

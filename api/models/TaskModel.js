@@ -11,7 +11,7 @@ class Task {
   constructor(task) {
     this.owner = task.owner == null ? null : task.owner;
     this.title = task.title == null ? null : task.title;
-    this.category = task.category == null ? none : task.category;;
+    this.category = task.category == null ? null : task.category;;
     this.priority = task.priority == null ? 0 : task.priority;
     this.subTasks = task.subTasks == null ? [] : task.subTasks;
     this.timeBlocks = task.timeBlocks == null ? [] : task.timeBlocks;

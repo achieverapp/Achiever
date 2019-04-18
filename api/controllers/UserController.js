@@ -9,7 +9,7 @@ const User = require('../models/UserModel.js').User;
 /*
   ResultObj constructor function. Since we need to create a different return object for many different possible scenarios, all this functionality
   can be put in one function.
-    
+
   The most common parameters are closer to the start of the list while the ones that rarely get called are towards the end.
 */
 function ResultObj(statusMsg = "", statusObj = null, success = false, id = null, data = null) { //what will be returned to the requester when the function completes
@@ -35,7 +35,15 @@ exports.addUser = function (req, res) {
 };
 
 exports.getUser = function (req, res) {
-  User.getUser(req.app.locals.users, req.params.id, function (result) {
+  var user = {}
+  if(req.params.id !== 'none') {
+    user._id = req.params.id
+  }
+  else if (req.query.email) {
+    user.email = req.query.email
+  }
+  console.log(user)
+  User.getUser(req.app.locals.users, user, function (result) {
     res.json(result);
   });
 }

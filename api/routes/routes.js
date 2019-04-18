@@ -7,6 +7,7 @@
 module.exports = function (app) {
     var TMuser = require('../controllers/UserController')
     var Task = require('../controllers/TaskController')
+    var Auth = require('../controllers/AuthController')
 
     app.route('/api/users')
         .post(TMuser.addUser)
@@ -26,4 +27,6 @@ module.exports = function (app) {
 
     app.route('/api/tasks/id/:id')
         .get(Task.getTasks);
+
+    app.get('/api/oauth/redirect', Auth.authenticate)
 }

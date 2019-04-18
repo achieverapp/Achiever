@@ -30,11 +30,13 @@ class User {
   GetUser returns the data of the user with the given ID.
   If no user is found, there is no data retuned and a statusMsg with the reason why there was an error.
   */
-  static getUser(usersDB, userId, result) {
+  static getUser(usersDB, queryUser, result) {
+    var query = queryUser;
+    if(queryUser._id) {
+      query._id = new ObjectId(queryUser._id)
+    }
     var resultObj;
-    usersDB.find({
-      _id: new ObjectId(userId)
-    }).toArray(function (err, res) {
+    usersDB.find(query).toArray(function (err, res) {
       if (err) {
         resultObj = ResultObj("Error when adding user to database", err);
         console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
@@ -114,7 +116,7 @@ class User {
 /*
   ResultObj constructor function. Since we need to create a different return object for many different possible scenarios, all this functionality
   can be put in one function.
-    
+
   The most common parameters are closer to the start of the list while the ones that rarely get called are towards the end.
 */
 function ResultObj(statusMsg = "", statusObj = null, success = false, id = null, data = null) { //what will be returned to the requester when the function completes
@@ -155,7 +157,7 @@ async function updateSavedTasks(usersDB, newUser, resultObj) {
     usersDB.find({
         _id: new ObjectId(newUser._id),
         savedTasks: {
-          $elemMatch: { //mongoDB to match anything that also matches the data inside the property     
+          $elemMatch: { //mongoDB to match anything that also matches the data inside the property
             taskId: newUser.savedTasks.taskId
           }
         }

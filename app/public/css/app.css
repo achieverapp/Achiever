@@ -84,12 +84,16 @@ input[type=number].input-no-spinner {
 /* LOGIN STYLES */
 /*////////////////////*/
 
- .google {
+.btn.google {
     border-color: #DB4437;
 }
 
-.facebook {
+.btn.facebook {
     border-color: #3C5A99;
+}
+
+.btn.github {
+    border-color: black;
 }
 
 /*////////////////////*/

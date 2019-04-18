@@ -20,7 +20,8 @@ $(document).ready(function () {
 
     $("#btn-newtask").on("click", function () {
         console.log("test");
-        window.location.href = './taskview.html?taskId=default';
+        var userId = getQueryParam("userId")
+        window.location.href = `/taskview?taskId=default&userId=${userId}`;
     });
 
     $(".sortby-dropdown-item").click(function (e) {
@@ -104,10 +105,11 @@ function buildTaskList(sortBy) {
     // Event handler for when a task is clicked on. Should bring the user to the task view page.
     // Adds a new empty row for the task to allow the user to input another task
     $(document.body).on("click", ".task-card", function (e) {
+        var userId = getQueryParam('userId')
         if ($(e.target).hasClass("task-card-container")) {
-            window.location.href = './taskview.html?taskId=' + e.target.parentElement.id;
+            window.location.href = `/taskview?taskId=${e.target.parentElement.id}&userId=${userId}`;
         } else {
-            window.location.href = './taskview.html?taskId=' + e.target.id;
+            window.location.href = `/taskview?taskId=${e.target.id}&userId=${userId}`;
         }
     });
 }
@@ -156,4 +158,9 @@ function compareTaskByPriorityDescending(lhs, rhs) {
         return compareTaskByDateAscending(lhs, rhs);
     }
     return rhs.priority - lhs.priority;
+}
+
+function getQueryParam(param) {
+    var url = window.location.href;
+    return url.split(`${param}=`)[1].split('&')[0]
 }

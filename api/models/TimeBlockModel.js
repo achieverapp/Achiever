@@ -15,6 +15,7 @@ class TimeBlock {
         this.day = timeBlocks.day == null ? new Date().toISOString().split("T")[0] : timeBlocks.day; //if there is no day, then use today. makes a new date and then splits on "T" which should give only month, day, and year
         this.startDate = timeBlocks.startDate == null ? new Date().toISOString() : timeBlocks.startDate;
         this.endDate = timeBlocks.endDate == null ? new Date().toISOString() : timeBlocks.endDate;
+        // this.title = timeBlocks.title == null ? null : timeBlocks.title;
     }
 
     // Takes a new timeBlock object that contains all data that we want to add.
@@ -151,15 +152,14 @@ function ResultObj(statusMsg = "", statusObj = null, success = false, id = null,
     return returnObj;
 }
 
-async function updateDate(timeBlockDB, newtimeBlock, resultObj) {
+async function updateDate(timeBlockDB, newTimeBlock, resultObj) {
     return new Promise(function (resolve) {
         timeBlockDB.updateOne({ //find the timeBlock to update
-                task: newtimeBlock.task,
-                startDate: newtimeBlock.startDate
+                _id: new ObjectId(newTimeBlock._id)
             }, { //update its data with:
                 $set: {
-                    'startDate': newtimeBlock.startDate,
-                    'endDate': newtimeBlock.endDate
+                    'startDate': newTimeBlock.startDate,
+                    'endDate': newTimeBlock.endDate
                 }
             },
             function (err) {
@@ -168,7 +168,7 @@ async function updateDate(timeBlockDB, newtimeBlock, resultObj) {
                     console.log(resultObj.statusMsg + ": " + err);
                     resolve(resultObj);
                 } else { //hole updated successfully!
-                    resultObj = ResultObj("start date changed to " + newtimeBlock.startDate, null, true, null, newtimeBlock);
+                    resultObj = ResultObj("start date changed to " + newTimeBlock.startDate, null, true, null, newTimeBlock);
                     resolve(resultObj);
                 }
             });

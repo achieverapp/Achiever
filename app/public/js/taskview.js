@@ -1,13 +1,16 @@
 var priorityToClassMap = {
-    0: "priority-low",
-    1: "priority-med",
-    2: "priority-high"
+    "0": "priority-low",
+    "1": "priority-med",
+    "2": "priority-high"
 };
 
 var priorityToName = {
     0: "Low",
     1: "Medium",
-    2: "High"
+    2: "High",
+    "0": "Low",
+    "1": "Medium",
+    "2": "High"
 };
 
 var nameToPriority = {
@@ -50,6 +53,7 @@ $(document).ready(function () {
     $(".priority-dropdown").click(function (e) {
         $("#priorityDropdown").html(e.target.innerText) //set the title of the button to the dropdown that was selected.
 
+        console.log(e.target.id);
         $("#priorityDropdown").toggleClass($(".dropdown").data("prevPriority") + " " + e.target.id); //set the style so it matches the priority
         $(".dropdown").data("prevPriority", e.target.id); //save the previous style
 
@@ -126,6 +130,7 @@ function setTaskInfo(task) {
     if (task.priority != null) { // If the priority is saved, show it
         $("#priorityDropdown").html(priorityToName[task.priority]);
         $("#priorityDropdown").addClass(priorityToClassMap[task.priority]);
+        $(".dropdown").data("prevPriority", priorityToClassMap[task.priority]); //save the previous style
     }
 
     if (task.checked == "true") { //if the task is checked
@@ -163,7 +168,7 @@ function addSubTasks(tasks) {
 
     //Trying to create a task object that can get sent to the server for saving
     $("#saveTaskBtn").click(function () {
-        if($("#taskHeader").val() == "") {
+        if ($("#taskHeader").val() == "") {
             showBlankTitleToast();
             return;
         }
@@ -204,8 +209,7 @@ function addSubTasks(tasks) {
             }
         });
 
-        updateTask(task, function (response, status) {
-        });
+        updateTask(task, function (response, status) {});
         window.location.href = `/tasklist?userId=${currUserId}`;
     });
 }

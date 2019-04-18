@@ -209,8 +209,10 @@ function addSubTasks(tasks) {
             }
         });
 
-        updateTask(task, function (response, status) {});
-        window.location.href = `/tasklist?userId=${currUserId}`;
+        updateTask(task, function (response, status) {
+            window.location.href = `/tasklist?userId=${currUserId}`; //need to change pages only after the task is updated
+        });
+
     });
 }
 

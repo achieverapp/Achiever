@@ -20,7 +20,7 @@ exports.addTimeBlock = function (req, res) {
             res.json(result);
         });
     } else {
-        res.json(ResultObj("Invalid TimeBlock. Missing one or more required properties"));
+        res.json(ResultObj("Invalid TimeBlock. Missing one or more required properties", newTimeBlock));
     }
 }
 
@@ -32,7 +32,7 @@ exports.getTimeBlock = function (req, res) {
             res.json(result);
         });
     } else {
-        res.json(ResultObj("Invalid task-start Time combination. Missing one or more required properties"));
+        res.json(ResultObj("Invalid task-start Time combination. Missing one or more required properties", taskStartObj));
     }
 }
 
@@ -44,7 +44,7 @@ exports.getTimeBlocks = function (req, res) {
             res.json(result);
         });
     } else {
-        res.json(ResultObj("Invalid task-start Time combination. Missing one or more required properties"));
+        res.json(ResultObj("Invalid task-start Time combination. Missing one or more required properties", userDayObj));
     }
 }
 
@@ -52,12 +52,12 @@ exports.getTimeBlocks = function (req, res) {
 // We are probably going to need to just delete the old one and add a new one.
 exports.updateTimeBlock = function (req, res) {
     var newTimeBlock = new TimeBlock(req.body);
-    if (newTimeBlock.task != null && newTimeBlock.startDate != null && newTimeBlock.endDate != null) {
+    if (newTimeBlock._id != null && newTimeBlock.startDate != null && newTimeBlock.endDate != null) {
         TimeBlock.updateTimeBlock(req.app.locals.timeblocks, newTimeBlock, function (result) {
             res.json(result);
         });
     } else {
-        res.json(ResultObj("Invalid task-start Time combination. Missing one or more required properties"));
+        res.json(ResultObj("Invalid task-start Time combination. Missing one or more required properties", newTimeBlock));
     }
 }
 
@@ -69,6 +69,6 @@ exports.deleteTimeBlock = function (req, res) {
             res.json(result);
         });
     } else {
-        res.json(ResultObj("Invalid task-start Time combination. Missing one or more required properties"));
+        res.json(ResultObj("Invalid task-start Time combination. Missing one or more required properties", taskStartObj));
     }
 }

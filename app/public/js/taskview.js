@@ -73,7 +73,7 @@ $(document).ready(function () {
     // Event handler for when the enter key is pressed on one of the text input forms.
     // Adds a new empty row for the task to allow the user to input another task
     $(document.body).on("keydown", ".empty-task", function (e) {
-        if ($(".empty-task").val() != "") { //if the enter key is pressed.        
+        if ($(".empty-task").val() != "") { //if the enter key is pressed.
             //regex to find only the number at the end of the id
             var curId = parseInt($(".empty-task").attr("id").match(/\d+/)[0]) + 1;
 
@@ -150,8 +150,8 @@ function addSubTasks(tasks) {
             .append( // add a new empty task to the end of the current list
                 "<div class=\"form-inline subtask-display\">" +
                 "   <span class=\"far fa-" + (t.checked == "true" ? "check-" : "") + "square subtask-checkbox\" id=\"checkbox" + curId + "\"></span>" +
-                "   <textarea class=\"form-control task-textbox border-0\" id=\"textbox" + curId + "\"" +
-                "       type=\"text\" rows=\"1\">" + t.title + "</textarea>" +
+                `   <textarea class='form-control task-textbox border-0' id='textbox${curId}'` +
+                `       type='text' rows='1' placeholder='Add a subtask here...'>${t.title}</textarea>` +
                 "   <span class=\"far fa-trash-alt\" id=\"trash" + curId + "\" style=\"float: right\"></span>" +
                 "</div>"
             );
@@ -213,9 +213,9 @@ function addEndTask(curId) {
     $(".task").children(".card-body").children(".subtask-list")
         .append( // add a new empty task to the end of the current list
             "<div class=\"form-inline subtask-display\">" +
-            "   <span class=\"far fa-square\" id=\"checkbox" + curId + "\"></span>" +
-            "   <textarea class=\"form-control task-textbox border-0 empty-task\" id=\"textbox" + curId + "\"" +
-            "       type=\"text\" rows=\"1\"></textarea>" +
+            `   <span class='far fa-square' id='checkbox${curId}'></span>` +
+            `   <textarea class='form-control task-textbox border-0 empty-task' id='textbox${curId}'` +
+            `       type='text' rows='1' placeholder='Add a subtask here...'></textarea>` +
             "</div>"
         );
 }

@@ -1,34 +1,37 @@
 //load the navbar when the page loads
 $(document).ready(function () {
-    var today = new Date();
-    $("#navbar").load("/html/navbar.html", function () {
+    var today = new Date(); //GLOBAL FOR THE PAGE. PROBABLY WANT TO CHANGE IN THE FUTURE
+
+    $("#navbar").load("/html/navbar.html", function () { //load the navbar at the top of the page
         $("#nav-schedule").addClass("nav-active");
         resizeNav();
     });
+
     generateTableRows(5, 24); //generates tables for the whole 24 hour day
-    getTimeBlocks({
-        day: today.toISOString().substr(0, 10),
-        owner: currUserId
-    }, function (response, status) {
-        if (status == "success") {
-            response.data.forEach(timeBlock => {
-                var startHour = Number(timeBlock.startDate.substr(11, 2));
-                var startMinute = Number(timeBlock.startDate.substr(14, 2));
-                var endHour = Number(timeBlock.endDate.substr(11, 2));
-                var endMinute = Number(timeBlock.endDate.substr(14, 2));
-
-                var nRows = ((endHour - startHour) * 4) - (startMinute / 15) + (endMinute / 15);
-
-                console.log(startHour, startMinute, endHour, endMinute, nRows)
-                addTaskToPage(startHour, startMinute, nRows, timeBlock.task, timeBlock._id);
-            })
-        }
-        console.log(status);
-        console.log(response);
-    });
+    addTimeBlocksToPage() // add timeblocks from the API server
     loadModalDropdown();
 
     $("#selectedDate").html(today.toDateString() + ":");
+
+    function addTimeBlocksToPage() {
+        getTimeBlocks({
+            day: today.toISOString().substr(0, 10),
+            owner: currUserId
+        }, function (response, status) {
+            if (status == "success") {
+                response.data.forEach(timeBlock => {
+                    var startHour = Number(timeBlock.startDate.substr(11, 2));
+                    var startMinute = Number(timeBlock.startDate.substr(14, 2));
+                    var endHour = Number(timeBlock.endDate.substr(11, 2));
+                    var endMinute = Number(timeBlock.endDate.substr(14, 2));
+
+                    var nRows = ((endHour - startHour) * 4) - (startMinute / 15) + (endMinute / 15);
+
+                    addTaskToPage(startHour, startMinute, nRows, timeBlock.task, timeBlock._id);
+                })
+            }
+        });
+    }
 
     // Function to generate rows for a table to make it look like a calendar.
     // The table will have 24 hours (12AM-11PM) and be broken down into sections of 15 minutes.
@@ -44,20 +47,20 @@ $(document).ready(function () {
                 meridian = "PM"
 
             rowHTML +=
-                "<tr class='empty-task-time' style='line-height:10px' id='time-" + i + "-0" + "'>" +
+                "<tr class='timeblock-row' style='line-height:10px' id='time-" + i + "-0" + "'>" +
                 "    <td rowspan='4' scope='row'><span style='width: 5em; display: inline-block'>" + time + ":00 " + meridian + "</span></td>" +
                 "    <td class='td-minute'>00</td>" +
                 "    <td class='task-bucket bucket-empty'></td>" +
                 "</tr>" +
-                "<tr class='empty-task-time' style='line-height:10px' id='time-" + i + "-15" + "'>" +
+                "<tr class='timeblock-row' style='line-height:10px' id='time-" + i + "-15" + "'>" +
                 "    <td class='td-minute'>15</td>" +
                 "    <td class='task-bucket bucket-empty'></td>" +
                 "</tr>" +
-                "<tr class='empty-task-time' style='line-height:10px' id='time-" + i + "-30" + "'>" +
+                "<tr class='timeblock-row' style='line-height:10px' id='time-" + i + "-30" + "'>" +
                 "    <td class='td-minute'>30</td>" +
                 "    <td class='task-bucket bucket-empty'></td>" +
                 "</tr>" +
-                "<tr class='empty-task-time' style='line-height:10px' id='time-" + i + "-45" + "'>" +
+                "<tr class='timeblock-row' style='line-height:10px' id='time-" + i + "-45" + "'>" +
                 "    <td class='td-minute'>45</td>" +
                 "    <td class='task-bucket bucket-empty'></td>" +
                 "</tr>";
@@ -128,8 +131,7 @@ $(document).ready(function () {
                 //First build html elements for each item in the drop
                 tasks.forEach(task => {
                     console.log(task._id); //not creating the correct ID
-                    taskSelectHTML += "<a class='dropdown-item task-dropdown-item' id='task:" + task._id + "'>" + task
-                        .title + "</a>";
+                    taskSelectHTML += "<a class='dropdown-item task-dropdown-item' id='task:" + task._id + "'>" + task.title + "</a>";
                 });
                 $("#taskDropdownMenu").html(taskSelectHTML);
             }
@@ -242,6 +244,24 @@ $(document).ready(function () {
             if (response.success)
                 addTaskToPage(startHour, startMinute, nRows, taskId, response.data._id);
         });
+    });
+
+    $("#nextDayBtn").click(function () {
+        today = new Date(today.setTime(today.getTime() + 86400000));
+        $("#selectedDate").html(today.toDateString() + ":");
+        $(".timeblock-row").remove();
+
+        generateTableRows(5, 24); //generates tables for the whole 24 hour day
+        addTimeBlocksToPage() // add timeblocks from the API server
+    });
+
+    $("#prevDayBtn").click(function () {
+        today = new Date(today.setTime(today.getTime() - 86400000));
+        $("#selectedDate").html(today.toDateString() + ":");
+        $(".timeblock-row").remove();
+
+        generateTableRows(5, 24); //generates tables for the whole 24 hour day
+        addTimeBlocksToPage() // add timeblocks from the API server
     });
 
     function createTimeBlockObject(startTime, endTime, taskId) {

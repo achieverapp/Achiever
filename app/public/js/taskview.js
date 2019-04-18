@@ -22,7 +22,7 @@ $(document).ready(function () {
     $("#priorityDropdown").data("changed", false);
 
     //updates the task information from the database.
-    getTask(function (result, status) {
+    getTask(currTaskId, function (result, status) {
         if (result != null && result.success) {
             setTaskInfo(result.data);
             console.log(result);

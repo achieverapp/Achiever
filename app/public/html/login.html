@@ -36,12 +36,8 @@
 
 </head>
 
-<style>
-</style>
-
 <body>
     <nav class="nav bg-primary" id="navbar"></nav>
-
     <div class="mx-auto page-container" style="padding-left: 16px; padding-right: 16px;">
         <div class="card center-screen" style='margin:auto;'>
             <article class="card-body">
@@ -55,18 +51,15 @@
                         Login with github
                     </a>
                 </p>
-
             </article>
-        </div> <!-- card.// -->
-
+        </div> 
     </div>
 </body>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function () { //load the navbar when the page is done loading
         $("#navbar").load("/html/navbar.html", function () {
-            $("#nav-progress").addClass("nav-active");
-            resizeNav();
+            $("#nav-progress").addClass("nav-active");            
         });
     })
 </script>

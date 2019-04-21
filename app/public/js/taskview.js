@@ -1,9 +1,13 @@
+/**
+ * Maps priority numbers to the css styles for them
+ */
 var priorityToClassMap = {
   "0": "priority-low",
   "1": "priority-med",
   "2": "priority-high"
 };
 
+/**maps priority numbers to priority names */
 var priorityToName = {
   0: "Low",
   1: "Medium",
@@ -13,12 +17,14 @@ var priorityToName = {
   "2": "High"
 };
 
+/**maps priority names to priority numbers */
 var nameToPriority = {
   "Low": 0,
   "Medium": 1,
   "High": 2
 }
 
+/**When the document finished loading, retrieve task information from the server and load all event handlers */
 $(document).ready(function () {
   //updates the task information from the database.
   getTask(currTaskId, function (result, status) {
@@ -60,6 +66,10 @@ $(document).ready(function () {
     e.currentTarget.parentElement.remove(); //traverses the tree and removes the parent html from the document.
   });
 });
+
+////////////////////////////////////////////////////////////////
+//////////// Event handlers ////////////////////////////////////
+////////////////////////////////////////////////////////////////
 
 /**
  * Item changed event handler for the category dropdown. Updates the dropdown text with what the user clicked on.
@@ -142,6 +152,65 @@ function checkSubTask(e) {
 }
 
 /**
+ * Grabs all the data from the current tasks on the page and sends only the data that has changed to be updated on the API server.
+ * Once a response is recieved, switches to the taskList Page
+ * TODO: show a loading bar and errors if the data does not get sent.
+ */
+function saveTask() {
+  if ($("#taskHeader").val() == "") { //show the user an error if there is no title for the task
+    showBlankTitleToast();
+    return;
+  }
+
+  // Calculate the dueDate from the date and time input forms.
+  var date = new Date($("#datepicker").val()).toISOString().substr(0, 10); //Grab just the date in ISO format
+  var time = $("#timepicker").val(); //Grab the time in ISO format
+  var dueDate = new Date(date + "T" + time + ":00.000Z"); //Cobine them into one time in ISO format
+
+  var task = { // Task schema with everything that will be changed each time an update is called.
+    _id: currTaskId,
+    owner: currUserId,
+    title: $("#taskHeader").val(), // Right now we always send the title, but we should change this in the future.
+    subTasks: [], // We always want to sent all subtasks as far as I can tell (possibly store a copy of the original task and compare it with the new one to decide what to send)
+    due: dueDate.toISOString() //Always want to send the dueDate unless the method above is implemented.
+  }
+
+  if ($("#taskCheckBox").hasClass("fa-check-square")) {
+    task.checked = true; //save that the task was completed.
+    task.completedOn = new Date().toISOString(); //save the time that the task was completed on.
+  } else {
+    task.checked = false; //save that the task was completed.
+    task.completedOn = null; //save the time that the task was not completed
+  }
+
+  if ($("#priorityDropdown").data("changed")) //send the new priority only if it is changed
+    task.priority = nameToPriority[$("#priorityDropdown").html()];
+
+  if ($("#categoryDropdown").data("changed")) //send the new category only if it is changed
+    task.category = $("#categoryDropdown").html();
+
+  $(".subtask-display").each(function () { //Load all the subtasks from the webpage
+    if ($(this).children("textarea").val() != "") { // Only load them if there is a task with text in it
+      task.subTasks.push(new SubTask({ //add each subtask to the array
+        checked: $(this).children("span.far").hasClass("fa-check-square"),
+        title: $(this).children("textarea").val()
+      }));
+    }
+  });
+
+  // Update the task and then switch to the tasklist page only after the data is sent.
+  updateTask(task, function (response, status) {
+    window.location.href = `/tasklist?userId=${currUserId}`; //need to change pages only after the task is updated
+  });
+}
+
+
+////////////////////////////////////////////////////////////////
+//////////// General use functions /////////////////////////////
+////////////////////////////////////////////////////////////////
+
+
+/**
  * Load the data from a task object on to the page
  * @param task: Task object that will be loaded into the page
  */
@@ -196,59 +265,6 @@ function addSubTasks(tasks) {
 
   addEndTask(curId); //Create an empty input at the end so the user can add a new subtask
   autosize($('textarea')); //set the new textarea to be autosized.
-}
-
-/**
- * Grabs all the data from the current tasks on the page and sends only the data that has changed to be updated on the API server.
- * Once a response is recieved, switches to the taskList Page
- * TODO: show a loading bar and errors if the data does not get sent.
- */
-function saveTask() {
-  if ($("#taskHeader").val() == "") { //show the user an error if there is no title for the task
-    showBlankTitleToast();
-    return;
-  }
-
-  // Calculate the dueDate from the date and time input forms.
-  var date = new Date($("#datepicker").val()).toISOString().substr(0, 10); //Grab just the date in ISO format
-  var time = $("#timepicker").val(); //Grab the time in ISO format
-  var dueDate = new Date(date + "T" + time + ":00.000Z"); //Cobine them into one time in ISO format
-
-  var task = { // Task schema with everything that will be changed each time an update is called.
-    _id: currTaskId,
-    owner: currUserId,
-    title: $("#taskHeader").val(), // Right now we always send the title, but we should change this in the future.
-    subTasks: [], // We always want to sent all subtasks as far as I can tell (possibly store a copy of the original task and compare it with the new one to decide what to send)
-    due: dueDate.toISOString() //Always want to send the dueDate unless the method above is implemented.
-  }
-
-  if ($("#taskCheckBox").hasClass("fa-check-square")) {
-    task.checked = true; //save that the task was completed.
-    task.completedOn = new Date().toISOString(); //save the time that the task was completed on.
-  } else {
-    task.checked = false; //save that the task was completed.
-    task.completedOn = null; //save the time that the task was not completed
-  }
-
-  if ($("#priorityDropdown").data("changed")) //send the new priority only if it is changed
-    task.priority = nameToPriority[$("#priorityDropdown").html()];
-
-  if ($("#categoryDropdown").data("changed")) //send the new category only if it is changed
-    task.category = $("#categoryDropdown").html();
-
-  $(".subtask-display").each(function () { //Load all the subtasks from the webpage
-    if ($(this).children("textarea").val() != "") { // Only load them if there is a task with text in it
-      task.subTasks.push(new SubTask({ //add each subtask to the array
-        checked: $(this).children("span.far").hasClass("fa-check-square"),
-        title: $(this).children("textarea").val()
-      }));
-    }
-  });
-
-  // Update the task and then switch to the tasklist page only after the data is sent.
-  updateTask(task, function (response, status) {
-    window.location.href = `/tasklist?userId=${currUserId}`; //need to change pages only after the task is updated
-  });
 }
 
 /**

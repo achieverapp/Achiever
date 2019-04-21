@@ -73,14 +73,12 @@
     $(document).ready(function () {
         resizeNav()
         setQueryParams()
-        var userId = getQueryParam("userId")
-        console.log(userId)
+        var userId = getQueryParam("userId")        
         if ("" !== userId && null !== userId && typeof userId !== 'undefined') {
             loggedIn = true;
             setCurrentPageTitle();
         }
-        else {
-            console.log("here i am")
+        else {            
             $('.logged-in').hide();
             $('.logged-out').show();
             disableMenu();
@@ -118,8 +116,7 @@
     }
 
     function getQueryParam(param) {
-        var url = window.location.href
-        console.log(window.location.href)
+        var url = window.location.href        
         temp = url.split(`${param}=`)[1]
         if(typeof temp === 'undefined') {
             return null

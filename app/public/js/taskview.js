@@ -19,27 +19,19 @@ var nameToPriority = {
     "High": 2
 }
 
-//load the navbar when the page loads
 $(document).ready(function () {
-    $("#categoryDropdown").data("changed", false); // flags to show whether data from a dropdown was changed;
-    $("#priorityDropdown").data("changed", false);
-
     //updates the task information from the database.
     getTask(currTaskId, function (result, status) {
-        if (result != null && result.success) {
+        if (result != null && result.success)
             setTaskInfo(result.data);
-            console.log(result);
-        } else {
-            console.log(result)
-        }
     });
 
+    $("#categoryDropdown").data("changed", false); // flags to show whether data from a dropdown was changed;
+    $("#priorityDropdown").data("changed", false);
     $(".dropdown").data("prevPriority", "btn-secondary"); //default style for priority dropdown
 
-
-    $("#navbar").load("/html/navbar.html", function () {
-        resizeNav();
-    });
+    //load the navbar when the page loads
+    $("#navbar").load("/html/navbar.html");
 
     // Event handler for the category dropdown menu.
     // When the user clicks a category, the dropdown will change its text to what they selected.
@@ -53,7 +45,6 @@ $(document).ready(function () {
     $(".priority-dropdown").click(function (e) {
         $("#priorityDropdown").html(e.target.innerText) //set the title of the button to the dropdown that was selected.
 
-        console.log(e.target.id);
         $("#priorityDropdown").toggleClass($(".dropdown").data("prevPriority") + " " + e.target.id); //set the style so it matches the priority
         $(".dropdown").data("prevPriority", e.target.id); //save the previous style
 
@@ -90,7 +81,6 @@ $(document).ready(function () {
 
             addEndTask(curId);
             autosize($('.empty-task'));
-            // return false;
         }
     });
 
@@ -98,12 +88,10 @@ $(document).ready(function () {
     $(document.body).on("click", ".subtask-checkbox", function (e) {
         this.classList.toggle("fa-square");
         this.classList.toggle("fa-check-square");
-        if (!$(".subtask-checkbox.fa-square")[0]) { //if there are not any boxes that are unchecked
-            // console.log("all checkBoxes checked");
+        if (!$(".subtask-checkbox.fa-square")[0]) { //if there are not any boxes that are unchecked            
             $("#taskCheckBox").addClass("fa-check-square"); //add the check to the title
             $("#taskCheckBox").removeClass("fa-square");
-        } else { //There are some unchecked boxes
-            // console.log("some checkBoxes unchecked");
+        } else { //There are some unchecked boxes            
             $("#taskCheckBox").removeClass("fa-check-square"); //remove the check from the title
             $("#taskCheckBox").addClass("fa-square");
         }
@@ -190,9 +178,7 @@ function addSubTasks(tasks) {
         } else {
             task.checked = false; //save that the task was completed.
             // task.completedOn = null; //save the time that the task was not completed
-        }
-
-        console.log($("#priorityDropdown").data("changed"), $("#categoryDropdown").data("changed"))
+        }        
 
         if ($("#priorityDropdown").data("changed")) //send the new priority only if it is changed
             task.priority = nameToPriority[$("#priorityDropdown").html()];

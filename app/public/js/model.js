@@ -3,6 +3,10 @@
     This file will now be used as a standardized interface to the true model backend.
 */
 
+///////////////////////////////////////////////////////////////////////////////
+/////////////////// Class Definitions for Database Schema /////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * SubTask object that is the same schema as the SubTasks stored inside a task on the API server.
  * Need to move all these into their own separate file
@@ -30,6 +34,10 @@ class Task {
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////
+/////////////////// Global Variables //////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
 const currUserId = getQueryParam('userId');
 const currTaskId = getQueryParam('taskId');
 const URL = "http://localhost:3000"; //URL of the API server.
@@ -44,9 +52,14 @@ function errorLog(data, status) {
     console.log(data);
 }
 
-// call this function with a callback to recieve all tasks for the user in the query parameter from the API
-// Will return details in the response object of the callback function
-// status object will return the status of the ajax call
+///////////////////////////////////////////////////////////////////////////////
+/////////////////// Task list interface functions /////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Retrieve all tasks for the current user from the API server
+ * @param callback: the function to call when the API call completes.
+ */
 function getTaskList(callback) {
     $.ajax({
         url: URL + "/api/tasks/id/" + currUserId,
@@ -84,6 +97,10 @@ function updateTask(task, callback) {
         error: errorLog
     });
 }
+
+///////////////////////////////////////////////////////////////////////////////
+/////////////////// TimeBlocks interface functions /////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Add a timeblock to the database 
@@ -154,7 +171,11 @@ function getTimeBlocks(timeBlock, callback) {
 }
 
 
-//https://stackoverflow.com/questions/19491336/get-url-parameter-jquery-or-how-to-get-query-string-values-in-js
+/**
+ * Retrieves parameters from the URL
+ * @param sParam: Retrieve the parameter from the URL with this name
+ *https://stackoverflow.com/questions/19491336/get-url-parameter-jquery-or-how-to-get-query-string-values-in-js
+ */
 function getQueryParam(sParam) {
     var sPageURL = window.location.search.substring(1),
         sURLVariables = sPageURL.split('&'),

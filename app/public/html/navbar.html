@@ -70,6 +70,8 @@
 
 <script>
     var loggedIn = false; //global flag that signals if the user is signed in
+
+    //When the page finished loading, adjust the navbar size
     $(document).ready(function () {
         resizeNav()
         setQueryParams()
@@ -85,11 +87,12 @@
         }
     });
 
-    $(window).resize(function () {
-        resizeNav()
-    });
+    // When the window resizes, we want to resize the navbar
+    $(window).resize(resizeNav);
 
-    // Handles the actions executed when switching between mobile and large resolutions
+    /**
+     * Handles the actions executed when switching between mobile and large resolutions
+     */
     function resizeNav() {
         // If the window is scaled to mobile, use the hamburger navbar
         if ($(window).width() <= 640) {
@@ -103,6 +106,9 @@
         }
     }
 
+    /**
+     * Adds the query parameters needed for the rest of the app to the URL
+     */
     function setQueryParams() {
         var url = window.location.href;
         var temp = url.split('userId=')[1]
@@ -115,6 +121,10 @@
         });
     }
 
+    /**
+     * Grabs the value of a query parameter from the URL and returns its value
+     * @param {string} param: name of the parameter that will be retrieved from the URL
+     */
     function getQueryParam(param) {
         var url = window.location.href        
         temp = url.split(`${param}=`)[1]
@@ -124,10 +134,16 @@
         return url.split(`${param}=`)[1].split('&')[0]
     }
 
+    /**
+     * Sets the navbar title to the name of the current page.
+     */
     function setCurrentPageTitle() {
         $('.nav-title').html(document.title);
     }
 
+    /**
+     * Disable the click events for the menu buttons.
+     */
     function disableMenu() {
         $('.navbar-toggler').removeAttr('data-toggle')
         $("#navIconMobile").removeClass('fa-bars').addClass('fa-check-double')

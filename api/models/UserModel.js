@@ -21,13 +21,13 @@ class User {
     this._id = user._id == null ? null : user._id;
     this.savedTasks = user.savedTasks == null ? [] : user.savedTasks;
   }
-  
+
   /**
    * inserts a new user into the database
    * If no user is found, there is no data retuned and a statusMsgs with the reason why there was an error.
    * @param {Collection} usersDB: MongoDB collection that the function will be run on
    * @param {string} newUser: User object that you want add to the database.
-   * @param {ResultObj} resultObj: JSON object that contains the server response
+   * @param {function} result: Function to call for the server response
    */
   static addUser(usersDB, newUser, result) {
     var resultObj;
@@ -48,7 +48,7 @@ class User {
    * If no user is found, there is no data retuned and a statusMsg with the reason why there was an error.
    * @param {Collection} usersDB: MongoDB collection that the function will be run on
    * @param {string} userId: User id for the user you want to delete
-   * @param {ResultObj} resultObj: JSON object that contains the server response
+   * @param {function} result: Function to call for the server response
    */
   static getUser(usersDB, queryUser, result) {
     var query = queryUser;
@@ -108,7 +108,7 @@ class User {
    * searching for the userId(for now we will find by userId) and remove them from the database
    * @param {Collection} usersDB: MongoDB collection that the function will be run on
    * @param {string} userId: User id for the user you want to delete
-   * @param {ResultObj} resultObj: JSON object that contains the server response
+   * @param {function} result: Function to call for the server response
    */
   static deleteUser(usersDB, userId, result) {
     var resultObj;
@@ -136,6 +136,10 @@ class User {
     });
   }
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////// General Use Functions /////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Constructor function for a result Object. Allows fast creation of a return object for an API response.

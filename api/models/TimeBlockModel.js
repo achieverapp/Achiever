@@ -28,6 +28,7 @@ class TimeBlock {
                 result(resultObj);
             } else { //timeBlock was added to the database.
                 resultObj = ResultObj("Added timeBlock ", null, true, newTimeBlock._id, newTimeBlock);
+                console.log(resultObj)
                 result(resultObj);
             }
         });
@@ -91,8 +92,8 @@ class TimeBlock {
                 resultObj = ResultObj("timeBlock is not available");
                 console.log(resultObj.statusMsg);
                 result(resultObj);
-            } else { //timeBlock is in the database!          
-                updateDate(timeBlockDB, newTimeBlock, resultObj).then(result); //change these to things we need later                
+            } else { //timeBlock is in the database!
+                updateDate(timeBlockDB, newTimeBlock, resultObj).then(result); //change these to things we need later
             }
         });
     }
@@ -135,9 +136,9 @@ class TimeBlock {
 /*
       ResultObj constructor function. Since we need to create a different return object for many different possible scenarios, all this functionality
       can be put in one function.
-    
+
       The most common parameters are closer to the start of the list while the ones that rarely get called are towards the end.
-    
+
 The most common parameters are closer to the start of the list
 while the ones that rarely get called are towards the end.*/
 

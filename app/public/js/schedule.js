@@ -24,6 +24,10 @@ $(document).ready(function () {
     $("#btnNextDay").click(onBtnNextDayClick)
     $("#btnPrevDay").click(onBtnPrevDayClick)
     $(document).on('drop', 'tr', onTimeblockDropped)
+    $(document.body).on("click", ".task-dropdown-item", onTaskDropdownItemClick)
+    $(document.body).on("click", ".input-minus", onInputMinusClick)
+    $(document.body).on("click", ".input-plus", onInputPlusClick)
+    $("#btnSave").click(onBtnSaveClick)
 
     $(document).on('dragover', 'tr', function (event) {
         event.preventDefault()
@@ -36,10 +40,7 @@ $(document).ready(function () {
     })
 })
 
-$(document.body).on("click", ".task-dropdown-item", onTaskDropdownItemClick)
-$(document.body).on("click", ".input-minus", onInputMinusClick)
-$(document.body).on("click", ".input-plus", onInputPlusClick)
-$("#btnSave").click(onBtnSaveClick)
+
 
 ////////////////////////////////////////////////////////////////////////////////
 ///////////////////// Event Handlers ///////////////////////////////////////////
@@ -97,7 +98,7 @@ function onBucketEmptyClick () {
     $("#inputEndMinute").val(quarter);
     $("#inputStartMinute").val(quarter);
     $("#timeblockEditModal").modal("show"); //open the modal
-});
+}
 
 function onBtnNextDayClick() {
     currentDay = new Date(currentDay.setTime(currentDay.getTime() + 86400000));
@@ -207,6 +208,7 @@ function onInputMinusClick() {
  * @param {*} e: event object for corresponding click event
  */
 function onTaskDropdownItemClick(e) {
+    console.log('task dropdown item click')
     // TODO: check still not creating correct Id
     console.log((e.target.id).split(':')[1]); //not creating the correct ID
     $("#taskDropdown").html(e.target.innerHTML);
@@ -346,7 +348,7 @@ function addTimeblockToPage(startHour, startMinute, nRows, taskId, timeblockId) 
         td.removeClass("bucket-empty");
         td.addClass("bucket-full");
         td.css('padding', '0px');
-        td.html(generateTimeblockDiv)
+        td.html(generateTimeblockDiv(timeblockId, task.title))
         setPriorityColor(td.children('.time-block-card'), task.priority);
         var div = (td.children('.time-block-card'))
         div.height(div.closest('td').height() + 1);

@@ -6,6 +6,9 @@
 
 const Task = require('../models/TaskModel.js');
 
+/** 
+ * Adds a task to the database. If there is an error, it will return to the caller.
+ */
 exports.addTask = function (req, res) {
   var newTask = new Task(req.body);
   Task.addTask(req.app.locals.tasks, newTask, function (err, result) {
@@ -17,7 +20,9 @@ exports.addTask = function (req, res) {
   });
 };
 
-//we need to deal with determining if the request is for a single task or for all the tasks from a certain user
+/**
+ * Gets a single task from the server based on ID. If there is an error, it will return to the caller.
+ */
 exports.getTask = function (req, res) {
   Task.getTask(req.app.locals.tasks, req.params.id, function (err, result) {
     if (err) {
@@ -28,6 +33,9 @@ exports.getTask = function (req, res) {
   });
 }
 
+/**
+ * Handles getting all tasks for the userID. Returns an error if there is one.
+ */
 exports.getTasks = function (req, res) {
   Task.getTasks(req.app.locals.tasks, req.params.id, function (err, result) {
     if (err) {
@@ -38,6 +46,9 @@ exports.getTasks = function (req, res) {
   });
 }
 
+/**
+ * Handles updaing tasks, automatically adds a task instead of updating if the ID is default.
+ */
 exports.updateTask = function (req, res) {
   if (req.body._id == "default") { //When we are adding a new task, the ID will be default
     delete req.body._id; //remove the ID from the task object
@@ -65,6 +76,9 @@ exports.updateTask = function (req, res) {
   }
 }
 
+/**
+ * Delete task handler, there is no logic needed here. We do not currently want to delete tasks.
+ */
 exports.deleteTask = function (req, res) {
   Task.getTasks(req.app.locals.tasks, req.params.id);
 }

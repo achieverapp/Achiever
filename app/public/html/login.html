@@ -56,12 +56,11 @@
     </div>
 </body>
 
-<script>
-    $(document).ready(function () { //load the navbar when the page is done loading
-        $("#navbar").load("/html/navbar.html", function () {
+<script>    
+    // Load the navbar when the page finishes loading.
+    $("#navbar").load("/html/navbar.html", function () {
             $("#nav-progress").addClass("nav-active");            
         });
-    })
 </script>
 
 </html>

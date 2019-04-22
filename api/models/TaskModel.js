@@ -151,12 +151,16 @@ class Task {
   }
 }
 
-/*
-  ResultObj constructor function. Since we need to create a different return object for many different possible scenarios, all this functionality
-  can be put in one function.
-
-  The most common parameters are closer to the start of the list while the ones that rarely get called are towards the end.
-*/
+/**
+ * Constructor function for a result Object. Allows fast creation of a return object for an API response.
+ * 
+ * The most common parameters are closer to the start of the list while the ones that rarely get called are towards the end.
+ * @param {string} statusMsg: Message that gives more detail on the result of the call.
+ * @param {Object} statusObj: Object containing details about errors if there is an error
+ * @param {boolean} success: Status of the API call
+ * @param {string} id: ID of the object affected
+ * @param {Object} data: data that can be read from the reciever
+ */
 function ResultObj(statusMsg = "", statusObj = null, success = false, id = null, data = null) { //what will be returned to the requester when the function completes
   var returnObj = {
     objId: id,
@@ -307,17 +311,20 @@ async function updateTaskTB(tasksDB, newTask) {
 
 //STATUS: Currently always just adds any new subtasks on to the end. I think we just want it to replace all the subtasks with whatever gets send by the webpage
 //update the subtask
+/**
+ * Gets a single timeblock with its _id as the key
+ * If no timeBlock is found, there is no data retuned and a statusMsg with the reason why there was an error.
+ * @param {Collection} timeBlockDB: MongoDB collectino that this function will be ran on.
+ * @param {TimeBlock} querytimeBlock: Object that contains the day and ownerID of the timeblocks that we want to retrieve
+ * @param {function} result: Function to call for the server response
+ */
 async function updatesubTask(tasksDB, newTask) {
   return new Promise(function (resolve) {
-    var resultObj;
-    tasksDB.find({
-      _id: new ObjectId(newTask._id),
-      subTasks: {
-        $elemMatch: {
-          subTasks: newTask.subTasks
+      var resultObj;
+      tasksDB.find({ //removed uneeded $elemMatch
+          _id: new ObjectId(newTask._id),
         }
-      }
-    }).toArray(function (err, res) {
+      }).toArray(function (err, res) {
       if (err) {
         resultObj = ResultObj("Error when locating subtask", err);
         console.log(resultObj.statusMsg + ": " + err);

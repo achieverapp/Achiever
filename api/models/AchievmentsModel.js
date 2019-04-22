@@ -13,6 +13,7 @@ class Acheievments
         this.counter=achievements.checkcounter== null ? null: 0;
         // might be uneccesary since counter should indicate if a achievements is completed
         this.completed=achievements.completed==null?  false:this.completed;
+        this.userAchievement=achievements.userAchievement==null?[]:this.userAchievement;
         
     }
 

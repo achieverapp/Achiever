@@ -269,59 +269,18 @@ async function updateTaskPriority(tasksDB, newTask) {
   })
 }
 
-//update the timeblock debating whether or not timeblocks would need a table of its own
-async function updateTaskTB(tasksDB, newTask) {
-  return new Promise(function (resolve) {
-    var resultObj;
-    tasksDB.find({
-      _id: new ObjectId(newTask._id)
-      // timeBlocks: { // for now we are just going to update everything each time we have to update timeblocks
-      //   $elemMatch: {
-      //     timeBlocks: newTask.timeBlocks
-      //   }
-      // }
-    }).toArray(function (err, res) {
-      if (err) {
-        resultObj = ResultObj("Error when locating specified timeblock", err);
-        console.log(resultObj.statusMsg + ": " + err);
-        resolve(statusObj);
-      } else if (res.length == 0) {
-        tasksDB.updateOne({
-          _id: new ObjectId(newTask._id)
-        }, {
-          $set: {
-            timeblocks: newTask.timeBlocks
-          },
-          function (err2) {
-            if (err2) {
-              resultObj = ResultObj("Error when locating specified timeblock", err);
-              console.log(resultObj.statusMsg + ": " + err);
-              resolve(statusObj);
-            } else {
-              resultObj = ResultObj("Task updated", null, true);
-              resolve(resultObj);
-            }
-          }
-        })
-      }
-    })
-  })
-}
+//Removed timeblock update
 
-
-//STATUS: Currently always just adds any new subtasks on to the end. I think we just want it to replace all the subtasks with whatever gets send by the webpage
-//update the subtask
 /**
- * Gets a single timeblock with its _id as the key
- * If no timeBlock is found, there is no data retuned and a statusMsg with the reason why there was an error.
- * @param {Collection} timeBlockDB: MongoDB collectino that this function will be ran on.
- * @param {TimeBlock} querytimeBlock: Object that contains the day and ownerID of the timeblocks that we want to retrieve
- * @param {function} result: Function to call for the server response
+ * Updates the subtasks for a task
+ * If no Task is found, there is no data retuned and a statusMsg with the reason why there was an error.
+ * @param {Collection} tasksDB: MongoDB collectino that this function will be ran on.
+ * @param {Task} newTask: Object that contains the subtasks that you want to replace.
  */
 async function updatesubTask(tasksDB, newTask) {
   return new Promise(function (resolve) {
       var resultObj;
-      tasksDB.find({ //removed uneeded $elemMatch
+      tasksDB.find({
           _id: new ObjectId(newTask._id),
         }
       }).toArray(function (err, res) {

@@ -1,13 +1,23 @@
 /* CptS 489, Spring 2019
     Project: Task Tracker
-    File: UserModel.js    */
+    File: TaskModel.js    */
 
 'use strict';
-
 var ObjectId = require('mongodb').ObjectId;
-var SubTask = require('./SubTask.js').default;
 
+/**
+ * Task object that represents and controls functionality for storing tasks on a backend database
+ * Current properties of a task:
+ - name
+ - category
+ - priority
+ - subtasks[]
+ */
 class Task {
+  /**
+   * Takes an Object and turns it into a Task with all the necessary properties.
+   * @param {Object} task 
+   */
   constructor(task) {
     this.owner = task.owner == null ? null : task.owner;
     this.title = task.title == null ? null : task.title;
@@ -19,10 +29,13 @@ class Task {
     this.completedOn = task.completedOn == null ? null : task.completedOn;
     this.checked = task.checked == null ? false : task.checked;
   }
-  /*
-    add a task to the task database
-    if the task can't be added then just return an err message
-  */
+
+  /**
+   * Inserts a single task to the database     
+   * @param {Collection} tasksDB: MongoDB collection that this function will be ran on.
+   * @param {Task} task: Task object that you want to add to the database.
+   * @param {function} result: Function to call for the server response
+   */
   static addTask(tasksDB, task, result) {
     var resultObj;
     tasksDB.insertOne(task, function (err, res) {
@@ -36,10 +49,15 @@ class Task {
       }
     });
   }
-  /*
-    get a single task
-    if the task is not available then the return an err message,else return the task informationto
-  */
+
+  /**
+   * Retrieves a single task
+   * If no Task is found, there is no data retuned and a statusMsg with the reason why there was an error.
+   * if the task is not available then the return an err message
+   * @param {Collection} tasksDB: MongoDB collection that this function will be ran on.
+   * @param {string} taskId: TaskID that we want to retrieve information from
+   * @param {function} result: Function to call for the server response
+   */
   static getTask(tasksDB, taskId, result) {
     var resultObj, id;
     if (taskId == "default") { // If the id is 'default' then we cannot create an ObjectId with it and mus tjust pass it as a string.
@@ -64,7 +82,13 @@ class Task {
     });
   }
 
-  //get all tasks for a specific user
+  /**
+   * Retrieves all the tasks for a certain user.
+   * If no Task is found, there is no data retuned and a statusMsg with the reason why there was an error.
+   * @param {Collection} tasksDB: MongoDB collection that this function will be ran on.
+   * @param {string} userId: userID that we want to retrieve all the tasks for
+   * @param {function} result: Function to call for the server response
+   */
   static getTasks(tasksDB, userId, result) {
     var resultObj;
     tasksDB.find({
@@ -80,13 +104,19 @@ class Task {
       }
     });
   }
-  // TODO: Implement U and D in milestone 3
-  /*update the task for several cases
-  -name
-  -category
-  -priority
-  -subtask
-  -timeblock?*/
+
+  /**
+   * Updates the properties of a task
+   * Current properties of a task:
+   - name
+   - category
+   - priority
+   - subtasks[]
+   * If no Task is found, there is no data retuned and a statusMsg with the reason why there was an error.
+   * @param {Collection} tasksDB: MongoDB collection that this function will be ran on.
+   * @param {Task} newTask: Object that contains the name and taskID that you want to update
+   * @param {function} result: Function to call for the server response
+   */
   static updateTask(tasksDB, newTask, result) {
     var resultObj;
     tasksDB.find({
@@ -122,8 +152,13 @@ class Task {
       }
     });
   }
-  // TODO: Implement U and D in milestone 3
-  /*delete a task from the task db*/
+
+  /**
+   * Deletes a task from the database
+   * If no Task is found, there is no data retuned and a statusMsg with the reason why there was an error.
+   * @param {Collection} tasksDB: MongoDB collection that this function will be ran on.
+   * @param {Task} newTask: Object that contains the taskID that you want to delete
+   */
   static deleteTask(tasksDB, taskId) {
     var resultObj;
     tasksDB.find({
@@ -172,7 +207,12 @@ function ResultObj(statusMsg = "", statusObj = null, success = false, id = null,
   return returnObj;
 }
 
-//update the priorty
+/**
+ * Updates the checked status of a task
+ * If no Task is found, there is no data retuned and a statusMsg with the reason why there was an error.
+ * @param {Collection} tasksDB: MongoDB collection that this function will be ran on.
+ * @param {Task} newTask: Object that contains the checked status and taskID that you want to update
+ */
 async function updateTaskChecked(tasksDB, newTask) {
   return new Promise(function (resolve) {
     var resultObj;
@@ -197,7 +237,12 @@ async function updateTaskChecked(tasksDB, newTask) {
   })
 }
 
-//update the task name
+/**
+ * Updates the name of a task
+ * If no Task is found, there is no data retuned and a statusMsg with the reason why there was an error.
+ * @param {Collection} tasksDB: MongoDB collection that this function will be ran on.
+ * @param {Task} newTask: Object that contains the name and taskID that you want to update
+ */
 async function updateTaskName(tasksDB, newTask) {
   return new Promise(function (resolve) {
     var resultObj;
@@ -221,7 +266,13 @@ async function updateTaskName(tasksDB, newTask) {
 
   })
 }
-//update category
+
+/**
+ * Updates the category of a task
+ * If no Task is found, there is no data retuned and a statusMsg with the reason why there was an error.
+ * @param {Collection} tasksDB: MongoDB collection that this function will be ran on.
+ * @param {Task} newTask: Object that contains the category and taskID that you want to update
+ */
 async function updateTaskCategory(tasksDB, newTask) {
   return new Promise(function (resolve) {
     var resultObj;
@@ -242,10 +293,15 @@ async function updateTaskCategory(tasksDB, newTask) {
         }
       }
     })
-
   })
 }
-//update the priorty
+
+/**
+ * Updates the priority of a task
+ * If no Task is found, there is no data retuned and a statusMsg with the reason why there was an error.
+ * @param {Collection} tasksDB: MongoDB collection that this function will be ran on.
+ * @param {Task} newTask: Object that contains the priority and taskID that you want to update
+ */
 async function updateTaskPriority(tasksDB, newTask) {
   return new Promise(function (resolve) {
     var resultObj;
@@ -269,21 +325,18 @@ async function updateTaskPriority(tasksDB, newTask) {
   })
 }
 
-//Removed timeblock update
-
 /**
  * Updates the subtasks for a task
  * If no Task is found, there is no data retuned and a statusMsg with the reason why there was an error.
- * @param {Collection} tasksDB: MongoDB collectino that this function will be ran on.
+ * @param {Collection} tasksDB: MongoDB collection that this function will be ran on.
  * @param {Task} newTask: Object that contains the subtasks that you want to replace.
  */
 async function updatesubTask(tasksDB, newTask) {
   return new Promise(function (resolve) {
-      var resultObj;
-      tasksDB.find({
-          _id: new ObjectId(newTask._id),
-        }
-      }).toArray(function (err, res) {
+    var resultObj;
+    tasksDB.find({
+      _id: new ObjectId(newTask._id)
+    }).toArray(function (err, res) {
       if (err) {
         resultObj = ResultObj("Error when locating subtask", err);
         console.log(resultObj.statusMsg + ": " + err);
@@ -309,5 +362,6 @@ async function updatesubTask(tasksDB, newTask) {
     })
   })
 }
+
 
 module.exports = Task;

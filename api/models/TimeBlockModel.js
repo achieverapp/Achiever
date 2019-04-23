@@ -35,7 +35,7 @@ class TimeBlock {
     /**
      * Inserts a timeblock to the database
      * If no timeBlock is found, there is no data retuned and a statusMsg with the reason why there was an error.
-     * @param {Collection} timeBlockDB: MongoDB collectino that this function will be ran on.
+     * @param {Collection} timeBlockDB: MongoDB collection that this function will be ran on.
      * @param {TimeBlock} newTimeBlock: TimeBlock that you want to add to the server.
      * @param {function} result: Function to call for the server response
      */
@@ -57,7 +57,7 @@ class TimeBlock {
     /**
      * Gets a single timeblock with its _id as the key
      * If no timeBlock is found, there is no data retuned and a statusMsg with the reason why there was an error.
-     * @param {Collection} timeBlockDB: MongoDB collectino that this function will be ran on.
+     * @param {Collection} timeBlockDB: MongoDB collection that this function will be ran on.
      * @param {TimeBlock} querytimeBlock: Object that contains the day and ownerID of the timeblocks that we want to retrieve
      * @param {function} result: Function to call for the server response
      */
@@ -83,7 +83,7 @@ class TimeBlock {
 
     /**
      * Gets all timeblocks from the server for a user on a certain day.
-     * @param {Collection} timeBlockDB: MongoDB collectino that this function will be ran on.
+     * @param {Collection} timeBlockDB: MongoDB collection that this function will be ran on.
      * @param {TimeBlock} querytimeBlock: Object that contains the day and ownerID of the timeblocks that we want to retrieve
      * @param {function} result: Function to call for the server response
      */
@@ -106,7 +106,7 @@ class TimeBlock {
 
     /**
      * Updates a start and end time for a time block
-     * @param {Collection} timeBlockDB: MongoDB collectino that this function will be ran on.
+     * @param {Collection} timeBlockDB: MongoDB collection that this function will be ran on.
      * @param {TimeBlock} newTimeBlock: Timeblock object that will be updated on the server side.
      * @param {function} result: Function to call for the server response
      */
@@ -131,7 +131,7 @@ class TimeBlock {
 
     /**
      * Deletes a timeblock from the database using the taskID and startDate as a key.
-     * @param {Collection} timeBlockDB: MongoDB collectino that this function will be ran on.
+     * @param {Collection} timeBlockDB: MongoDB collection that this function will be ran on.
      * @param {TimeBlock} querytimeBlock: Timeblock object that will be used to locate the one to delete.
      * @param {function} result: Function to call for the server response
      */
@@ -194,7 +194,7 @@ function ResultObj(statusMsg = "", statusObj = null, success = false, id = null,
 
 /**
  * Updates the start and end date of a timeblock.
- * @param {Collection} timeBlockDB: MongoDB collectino that this function will be ran on.
+ * @param {Collection} timeBlockDB: MongoDB collection that this function will be ran on.
  * @param {TimeBlock} newTimeBlock: Timeblock object to update.
  * @param {ResultObj} resultObj: JSON object that contains the server response
  */

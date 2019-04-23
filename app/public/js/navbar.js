@@ -21,11 +21,7 @@ $(document).ready(function () {
 /**
  * Event handler for window resize events. Switches nav between mobile and desktop versions as appropriate.
  */
-$(window).resize(function () {
-    resizeNav()
-});
-
-// Handles the actions executed when switching between mobile and large resolutions
+$(window).resize(resizeNav);
 
 /**
  * Shows the correct navbar based on screen resolution. Mobile nav is used for screens narrower than 640px, desktop for larger.

@@ -52,14 +52,17 @@
                     </a>
                 </p>
             </article>
-        </div> 
+        </div>
     </div>
 </body>
 
 <script>
+    /**
+     * loads the navbar and when the document finishes loading.
+     */
     $(document).ready(function () { //load the navbar when the page is done loading
         $("#navbar").load("/html/navbar.html", function () {
-            $("#nav-progress").addClass("nav-active");            
+            $("#nav-progress").addClass("nav-active");
         });
     })
 </script>

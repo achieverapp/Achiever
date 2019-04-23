@@ -169,7 +169,30 @@ function getTimeBlocks(timeBlock, callback) {
         error: errorLog
     });
 }
+///////////////////////////////////////////////////////////////////////////////
+/////////////////// achievements interface functions /////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Get all timeblocks on a certain day for a certain user.
+ * @param userAchievement: Pass a timeblok object with the owner ID and the day that you want to get the tasks for.
+ * @param callback: the function to call when the API call completes.
+ */
+function getUserAchievements(userAchievement, callback)
+{
+    var sendObj={
+        owner:userAchievement.owner,
+        
+    }
+
+    $.ajax({
+        url: URL + "/api/UserAchievement/" + JSON.stringify(sendObj),
+        data: userachievement,
+        method: 'GET',
+        success: callback,
+        error: errorLog
+    });
+}
 
 /**
  * Retrieves parameters from the URL

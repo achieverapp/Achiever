@@ -6,4 +6,17 @@ $(document).ready(function()
         $("#nav-schedule").addClass("nav-active");
         resizeNav();
     });
+
+
+    
 })
+
+function buildAchievementsList()
+{
+getUserAchievements({
+    owner:currUserId
+},function(result,error)
+{
+    
+})
+}

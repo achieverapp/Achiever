@@ -1,3 +1,7 @@
+/* CptS 489, Spring 2019
+    Project: Task Tracker
+    File: AchievementModel.js    */
+
 'use strict';
 
 var ObjectId = require('mongodb').ObjectId;
@@ -12,7 +16,7 @@ class Acheievments
         // this is just for counting how many times the achievement was completed
         this.counter=achievements.checkcounter== null ? null: 0;
         // might be uneccesary since counter should indicate if a achievements is completed
-        this.completed=achievements.completed==null?  false:this.completed;
+        //this.completed=achievements.completed==null?  false:this.completed;
         this.userAchievement=achievements.userAchievement==null?[]:this.userAchievement;
         
     }
@@ -33,9 +37,7 @@ static addAchievements(achievementsDB, achievements, result) {
 
   static getAchievements(achievementsDB, achievementsId, result) {
     var resultObj, id;
-    if (achievementsId == "default") { // If the id is 'default' then we cannot create an ObjectId with it and mus tjust pass it as a string.
-      id = achievementsId;
-    } else {
+    if (achievementsId._id) { // If the id is 'default' then we cannot create an ObjectId with it and mus tjust pass it as a string.
       id = new ObjectId(achievementsId);
     }
     achievementsDB.find({
@@ -93,7 +95,7 @@ static addAchievements(achievementsDB, achievements, result) {
       }
     })
   }
-
+// maybe not necessary to delete achievements 
 static deleteachievement(achievementsDB, achievementId) {
   var resultObj;
   achievementsDB.find({
@@ -149,9 +151,5 @@ function ResultObj(statusMsg = "", statusObj = null, success = false, id = null,
   // checks to see if the achievement is completed
   function achievementCheck(userId)
   {
-    if(userId)
-    {
-      return true;
-    }
-    return false;
+    
   }

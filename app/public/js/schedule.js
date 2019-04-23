@@ -20,8 +20,6 @@ $(document).ready(function () {
     generateTableRows(5, 24) //generates tables for the whole 24 hour day
     addTimeblocksToPage() // add timeblocks from the API server
     loadModalDropdown()
-
-
 })
 
 $(document.body).on('dragover', 'tr', onTrDragover)
@@ -59,7 +57,7 @@ function onTrDragover(e) {
  * Click event handler for empty time slot. When an empty time slot in the schedule is clicked, open the timeblock editing modal,
  * and set the times based on the time clicked on.
  */
-function onBucketEmptyClick () {
+function onBucketEmptyClick() {
     var id = $(this).closest('tr')[0].id
     var temp = id.split('-') // empty time block's ids are displayed as times in 24hr format
     var hour24 = parseInt(temp[1])
@@ -145,7 +143,7 @@ function onBtnSaveClick() {
         return
     }
     var nRows = ((endHour - startHour) * 4) - (startMinute / 15) + (endMinute / 15);
-    if (hasOverlaps(startHour, startMinute, nRows)) {
+    if (hasOverlaps(startHour, startMinute, nRows, null)) {
         showOverlapToast()
         return
     }
@@ -243,7 +241,7 @@ function onTimeblockDropped(event) {
     var nRows = $(id).children().find('.time-block-card').data('nRows');
     var taskId = $(id).children().find('.time-block-card').data('taskId');
 
-    if (!hasOverlaps(hour, minute, nRows)) {
+    if (!hasOverlaps(hour, minute, nRows, timeBlockID)) {
         removeTimeblockFromPage(id);
         addTimeblockToPage(hour, minute, nRows, taskId, timeBlockID);
         var endHour = Number(hour) + Math.floor(nRows / 4); //calculate the end times
@@ -522,14 +520,20 @@ function generateTimeblockDiv(timeblockId, taskTitle) {
  * @param {NUmber} hour24: the 24 hour start of the range
  * @param {Number} minute: the minute start of the range in 15 minute increments
  * @param {Number} nRows: the number of rows to span (number of 15 minute blocks)
+ * @param {string} timeBlockID: the timeblock ID that can be compared to allow overlap only if it is itself
  * @returns true if overlaps, false otherwise
  */
-function hasOverlaps(hour24, minute, nRows) {
-    var currentHour = hour24,
+function hasOverlaps(hour24, minute, nRows, timeBlockID) {
+    var selector = "",
+        currentHour = hour24,
         currentMinute = minute,
         trId = "#time-" + currentHour + "-" + currentMinute;
 
-    if ($(trId).children('.bucket-full').length > 0) {
+    if (timeBlockID != null) // If there is no timeblock ID passed in.
+        selector = ':not(#' + timeBlockID + ')';
+
+    if ($(trId).children('.bucket-full').children(selector) > 0) { // If the specific location selected has a task that starts on it.
+        //console.log($(trId).children('.bucket-full'));
         return true;
     }
     for (var i = 0; i < nRows - 1; i++) {
@@ -540,7 +544,9 @@ function hasOverlaps(hour24, minute, nRows) {
             currentMinute += 15;
         }
         trId = "#time-" + currentHour + "-" + currentMinute;
-        if ($(trId).children('.bucket-full').length > 0) {
+        if ($(trId).children('.bucket-full').children(selector).length > 0) { // If the row has part of a task on it that is not itself
+            // console.log("$(trId).children('.bucket-full').children(" + selector + ")")
+            // console.log($(trId).children('.bucket-full').children(selector))
             return true;
         }
     }

@@ -1,8 +1,3 @@
-
-
-
-
-
 /* CptS 489, Spring 2019
     Project: Task Tracker
     File: UserAchievementModel.js    */
@@ -10,36 +5,34 @@
 
 var ObjectId = require('mongodb').ObjectId;
 
-class userachievements
-{
-    constructor(UserAchievement)
-    {
-        this.owner=UserAchievement.owner==null?null:UserAchievement.owner;
-        this.datesAchieved=UserAchievement.datesAchieved==null?[]:UserAchievement.datesAchieved;
-        this.recent=UserAchievement.recent==null? new Date().toISOString:UserAchievement.recent;
-        this.achievementId=UserAchievement.achievementId==null?null:UserAchievement.achievementId;
-    }
-    static addUserAchievement(userachievementsDB, userachievement, result) 
-    {
-        var resultObj;
-        userachievementsDB.insertOne(userachievement, function (err, res) {
+class UserAchievement {
+  constructor(UserAchievement) {
+    this.owner = UserAchievement.owner == null ? null : UserAchievement.owner;
+    this.datesAchieved = UserAchievement.datesAchieved == null ? [] : UserAchievement.datesAchieved;
+    this.recent = UserAchievement.recent == null ? new Date().toISOString : UserAchievement.recent;
+    this.achievementId = UserAchievement.achievementId == null ? null : UserAchievement.achievementId;
+  }
+
+  static addUserAchievement(userAchievementsDB, userAchievement, result) {
+    var resultObj;
+    userAchievementsDB.insertOne(userAchievement, function (err, res) {
       if (err) { //Unkown error, return to client and display it in the log.
         resultObj = ResultObj("Error when adding new useruseruserachievements to database", err);
         console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
         result(null, resultObj);
       } else {
-        resultObj = ResultObj("Added useruseruserachievements " + useruseruserachievements.title, null, true, useruseruserachievements._id, useruseruserachievements);
+        resultObj = ResultObj("Added useruseruserachievements " + userAchievement.title, null, true, userAchievement._id, userAchievement);
         result(null, resultObj);
       }
     });
-    }
-    static getUserAchievement(userachievementsDB, userachievementId, result) 
-    {
+  }
+
+  static getUserAchievement(userAchievementsDB, userAchievementId, result) {
     var resultObj, id;
-    if (userachievementId._id) { // If the id is 'default' then we cannot create an ObjectId with it and mus tjust pass it as a string.
-      id = new ObjectId(userachievementsId);
+    if (userAchievementId._id) { // If the id is 'default' then we cannot create an ObjectId with it and mus tjust pass it as a string.
+      id = new ObjectId(userAchievementId);
     }
-    userachievementsDB.find({
+    userAchievementsDB.find({
       _id: id
     }).toArray(function (err, res) {
       if (err) {
@@ -54,12 +47,11 @@ class userachievements
         result(null, resultObj);
       }
     });
-    }
-    
-    static getUserachievements(userachievementsDB, userId, result) 
-    {
+  }
+
+  static getUserachievements(userAchievementsDB, userId, result) {
     var resultObj;
-    userachievementsDB.find({
+    userAchievementsDB.find({
       owner: userId
     }).toArray(function (err, res) {
       if (err) {
@@ -71,15 +63,14 @@ class userachievements
         result(null, resultObj);
       }
     });
-    }
+  }
 
-    static updateUserAchievement(useruseruseruserachievementsDB, userachievement, result) 
-    {
+  static updateUserAchievement(userAchievementsDB, userachievement, result) {
 
 
-    }
-    /* 
-    static deleteUserAchievement(useruseruseruserachievementsDB, userachievement, result) 
+  }
+  /* 
+    static deleteUserAchievement(useruseruseruserAchievementsDB, userachievement, result) 
     {
 
     }
@@ -98,12 +89,14 @@ The most common parameters are closer to the start of the list
 while the ones that rarely get called are towards the end.*/
 
 function ResultObj(statusMsg = "", statusObj = null, success = false, id = null, data = null) { //what will be returned to the requester when the function completes
-    var returnObj = {
-        objId: id,
-        success: success,
-        statusMsg: statusMsg,
-        statusObj: statusObj,
-        data: data,
-    };
-    return returnObj;
+  var returnObj = {
+    objId: id,
+    success: success,
+    statusMsg: statusMsg,
+    statusObj: statusObj,
+    data: data,
+  };
+  return returnObj;
 }
+
+module.exports = UserAchievement;

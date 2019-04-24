@@ -45,8 +45,11 @@
                     <hr>
                     <h4 style='margin-bottom: 32px;'>Login or register using Github:</h4>
                     <p>
+<!-- <<<<<<< HEAD
+                        <a href="https://github.com/login/oauth/authorize?client_id=e428572ccd0ee17f18f0&scope=user&redirect_uri=http://achieverapp.net/api/oauth/redirect"
+======= -->
                         <a href="https://github.com/login/oauth/authorize?client_id=d092b106e4dba55e7462&scope=user&redirect_uri=http://localhost:3000/api/oauth/redirect"
-                            class='btn btn-block github'>
+                            class='btn btn-block github' id='btnLogin'>
                             <i class="fab fa-github"></i>
                             Login with github
                         </a>
@@ -56,14 +59,21 @@
     </div>
 </body>
 
-
 <script>
     /**
      * loads the navbar and when the document finishes loading.
      */
     $("#navbar").load("/html/navbar.html", function () {
         $("#nav-progress").addClass("nav-active");
+        generateAuthUrl();
     });
+
+    function generateAuthUrl() {
+        var hostname = window.location.host;
+        console.log(hostname);
+        var authUrl = `https://github.com/login/oauth/authorize?client_id=d092b106e4dba55e7462&scope=user&redirect_uri=http://${hostname}/api/oauth/redirect`
+        $('#btnLogin').prop('href', authUrl)
+    }
 </script>
 
 </html>

@@ -123,8 +123,6 @@ class Acheievment {
 }
 
 
-
-
 /*
   ResultObj constructor function. Since we need to create a different return object for many different possible scenarios, all this functionality
   can be put in one function.

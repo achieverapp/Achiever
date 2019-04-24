@@ -45,13 +45,6 @@ achievementCardNode.innerHTML=
 "</div>"+
 "<div class=container>"+
 "<p class='achievements-description'>&nbsp"+userAchievement.achievementId.description+"</p>"+
-"<h2 class"
-
-
-
-
-
-
-
+"<h2 class='achievement-counter'&nbsp"+userAchievement.achievementId.counter+"</h2>";
 return achievementCardNode;
 }

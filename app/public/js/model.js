@@ -84,6 +84,16 @@ function getTask(id, callback) {
     });
 }
 
+
+function getCheckedTask(id, callback) {
+    $.ajax({
+        url: URL + "/api/tasks/" + id + "?checked=true",
+        method: 'GET',
+        success: callback,
+        error: errorLog
+    });
+}
+
 /**
  * Update the server side copy of the sent task.
  * @param task: a Task object with any properties that you want updated.

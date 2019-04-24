@@ -58,12 +58,12 @@ class Task {
    * @param {string} taskId: TaskID that we want to retrieve information from
    * @param {function} result: Function to call for the server response
    */
-  static getTask(tasksDB, taskId, result) {
+  static getTask(tasksDB, task, result) {
     var resultObj, id;
-    if (taskId == "default") { // If the id is 'default' then we cannot create an ObjectId with it and mus tjust pass it as a string.
-      id = taskId;
+    if (task._id == "default") { // If the id is 'default' then we cannot create an ObjectId with it and mus tjust pass it as a string.
+      id = task._id;
     } else {
-      id = new ObjectId(taskId);
+      id = new ObjectId(task._id);
     }
     tasksDB.find({
       _id: id
@@ -118,37 +118,38 @@ class Task {
    * @param {function} result: Function to call for the server response
    */
   static updateTask(tasksDB, newTask, result) {
+    var taskId = new ObjectId(newTask._id);
+    newTask._id = taskId;
     var resultObj;
     tasksDB.find({
-      _id: new ObjectId(newTask._id)
+      _id: taskId
     }).toArray(function (err, res) {
       if (err) { //Unkown error, return to client and display it in the log.
         resultObj = ResultObj("Error when checking if user with id " + newTask._id + " exists in database.", err);
         console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
-        result(resultObj);
+        result(null, resultObj);
       } else if (res.length == 0) { //no user with id userId, tell the updater and log it
         resultObj = ResultObj("Task not in database. ID:" + newTask._id);
         console.log(resultObj.statusMsg);
         result(null, resultObj);
       } else {
-        if (newTask.title != null) {
-          updateTaskName(tasksDB, newTask, result).then(result);
-        }
-        if (newTask.category != null) {
-          updateTaskCategory(tasksDB, newTask, result).then(result);
-        }
-        if (newTask.priority != null) {
-          updateTaskPriority(tasksDB, newTask, result).then(result);
-        }
-        if (newTask.timeBlocks != null && newTask.timeBlocks.length > 0) {
-          updateTaskTB(tasksDB, newTask, result).then(result);
-        }
-        if (newTask.subTasks != null && newTask.subTasks.length > 0) {
-          updatesubTask(tasksDB, newTask, result).then(result);
-        }
-        if (newTask.checked != null && newTask.completedOn != null) {
-          updateTaskChecked(tasksDB, newTask, result).then(result);
-        }
+        console.log('update one...')
+        tasksDB.updateOne({
+          _id: new ObjectId(newTask._id)
+        }, {
+            $set: newTask,
+            function(err) {
+              if (err) {
+                resultObj = ResultObj("Error when attempting to change name!", err);
+                console.log(resultObj.statusMsg + ": " + err);
+                result(null, resultObj)
+              } else {
+                resultObj = ResultObj("priority changed to " + newTask.priority, null, true);
+                console.log(success)
+                result(null, resultObj)
+              }
+            }
+          })
       }
     });
   }
@@ -207,161 +208,169 @@ function ResultObj(statusMsg = "", statusObj = null, success = false, id = null,
   return returnObj;
 }
 
-/**
- * Updates the checked status of a task
- * If no Task is found, there is no data retuned and a statusMsg with the reason why there was an error.
- * @param {Collection} tasksDB: MongoDB collection that this function will be ran on.
- * @param {Task} newTask: Object that contains the checked status and taskID that you want to update
- */
-async function updateTaskChecked(tasksDB, newTask) {
-  return new Promise(function (resolve) {
-    var resultObj;
-    tasksDB.updateOne({
-      _id: new ObjectId(newTask._id)
-    }, {
-      $set: {
-        'checked': newTask.checked,
-        'completedOn': newTask.completedOn
-      },
-      function (err) {
-        if (err) {
-          resultObj = ResultObj("Error when attempting to check off task!", err);
-          console.log(resultObj.statusMsg + ": " + err);
-          resolve(resultObj);
-        } else {
-          resultObj = ResultObj("Task checked changed to " + newTask.checked, null, true);
-          resolve(resultObj);
-        }
-      }
-    })
-  })
-}
+// /**
+//  * Updates the checked status of a task
+//  * If no Task is found, there is no data retuned and a statusMsg with the reason why there was an error.
+//  * @param {Collection} tasksDB: MongoDB collection that this function will be ran on.
+//  * @param {Task} newTask: Object that contains the checked status and taskID that you want to update
+//  */
+// async function updateTaskChecked(tasksDB, newTask, result) {
+//   return new Promise(function (resolve) {
+//     var resultObj;
+//     tasksDB.updateOne({
+//       _id: new ObjectId(newTask._id)
+//     }, {
+//         $set: {
+//           'checked': newTask.checked,
+//           'completedOn': newTask.completedOn
+//         },
+//         function(err) {
+//           if (err) {
+//             resultObj = ResultObj("Error when attempting to check off task!", err);
+//             console.log(resultObj.statusMsg + ": " + err);
+//             resolve(resultObj);
+//           } else {
+//             resultObj = ResultObj("Task checked changed to " + newTask.checked, null, true);
+//             resolve(resultObj);
+//           }
+//         }
+//       })
+//   })
+// }
 
-/**
- * Updates the name of a task
- * If no Task is found, there is no data retuned and a statusMsg with the reason why there was an error.
- * @param {Collection} tasksDB: MongoDB collection that this function will be ran on.
- * @param {Task} newTask: Object that contains the name and taskID that you want to update
- */
-async function updateTaskName(tasksDB, newTask) {
-  return new Promise(function (resolve) {
-    var resultObj;
-    tasksDB.updateOne({
-      _id: new ObjectId(newTask._id)
-    }, {
-      $set: {
-        'title': newTask.title
-      },
-      function (err) {
-        if (err) {
-          resultObj = ResultObj("Error when attempting to change name!", err);
-          console.log(resultObj.statusMsg + ": " + err);
-          resolve(resultObj);
-        } else {
-          resultObj = ResultObj("Name changed to " + newTask.title, null, true);
-          resolve(resultObj);
-        }
-      }
-    })
+// /**
+//  * Updates the name of a task
+//  * If no Task is found, there is no data retuned and a statusMsg with the reason why there was an error.
+//  * @param {Collection} tasksDB: MongoDB collection that this function will be ran on.
+//  * @param {Task} newTask: Object that contains the name and taskID that you want to update
+//  */
+// async function updateTaskName(tasksDB, newTask) {
+//   return new Promise(function (resolve) {
+//     var resultObj;
+//     tasksDB.updateOne({
+//       _id: new ObjectId(newTask._id)
+//     }, {
+//         $set: {
+//           'title': newTask.title
+//         },
+//         function(err) {
+//           if (err) {
+//             resultObj = ResultObj("Error when attempting to change name!", err);
+//             console.log(resultObj.statusMsg + ": " + err);
+//             resolve(resultObj);
+//           } else {
+//             resultObj = ResultObj("Name changed to " + newTask.title, null, true);
+//             resolve(resultObj);
+//           }
+//         }
+//       })
 
-  })
-}
+//   })
+// }
 
-/**
- * Updates the category of a task
- * If no Task is found, there is no data retuned and a statusMsg with the reason why there was an error.
- * @param {Collection} tasksDB: MongoDB collection that this function will be ran on.
- * @param {Task} newTask: Object that contains the category and taskID that you want to update
- */
-async function updateTaskCategory(tasksDB, newTask) {
-  return new Promise(function (resolve) {
-    var resultObj;
-    tasksDB.updateOne({
-      _id: new ObjectId(newTask._id)
-    }, {
-      $set: {
-        'category': newTask.category
-      },
-      function (err) {
-        if (err) {
-          resultObj = ResultObj("Error when attempting to change name!", err);
-          console.log(resultObj.statusMsg + ": " + err);
-          resolve(resultObj);
-        } else {
-          resultObj = ResultObj("category changed to " + newTask.category, null, true);
-          resolve(resultObj);
-        }
-      }
-    })
-  })
-}
+// /**
+//  * Updates the category of a task
+//  * If no Task is found, there is no data retuned and a statusMsg with the reason why there was an error.
+//  * @param {Collection} tasksDB: MongoDB collection that this function will be ran on.
+//  * @param {Task} newTask: Object that contains the category and taskID that you want to update
+//  */
+// async function updateTaskCategory(tasksDB, newTask) {
+//   return new Promise(function (resolve) {
+//     var resultObj;
+//     tasksDB.updateOne({
+//       _id: new ObjectId(newTask._id)
+//     }, {
+//         $set: {
+//           'category': newTask.category
+//         },
+//         function(err) {
+//           if (err) {
+//             resultObj = ResultObj("Error when attempting to change name!", err);
+//             console.log(resultObj.statusMsg + ": " + err);
+//             resolve(resultObj);
+//           } else {
+//             resultObj = ResultObj("category changed to " + newTask.category, null, true);
+//             resolve(resultObj);
+//           }
+//         }
+//       })
+//   })
+// }
 
-/**
- * Updates the priority of a task
- * If no Task is found, there is no data retuned and a statusMsg with the reason why there was an error.
- * @param {Collection} tasksDB: MongoDB collection that this function will be ran on.
- * @param {Task} newTask: Object that contains the priority and taskID that you want to update
- */
-async function updateTaskPriority(tasksDB, newTask) {
-  return new Promise(function (resolve) {
-    var resultObj;
-    tasksDB.updateOne({
-      _id: new ObjectId(newTask._id)
-    }, {
-      $set: {
-        'priority': newTask.priority
-      },
-      function (err) {
-        if (err) {
-          resultObj = ResultObj("Error when attempting to change name!", err);
-          console.log(resultObj.statusMsg + ": " + err);
-          resolve(resultObj);
-        } else {
-          resultObj = ResultObj("priority changed to " + newTask.priority, null, true);
-          resolve(resultObj);
-        }
-      }
-    })
-  })
-}
+// /**
+//  * Updates the priority of a task
+//  * If no Task is found, there is no data retuned and a statusMsg with the reason why there was an error.
+//  * @param {Collection} tasksDB: MongoDB collection that this function will be ran on.
+//  * @param {Task} newTask: Object that contains the priority and taskID that you want to update
+//  */
+// async function updateTaskPriority(tasksDB, newTask) {
+//   return new Promise(function (resolve) {
+//     var resultObj;
+//     tasksDB.updateOne({
+//       _id: new ObjectId(newTask._id)
+//     }, {
+//         $set: {
+//           'priority': newTask.priority
+//         },
+//         function(err) {
+//           if (err) {
+//             resultObj = ResultObj("Error when attempting to change name!", err);
+//             console.log(resultObj.statusMsg + ": " + err);
+//             resolve(function (result) {
+//               result(null, resultObj)
+//             });
+//           } else {
+//             resultObj = ResultObj("priority changed to " + newTask.priority, null, true);
+//             resolve(function (result) {
+//               result(null, resultObj)
+//             });
+//           }
+//         }
+//       })
+//   })
+// }
 
-/**
- * Updates the subtasks for a task
- * If no Task is found, there is no data retuned and a statusMsg with the reason why there was an error.
- * @param {Collection} tasksDB: MongoDB collection that this function will be ran on.
- * @param {Task} newTask: Object that contains the subtasks that you want to replace.
- */
-async function updatesubTask(tasksDB, newTask) {
-  return new Promise(function (resolve) {
-    var resultObj;
-    tasksDB.find({
-      _id: new ObjectId(newTask._id)
-    }).toArray(function (err, res) {
-      if (err) {
-        resultObj = ResultObj("Error when locating subtask", err);
-        console.log(resultObj.statusMsg + ": " + err);
-        resolve(statusObj);
-      } else if (res.length == 0) {
-        tasksDB.updateOne({
-          _id: new ObjectId(newTask._id)
-        }, {
-          $set: {
-            subTasks: newTask.subTasks
-          }
-        }, function (err2, res2) {
-          if (err2) { //Unkown error, return to client and display it in the log.
-            resultObj = ResultObj("Error when attempting to save task ID: " + newTask.subTasks + " for task " + newTask.title, err2);
-            console.log(resultObj.statusMsg + ": " + err2);
-            resolve(resultObj);
-          } else { //Task was added successfully!
-            resultObj = ResultObj("Task updated", null, true);
-            resolve(resultObj);
-          }
-        })
-      }
-    })
-  })
-}
+// /**
+//  * Updates the subtasks for a task
+//  * If no Task is found, there is no data retuned and a statusMsg with the reason why there was an error.
+//  * @param {Collection} tasksDB: MongoDB collection that this function will be ran on.
+//  * @param {Task} newTask: Object that contains the subtasks that you want to replace.
+//  */
+// async function updatesubTask(tasksDB, newTask) {
+//   return new Promise(function (resolve) {
+//     var resultObj;
+//     tasksDB.find({
+//       _id: new ObjectId(newTask._id)
+//     }).toArray(function (err, res) {
+//       if (err) {
+//         resultObj = ResultObj("Error when locating subtask", err);
+//         console.log(resultObj.statusMsg + ": " + err);
+//         resolve(statusObj);
+//       } else if (res.length == 0) {
+//         tasksDB.updateOne({
+//           _id: new ObjectId(newTask._id)
+//         }, {
+//             $set: {
+//               subTasks: newTask.subTasks
+//             }
+//           }, function (err2, res2) {
+//             if (err2) { //Unkown error, return to client and display it in the log.
+//               resultObj = ResultObj("Error when attempting to save task ID: " + newTask.subTasks + " for task " + newTask.title, err2);
+//               console.log(resultObj.statusMsg + ": " + err2);
+//               resolve(function (result) {
+//                 result(null, resultObj)
+//               });
+//             } else { //Task was added successfully!
+//               resultObj = ResultObj("Task updated", null, true);
+//               resolve(function (result) {
+//                 result(null, resultObj)
+//               });
+//             }
+//           })
+//       }
+//     })
+//   })
+// }
 
 
 module.exports = Task;

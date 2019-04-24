@@ -99,15 +99,26 @@ function changeSortMethod(e) {
  * TODO: this function needs to update all the subtasks to be checked too (or not??? might not want to do this)
  */
 function onTaskChecked() {
+    var taskId = $(this).closest('.task-card')[0].id
+    console.log('taskid = ' + taskId)
     var task = {
         _id: $(this).closest('.task-card')[0].id,
         completedOn: new Date().toISOString(),
         checked: true
     }
     updateTask(task, function (response, status) {
-        console.log(response);
-        $(taskCard).remove();
+        console.log('as;lkdfjasl;fkjaslk;fj')
+        var cardId = taskId //'#' + taskId
+        console.log('task card: ' + taskCard);
+        
     });
+    taskCard = document.getElementById(taskId)
+    $(taskCard).remove();
+    console.log()
+    if(0 == $('#overdue-list').find('li').length) {
+        $('#overdue-div').hide();
+    }
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -125,12 +136,19 @@ function buildTaskList(sortBy) {
     var tasks;
     getTaskList(function (result, error) {
         tasks = result.data
-
         if (sortBy === "sortByPriority") {
             tasks.sort(compareTaskByPriorityDescending);
         } else if (sortBy === "sortByDueDate") {
             tasks.sort(compareTaskByDateAscending);
         }
+        var checkedTasks = [];
+        tasks.forEach(function (task) {
+            if (task.checked === "false") {
+                checkedTasks.push(task);
+
+            }
+        });
+        tasks = checkedTasks;
         var overdue = [];
 
         while (upcomingUL.firstChild) {

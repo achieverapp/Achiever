@@ -42,26 +42,28 @@
         <div class="card center-screen" style='margin:auto;'>
             <article class="card-body">
                 <h3 class="card-title mb-4 mt-1">Sign in to start using Achiever!</h4>
-                <hr>
-                <h4 style='margin-bottom: 32px;'>Login or register using Github:</h4>
-                <p>
-                    <a href="https://github.com/login/oauth/authorize?client_id=d092b106e4dba55e7462&scope=user&redirect_uri=http://localhost:3000/api/oauth/redirect"
-                        class='btn btn-block github'>
-                        <i class="fab fa-github"></i>
-                        Login with github
-                    </a>
-                </p>
+                    <hr>
+                    <h4 style='margin-bottom: 32px;'>Login or register using Github:</h4>
+                    <p>
+                        <a href="https://github.com/login/oauth/authorize?client_id=d092b106e4dba55e7462&scope=user&redirect_uri=http://localhost:3000/api/oauth/redirect"
+                            class='btn btn-block github'>
+                            <i class="fab fa-github"></i>
+                            Login with github
+                        </a>
+                    </p>
             </article>
-        </div> 
+        </div>
     </div>
 </body>
 
+
 <script>
-    $(document).ready(function () { //load the navbar when the page is done loading
-        $("#navbar").load("/html/navbar.html", function () {
-            $("#nav-progress").addClass("nav-active");            
-        });
-    })
+    /**
+     * loads the navbar and when the document finishes loading.
+     */
+    $("#navbar").load("/html/navbar.html", function () {
+        $("#nav-progress").addClass("nav-active");
+    });
 </script>
 
 </html>

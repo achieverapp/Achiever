@@ -1,7 +1,21 @@
+/* CptS 489, Spring 2019
+    Project: Task Tracker
+    TimeblockController.js
+*/
 'use strict'
 
 const TimeBlock = require('../models/TimeBlockModel.js').TimeBlock;
 
+/**
+ * Constructor function for a result Object. Allows fast creation of a return object for an API response.
+ * 
+ * The most common parameters are closer to the start of the list while the ones that rarely get called are towards the end.
+ * @param {string} statusMsg: Message that gives more detail on the result of the call.
+ * @param {Object} statusObj: Object containing details about errors if there is an error
+ * @param {boolean} success: Status of the API call
+ * @param {string} id: ID of the object affected
+ * @param {Object} data: data that can be read from the reciever
+ */
 function ResultObj(statusMsg = "", statusObj = null, success = false, id = null, data = null) { //what will be returned to the requester when the function completes
     var returnObj = {
         objId: id,
@@ -13,9 +27,13 @@ function ResultObj(statusMsg = "", statusObj = null, success = false, id = null,
     return returnObj;
 }
 
+/**
+ * Calls the model's add time block function.
+ * Checks to ensure that all needed properties are included. Will return an error if data is missing
+ */
 exports.addTimeBlock = function (req, res) {
     var newTimeBlock = new TimeBlock(req.body);
-    if (newTimeBlock.owner != null && newTimeBlock.task != null && newTimeBlock.day != null && newTimeBlock.owner != null && newTimeBlock.owner != null) {
+    if (newTimeBlock.owner != null && newTimeBlock.task != null && newTimeBlock.day != null && newTimeBlock.startDate != null && newTimeBlock.endDate != null) {
         TimeBlock.addTimeBlock(req.app.locals.timeblocks, newTimeBlock, function (result) {
             res.json(result);
         });
@@ -24,7 +42,12 @@ exports.addTimeBlock = function (req, res) {
     }
 }
 
-//get a single task, startTIme combo
+/**
+ * Gets a single timeblock with the task ID and startDate as the key.
+ * Calls the getTimeBlock model function
+ * TODO: Need to change this to get a timeblock based on timeblock ID
+ * Checks to ensure that all needed properties are included. Will return an error if data is missing
+ */
 exports.getTimeBlock = function (req, res) {
     var taskStartObj = JSON.parse(req.params.taskStartObj);
     if (taskStartObj.task != null && taskStartObj.startDate != null) {
@@ -36,7 +59,11 @@ exports.getTimeBlock = function (req, res) {
     }
 }
 
-//get all timeblocks for a certain task on a certain day
+/**
+ * Gets all timeblocks for a user on a certain day.
+ * Calls the getTimeBLocks model function
+ * Checks to ensure that all needed properties are included. Will return an error if data is missing
+ */
 exports.getTimeBlocks = function (req, res) {
     var userDayObj = JSON.parse(req.params.userDayObj);
     if (userDayObj.owner != null && userDayObj.day != null) {
@@ -48,8 +75,11 @@ exports.getTimeBlocks = function (req, res) {
     }
 }
 
-//I don't think we are going to need updateTimeBlock.
-// We are probably going to need to just delete the old one and add a new one.
+/**
+ * Updates a timeblock with a certain ID
+ * Calls the updateTimeBlock model function
+ * Checks to ensure that all needed properties are included. Will return an error if data is missing
+ */
 exports.updateTimeBlock = function (req, res) {
     var newTimeBlock = new TimeBlock(req.body);
     if (newTimeBlock._id != null && newTimeBlock.startDate != null && newTimeBlock.endDate != null) {
@@ -61,7 +91,11 @@ exports.updateTimeBlock = function (req, res) {
     }
 }
 
-//delete a task, startTIme combo
+/**
+ * Deletes a timeblock with a certain ID
+ * Calls the deleteTimeBlock model function
+ * Checks to ensure that all needed properties are included. Will return an error if data is missing
+ */
 exports.deleteTimeBlock = function (req, res) {
     var taskStartObj = JSON.parse(req.params.taskStartObj);
     if (taskStartObj.task != null && taskStartObj.startDate != null) {

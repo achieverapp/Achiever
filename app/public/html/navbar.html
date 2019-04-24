@@ -68,68 +68,6 @@
     </div>
 </nav>
 
-<script>
-    var loggedIn = false; //global flag that signals if the user is signed in
-    $(document).ready(function () {
-        resizeNav()
-        setQueryParams()
-        var userId = getQueryParam("userId") // store the current userID from the query parameters     
-        if ("" !== userId && null !== userId && typeof userId !== 'undefined') { //if that userID is actually there, show that the user is logged in.
-            loggedIn = true;
-            setCurrentPageTitle();
-        }
-        else { //If there is no user ID, show that they are logged out.
-            $('.logged-in').hide();
-            $('.logged-out').show();
-            disableMenu();
-        }
-    });
+<script src='/js/navbar.js'>
 
-    $(window).resize(function () {
-        resizeNav()
-    });
-
-    // Handles the actions executed when switching between mobile and large resolutions
-    function resizeNav() {
-        // If the window is scaled to mobile, use the hamburger navbar
-        if ($(window).width() <= 640) {
-            $(".nav-large").hide();
-            $(".nav-smol").show();
-        }
-        // Otherwise, use the default nav bar with page tabs
-        else {
-            $(".nav-large").show();
-            $(".nav-smol").hide();
-        }
-    }
-
-    function setQueryParams() {
-        var url = window.location.href;
-        var temp = url.split('userId=')[1]
-        if(typeof temp === 'undefined') {
-            return
-        }
-        var userId = url.split('userId=')[1].split('&')[0]
-        $('.nav-link').attr('href', function (i, h) {
-            return h + (h.indexOf('?') != -1 ? "&userId=" : "?userId=" + userId);
-        });
-    }
-
-    function getQueryParam(param) {
-        var url = window.location.href        
-        temp = url.split(`${param}=`)[1]
-        if(typeof temp === 'undefined') {
-            return null
-        }
-        return url.split(`${param}=`)[1].split('&')[0]
-    }
-
-    function setCurrentPageTitle() {
-        $('.nav-title').html(document.title);
-    }
-
-    function disableMenu() {
-        $('.navbar-toggler').removeAttr('data-toggle')
-        $("#navIconMobile").removeClass('fa-bars').addClass('fa-check-double')
-    }
 </script>

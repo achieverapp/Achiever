@@ -16,12 +16,14 @@ var priorityToClassMap = {
     "2": "priority-high",
 };
 
-// Runs when the page finished loading
+/**
+ * Initializes the page, and all event handlers when the page finishes loading
+ */
 $(document).ready(function () {
     // load the navbar
     $("#navbar").load("/html/navbar.html", onNavBarLoad);
 
-    buildTaskList("sortByDueDate"); //Build the task list, sorting by due date.    
+    buildTaskList("sortByDueDate"); //Build the task list, sorting by due date.
 
     $("#btn-newtask").on("click", loadTaskView); //Load the navbar and add the active class
 

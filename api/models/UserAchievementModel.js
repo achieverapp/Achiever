@@ -21,7 +21,7 @@ class UserAchievement {
         console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
         result(null, resultObj);
       } else {
-        resultObj = ResultObj("Added useruseruserachievements " + userAchievement.title, null, true, userAchievement._id, userAchievement);
+        resultObj = ResultObj("Added userachievements " + userAchievement.title, null, true, userAchievement._id, userAchievement);
         result(null, resultObj);
       }
     });

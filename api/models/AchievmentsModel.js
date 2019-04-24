@@ -53,15 +53,9 @@ class Acheievment {
       }
     });
   }
-<<<<<<< HEAD
-  /*
- //get all achievementss for a specific user
- static getAchievements(achievementsDB, userId, result) {
-=======
 
   //get all achievementss for a specific user
   static getAchievements(achievementsDB, userId, result) {
->>>>>>> 9c621fea6c9a4950b317558331017453d2420821
     var resultObj;
     achievementsDB.find({
       owner: userId
@@ -75,14 +69,9 @@ class Acheievment {
         result(null, resultObj);
       }
     });
-<<<<<<< HEAD
-  }*/
-  static updateAchievement(achievementsDB, newachievement, result) {
-=======
   }
 
   static updateAchievement(achievementsDB, newAchievement, result) {
->>>>>>> 9c621fea6c9a4950b317558331017453d2420821
     var resultObj;
     achievementsDB.find({
       _id: new ObjectId(newAchievement._id)

@@ -65,17 +65,38 @@ class UserAchievement {
     });
   }
 
-  static updateUserAchievement(userAchievementsDB, userachievement, result) {
-
-
+  static updateUserAchievement(userAchievementsDB, userAchievement, result) {
+    var resultObj;
+    userAchievementsDB.find({
+      _id: new ObjectId(userAchievement._id)
+    }).toArray(function (err, res) {
+      if (err) { //Unkown error, return to client and display it in the log.
+        resultObj = ResultObj("Error when checking if user with id " + userAchievement._id + " exists in database.", err);
+        console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
+        result(resultObj);
+      } else if (res.length == 0) { //no user with id userId, tell the updater and log it
+        resultObj = ResultObj("achievement not in database. ID:" + userAchievement._id);
+        console.log(resultObj.statusMsg);
+        result(null, resultObj);
+      } else {
+        if (userAchievement.datesAchieved != null) {
+          updateAchievementdateAchieved(userAchievementsDB, userAchievement, result).then(result);
+        }
+        if (userAchievement.recent != null) {
+          updateAchievementrecent(userAchievementsDB, userAchievement, result).then(result);
+        }
+      }
+    })
   }
-  /* 
+
+}
+/* 
     static deleteUserAchievement(useruseruseruserAchievementsDB, userachievement, result) 
     {
 
     }
 */
-}
+
 /*
   ResultObj constructor function. Since we need to create a different return object for many different possible scenarios, all this functionality
   can be put in one function.
@@ -98,5 +119,6 @@ function ResultObj(statusMsg = "", statusObj = null, success = false, id = null,
   };
   return returnObj;
 }
+
 
 module.exports = UserAchievement;

@@ -175,8 +175,8 @@ function getTimeBlocks(timeBlock, callback) {
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * Get all timeblocks on a certain day for a certain user.
- * @param userAchievement: Pass a timeblok object with the owner ID and the day that you want to get the tasks for.
+ * Get all userAChievement on a certain day for a certain user.
+ * @param userAchievement: Pass a userachievement object with the owner ID and the day that you want to get the tasks for.
  * @param callback: the function to call when the API call completes.
  */
 function getUserAchievements(userAchievement, callback)
@@ -188,12 +188,30 @@ function getUserAchievements(userAchievement, callback)
 
     $.ajax({
         url: URL + "/api/UserAchievement/" + JSON.stringify(sendObj),
-        data: userachievement,
+        data: userAchievement,
         method: 'GET',
         success: callback,
         error: errorLog
     });
 }
+
+/** Get all achievements from a userachievement.
+ * @param Id: Pass a an id for an achievement
+ * @param callback: the function to call when the API call completes.
+ */
+function getAchievement(id,callback)
+{
+$.ajax({
+    url: URL + "/api/achievement/" + id,
+    method: 'GET',
+    success: callback,
+    error: errorLog
+})
+}
+
+
+
+
 
 /**
  * Retrieves parameters from the URL

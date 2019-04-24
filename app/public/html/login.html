@@ -69,9 +69,14 @@
     });
 
     function generateAuthUrl() {
+        var clientId = d092b106e4dba55e7462;
         var hostname = window.location.host;
+        if (hostname.includes('achieverapp.net'))
+        {
+            clientId = e428572ccd0ee17f18f0;
+        }
         console.log(hostname);
-        var authUrl = `https://github.com/login/oauth/authorize?client_id=d092b106e4dba55e7462&scope=user&redirect_uri=http://${hostname}/api/oauth/redirect`
+        var authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=user&redirect_uri=http://${hostname}/api/oauth/redirect`
         $('#btnLogin').prop('href', authUrl)
     }
 </script>

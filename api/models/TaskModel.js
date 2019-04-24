@@ -125,29 +125,55 @@ class Task {
       if (err) { //Unkown error, return to client and display it in the log.
         resultObj = ResultObj("Error when checking if user with id " + newTask._id + " exists in database.", err);
         console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
-        result(resultObj);
+        result(null, resultObj);
       } else if (res.length == 0) { //no user with id userId, tell the updater and log it
         resultObj = ResultObj("Task not in database. ID:" + newTask._id);
         console.log(resultObj.statusMsg);
         result(null, resultObj);
       } else {
+        console.log(newTask);
         if (newTask.title != null) {
-          updateTaskName(tasksDB, newTask, result).then(result);
+          var promiseTest = updateTaskName(tasksDB, newTask)
+          console.log(promiseTest.then());
+          promiseTest.then(function (err, res) {
+            console.log("updateTitle!")
+            result(err, res)            
+          });          
         }
         if (newTask.category != null) {
-          updateTaskCategory(tasksDB, newTask, result).then(result);
+          updateTaskCategory(tasksDB, newTask).then(function (err, res) {
+            console.log("updateTitle!")
+            result(err, res)            
+          });
+          // console.log("updateTask!")
         }
         if (newTask.priority != null) {
-          updateTaskPriority(tasksDB, newTask, result).then(result);
+          updateTaskPriority(tasksDB, newTask).then(function (err, res) {
+            console.log("updateTitle!")
+            result(err, res)            
+          });
+          // console.log("updateTask!")
         }
         if (newTask.timeBlocks != null && newTask.timeBlocks.length > 0) {
-          updateTaskTB(tasksDB, newTask, result).then(result);
+          updateTaskTB(tasksDB, newTask).then(function (err, res) {
+            console.log("updateTitle!")
+            result(err, res)            
+          });
+          // console.log("updateTask!")
         }
         if (newTask.subTasks != null && newTask.subTasks.length > 0) {
-          updatesubTask(tasksDB, newTask, result).then(result);
+          updatesubTask(tasksDB, newTask).then(function (err, res) {
+            console.log("updateTitle!")
+            result(err, res)            
+          });
+          // console.log("updateTask!")
         }
         if (newTask.checked != null && newTask.completedOn != null) {
-          updateTaskChecked(tasksDB, newTask, result).then(result);
+          updateTaskChecked(tasksDB, newTask).then(function (err, res) {
+            console.log("updateTitle!")
+            result(err, res)            
+          });
+          // console.log("updateTask!")
         }
       }
     });
@@ -167,7 +193,7 @@ class Task {
       if (err) {
         resultObj = ResultObj("Error when attempting to delete task!", err);
         console.log(resultObj.statusMsg + ": " + err);
-        resolve(resultObj);
+        resolve(null, resultObj);
       } else {
         tasksDB.deleteOne({
           _id: new ObjectId(taskId)
@@ -175,7 +201,7 @@ class Task {
           if (err2) {
             resultObj = ResultObj("Error when attempting to delete task!", err);
             console.log(resultObj.statusMsg + ": " + err);
-            resolve(resultObj);
+            resolve(null, resultObj);
           } else {
             resultObj = ResultObj("user with" + taskId.title + "deleted");
             resultObj(resultObj);
@@ -227,10 +253,10 @@ async function updateTaskChecked(tasksDB, newTask) {
         if (err) {
           resultObj = ResultObj("Error when attempting to check off task!", err);
           console.log(resultObj.statusMsg + ": " + err);
-          resolve(resultObj);
+          resolve(null, resultObj);
         } else {
           resultObj = ResultObj("Task checked changed to " + newTask.checked, null, true);
-          resolve(resultObj);
+          resolve(null, resultObj);
         }
       }
     })
@@ -244,7 +270,7 @@ async function updateTaskChecked(tasksDB, newTask) {
  * @param {Task} newTask: Object that contains the name and taskID that you want to update
  */
 async function updateTaskName(tasksDB, newTask) {
-  return new Promise(function (resolve) {
+  return new Promise(function (resolve, reject) {
     var resultObj;
     tasksDB.updateOne({
       _id: new ObjectId(newTask._id)
@@ -256,10 +282,10 @@ async function updateTaskName(tasksDB, newTask) {
         if (err) {
           resultObj = ResultObj("Error when attempting to change name!", err);
           console.log(resultObj.statusMsg + ": " + err);
-          resolve(resultObj);
+          resolve(null, resultObj);
         } else {
           resultObj = ResultObj("Name changed to " + newTask.title, null, true);
-          resolve(resultObj);
+          resolve(null, resultObj);
         }
       }
     })
@@ -286,10 +312,10 @@ async function updateTaskCategory(tasksDB, newTask) {
         if (err) {
           resultObj = ResultObj("Error when attempting to change name!", err);
           console.log(resultObj.statusMsg + ": " + err);
-          resolve(resultObj);
+          resolve(null, resultObj);
         } else {
           resultObj = ResultObj("category changed to " + newTask.category, null, true);
-          resolve(resultObj);
+          resolve(null, resultObj);
         }
       }
     })
@@ -315,10 +341,10 @@ async function updateTaskPriority(tasksDB, newTask) {
         if (err) {
           resultObj = ResultObj("Error when attempting to change name!", err);
           console.log(resultObj.statusMsg + ": " + err);
-          resolve(resultObj);
+          resolve(null, resultObj);
         } else {
           resultObj = ResultObj("priority changed to " + newTask.priority, null, true);
-          resolve(resultObj);
+          resolve(null, resultObj);
         }
       }
     })
@@ -352,10 +378,10 @@ async function updatesubTask(tasksDB, newTask) {
           if (err2) { //Unkown error, return to client and display it in the log.
             resultObj = ResultObj("Error when attempting to save task ID: " + newTask.subTasks + " for task " + newTask.title, err2);
             console.log(resultObj.statusMsg + ": " + err2);
-            resolve(resultObj);
+            resolve(null, resultObj);
           } else { //Task was added successfully!
             resultObj = ResultObj("Task updated", null, true);
-            resolve(resultObj);
+            resolve(null, resultObj);
           }
         })
       }

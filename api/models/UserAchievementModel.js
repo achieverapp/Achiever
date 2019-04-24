@@ -65,8 +65,29 @@ class UserAchievement {
     });
   }
 
-  static updateUserAchievement(userAchievementsDB, userachievement, result) {
-
+  static updateUserAchievement(userAchievementsDB, userAchievement, result) {
+    var resultObj;
+    userAchievementsDB.find({
+      _id: new ObjectId(userAchievement._id)
+    }).toArray(function (err, res) {
+      if (err) { //Unkown error, return to client and display it in the log.
+        resultObj = ResultObj("Error when checking if user with id " + newAchievement._id + " exists in database.", err);
+        console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
+        result(resultObj);
+      } else if (res.length == 0) { //no user with id userId, tell the updater and log it
+        resultObj = ResultObj("achievement not in database. ID:" + newAchievement._id);
+        console.log(resultObj.statusMsg);
+        result(null, resultObj);
+      } else {
+        if (newAchievement.counter != null) {
+          updateAchievementCounter(achievementsDB, newAchievement, result).then(result);
+        }
+        if (newAchievement.completed != null) {
+          updateAchievementcompleted(achievementsDB, newAchievement, result).then(result);
+        }
+      }
+    })
+  }
 
   }
   /* 

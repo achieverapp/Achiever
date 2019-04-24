@@ -33,7 +33,6 @@
 
     <link rel="stylesheet" href="../css/app.css">
     <script src="../js/model.js"></script>
-    <script src="../js/schedule.js"></script>
 </head>
 
 <body>
@@ -66,7 +65,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <center style="width:100%;">
-                                <h3 class="modal-title" id="exampleModalLabel">Add/Edit Timeblock BLAH-DITTY-BLAH</h3>
+                                <h3 class="modal-title" id="exampleModalLabel">Add/Edit Timeblock</h3>
                             </center>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -192,7 +191,7 @@
                                 </span>
                             </form>
 
-                        </div>
+                        </div> <!-- .modal-body -->
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal"
                                 id="btnDiscard">Discard</button>
@@ -200,11 +199,12 @@
                                 data-dismiss="modal">Save</button>
                         </div>
                     </div>
-                </div>
+                </div> <!-- .modal-dialog -->
             </div>
-        </div>
+        </div> <!-- .modal -->
 
-        <div class="table-responsive">
+
+        <div class="schedule-table table-responsive">
             <table style="width: 100%; margin-bottom: 64px;" cellpadding="2" class="table-sm">
                 <colgroup width="" valign="middle" span="1" align="center"></colgroup>
                 <colgroup width="" valign="middle" span="1" align="center"></colgroup>
@@ -223,9 +223,12 @@
                     </tr>
                 </tbody>
             </table>
+        </div> <!-- .table-responsive -->
 
-
-
+        <div class='vertical-alignment-helper' style='margin:auto; z-index: 100; position: absolute; top:0;'>
+            <div class='vertical-align-center'>
+                    <center class="fas fa-spinner fa-spin" style='font-size: 32pt; width:100%;'></center>
+            </div>
         </div>
 
         <div class="toast toast-error" data-delay="10000">
@@ -246,6 +249,7 @@
             Schedule Timeblock
         </button>
 
+    </div> <!-- .page-container -->
 
-    </div>
+    <script src="../js/schedule.js"></script>
 </body>

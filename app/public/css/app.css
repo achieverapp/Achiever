@@ -242,3 +242,13 @@ td, th {
     margin: 0 auto;
     pointer-events: all;
 }
+
+/*for achievement page*/
+.achievements-title
+{
+    display: 'inline';
+} 
+.achievements-card-container
+{
+    padding:0px;
+}

@@ -10,110 +10,119 @@ var currentDay // GLOBAL FOR THE PAGE. PROBABLY WANT TO CHANGE IN THE FUTURE
  * When the document is ready, initialize the page by setting event handlers, and generating or loading the necessary html
  */
 $(document).ready(function () {
-    currentDay = new Date();
-    $("#selectedDate").html(currentDay.toDateString() + ":");
+    currentDay = new Date()
+    $("#selectedDate").html(currentDay.toDateString() + ":")
 
     $("#navbar").load("/html/navbar.html", function () { //load the navbar at the top of the page
-        $("#nav-schedule").addClass("nav-active");
-        resizeNav();
-    });
-    generateTableRows(5, 24); //generates tables for the whole 24 hour day
-    addTimeBlocksToPage() // add timeblocks from the API server
-    loadModalDropdown();
-    $(document.body).on("click", ".bucket-empty", onBucketEmptyClick)
-    $("#btnNextDay").click(onBtnNextDayClick)
-    $("#btnPrevDay").click(onBtnPrevDayClick)
-    $(document).on('drop', 'tr', onTimeblockDropped)
-    $(document.body).on("click", ".task-dropdown-item", onTaskDropdownItemClick)
-    $(document.body).on("click", ".input-minus", onInputMinusClick)
-    $(document.body).on("click", ".input-plus", onInputPlusClick)
-    $("#btnSave").click(onBtnSaveClick)
-
-    $(document).on('dragover', 'tr', function (event) {
-        event.preventDefault()
+        $("#nav-schedule").addClass("nav-active")
+        resizeNav()
     })
-
-    $(document).on('drag', '.time-block-card', function (event) { })
-
-    $(document).on('dragstart', '.time-block-card', function (event) {
-        event.originalEvent.dataTransfer.setData("text", $(this).data('parentId'))
-    })
+    generateTableRows(5, 24) //generates tables for the whole 24 hour day
+    addTimeblocksToPage() // add timeblocks from the API server
+    loadModalDropdown()
 })
 
-
+$(document.body).on('dragover', 'tr', onTrDragover)
+$(document.body).on('dragstart', '.time-block-card', onTimeblockCardDragstart)
+$(document.body).on("click", ".bucket-empty", onBucketEmptyClick)
+$(document.body).on('click', '#btnNextDay', onBtnNextDayClick)
+$(document.body).on('click', '#btnPrevDay', onBtnPrevDayClick)
+$(document.body).on('drop', 'tr', onTimeblockDropped)
+$(document.body).on("click", ".task-dropdown-item", onTaskDropdownItemClick)
+$(document.body).on("click", ".input-minus", onInputMinusClick)
+$(document.body).on("click", ".input-plus", onInputPlusClick)
+$(document.body).on('click', '#btnSave', onBtnSaveClick)
 
 ////////////////////////////////////////////////////////////////////////////////
 ///////////////////// Event Handlers ///////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * store the id of the starting table row in the drag event dataTransfer
+ * @param {*} e: event object
+ */
+function onTimeblockCardDragstart(e) {
+    e.originalEvent.dataTransfer.setData("text", $(this).data('parentId'))
+}
+
+/**
+ * Allow dragging timeblocks over tr elements
+ * @param {*} e: event object
+ */
+function onTrDragover(e) {
+    e.preventDefault()
+}
 
 /**
  * Click event handler for empty time slot. When an empty time slot in the schedule is clicked, open the timeblock editing modal,
  * and set the times based on the time clicked on.
  */
-function onBucketEmptyClick () {
-    var id = $(this).closest('tr')[0].id;
-    var temp = id.split('-'); // empty time block's ids are displayed as times in 24hr format
-    var hour24 = parseInt(temp[1]);
-    var hour = hour24 % 12;
-    var endHour = hour + 1; // default timeblock length is 1 hour.
-    var quarter = parseInt(temp[2]);
+function onBucketEmptyClick() {
+    var id = $(this).closest('tr')[0].id
+    var temp = id.split('-') // empty time block's ids are displayed as times in 24hr format
+    var hour24 = parseInt(temp[1])
+    var hour = hour24 % 12
+    var endHour = hour + 1 // default timeblock length is 1 hour.
+    var quarter = parseInt(temp[2])
 
     // Showing whether the time selected is AM or PM
     if (hour24 >= 12) {
-        $("#optionStartAM").parent().removeClass("active");
-        $("#optionStartPM").parent().addClass("active");
+        $("#optionStartAM").parent().removeClass("active")
+        $("#optionStartPM").parent().addClass("active")
     } else {
-        $("#optionStartAM").parent().addClass("active");
-        $("#optionStartPM").parent().removeClass("active");
+        $("#optionStartAM").parent().addClass("active")
+        $("#optionStartPM").parent().removeClass("active")
     }
 
     // Showing whether the default 1 hour later end time is AM or PM
     if (hour24 + 1 >= 12 && hour24 + 1 < 24) {
-        $("#optionEndAM").parent().removeClass("active");
-        $("#optionEndPM").parent().addClass("active");
+        $("#optionEndAM").parent().removeClass("active")
+        $("#optionEndPM").parent().addClass("active")
     } else {
-        $("#optionEndAM").parent().addClass("active");
-        $("#optionEndPM").parent().removeClass("active");
+        $("#optionEndAM").parent().addClass("active")
+        $("#optionEndPM").parent().removeClass("active")
     }
 
-    hour = (hour % 12 == 0) ? 12 : hour;
-    endHour = (endHour % 12 == 0) ? 12 : endHour;
+    hour = (hour % 12 == 0) ? 12 : hour
+    endHour = (endHour % 12 == 0) ? 12 : endHour
 
     // Padding times that are less than 10 with a 0 to make them uniform
     if (quarter < 10) {
-        quarter = "0" + quarter.toString();
+        quarter = "0" + quarter.toString()
     }
     if (hour < 10) {
-        hour = "0" + hour.toString();
-        console.log(hour);
-        console.log(hour % 12);
+        hour = "0" + hour.toString()
+        console.log(hour)
+        console.log(hour % 12)
     }
     if (endHour < 10) {
-        endHour = "0" + endHour.toString();
+        endHour = "0" + endHour.toString()
     }
 
     // setting the actual start and end times in the modal.
-    $("#inputStartHour").val(hour);
-    $("#inputEndHour").val(endHour);
-    $("#inputEndMinute").val(quarter);
-    $("#inputStartMinute").val(quarter);
-    $("#timeblockEditModal").modal("show"); //open the modal
+    $("#inputStartHour").val(hour)
+    $("#inputEndHour").val(endHour)
+    $("#inputEndMinute").val(quarter)
+    $("#inputStartMinute").val(quarter)
+    $("#timeblockEditModal").modal("show") //open the modal
 }
 
 function onBtnNextDayClick() {
-    currentDay = new Date(currentDay.setTime(currentDay.getTime() + 86400000));
-    $("#selectedDate").html(currentDay.toDateString() + ":");
-    $(".timeblock-row").remove();
-    generateTableRows(5, 24); //generates tables for the whole 24 hour day
-    addTimeBlocksToPage() // add timeblocks from the API server
+    $('.fa-spinner').show();
+    currentDay.setTime(currentDay.getTime() + 86400000)
+    $("#selectedDate").html(currentDay.toDateString() + ":")
+    $(".timeblock-row").remove()
+    generateTableRows(5, 24) //generates tables for the whole 24 hour day
+    addTimeblocksToPage() // add timeblocks from the API server
 }
 
 function onBtnPrevDayClick() {
-    currentDay = new Date(currentDay.setTime(currentDay.getTime() - 86400000));
-    $("#selectedDate").html(currentDay.toDateString() + ":");
-    $(".timeblock-row").remove();
-    generateTableRows(5, 24); //generates tables for the whole 24 hour day
-    addTimeBlockToPage() // add timeblocks from the API server
+    $('.fa-spinner').show();
+    currentDay.setTime(currentDay.getTime() - 86400000)
+    $("#selectedDate").html(currentDay.toDateString() + ":")
+    $(".timeblock-row").remove()
+    generateTableRows(5, 24) //generates tables for the whole 24 hour day
+    addTimeblocksToPage() // add timeblocks from the API server
 }
 
 /**
@@ -134,7 +143,7 @@ function onBtnSaveClick() {
         return
     }
     var nRows = ((endHour - startHour) * 4) - (startMinute / 15) + (endMinute / 15);
-    if (hasOverlaps(startHour, startMinute, nRows)) {
+    if (hasOverlaps(startHour, startMinute, nRows, null)) {
         showOverlapToast()
         return
     }
@@ -232,7 +241,7 @@ function onTimeblockDropped(event) {
     var nRows = $(id).children().find('.time-block-card').data('nRows');
     var taskId = $(id).children().find('.time-block-card').data('taskId');
 
-    if (!hasOverlaps(hour, minute, nRows)) {
+    if (!hasOverlaps(hour, minute, nRows, timeBlockID)) {
         removeTimeblockFromPage(id);
         addTimeblockToPage(hour, minute, nRows, taskId, timeBlockID);
         var endHour = Number(hour) + Math.floor(nRows / 4); //calculate the end times
@@ -256,7 +265,7 @@ function onTimeblockDropped(event) {
 /**
  * Queries the model for all the timeblocks in the current day, and adds them to the schedule.
  */
-function addTimeBlocksToPage() {
+function addTimeblocksToPage() {
     getTimeBlocks({
         day: currentDay.toISOString().substr(0, 10),
         owner: currUserId
@@ -271,6 +280,8 @@ function addTimeBlocksToPage() {
                 addTimeblockToPage(startHour, startMinute, nRows, timeBlock.task, timeBlock._id);
             })
         }
+        $('.fa-spinner').hide();
+        //$('.schedule-table').show();
     });
 }
 
@@ -333,9 +344,9 @@ function generateTableRows(startHour, endHour) {
 
 /**
  * Add a timeblock to the current day's schedule page.
- * @param {*} startHour: the hour (24) at which the timeblock begins
- * @param {*} startMinute: the minute (increments of 15) at which the timeblock begins
- * @param {*} nRows: the number of quarter-hour increments the timeblock spans
+ * @param {Number} startHour: the hour (24) at which the timeblock begins
+ * @param {Number} startMinute: the minute (increments of 15) at which the timeblock begins
+ * @param {Number} nRows: the number of quarter-hour increments the timeblock spans
  * @param {*} taskId: the id of the task to fill the timeblock
  */
 function addTimeblockToPage(startHour, startMinute, nRows, taskId, timeblockId) {
@@ -509,14 +520,20 @@ function generateTimeblockDiv(timeblockId, taskTitle) {
  * @param {NUmber} hour24: the 24 hour start of the range
  * @param {Number} minute: the minute start of the range in 15 minute increments
  * @param {Number} nRows: the number of rows to span (number of 15 minute blocks)
+ * @param {string} timeBlockID: the timeblock ID that can be compared to allow overlap only if it is itself
  * @returns true if overlaps, false otherwise
  */
-function hasOverlaps(hour24, minute, nRows) {
-    var currentHour = hour24,
+function hasOverlaps(hour24, minute, nRows, timeBlockID) {
+    var selector = "",
+        currentHour = hour24,
         currentMinute = minute,
         trId = "#time-" + currentHour + "-" + currentMinute;
 
-    if ($(trId).children('.bucket-full').length > 0) {
+    if (timeBlockID != null) // If there is no timeblock ID passed in.
+        selector = ':not(#' + timeBlockID + ')';
+
+    if ($(trId).children('.bucket-full').children(selector) > 0) { // If the specific location selected has a task that starts on it.
+        //console.log($(trId).children('.bucket-full'));
         return true;
     }
     for (var i = 0; i < nRows - 1; i++) {
@@ -527,7 +544,9 @@ function hasOverlaps(hour24, minute, nRows) {
             currentMinute += 15;
         }
         trId = "#time-" + currentHour + "-" + currentMinute;
-        if ($(trId).children('.bucket-full').length > 0) {
+        if ($(trId).children('.bucket-full').children(selector).length > 0) { // If the row has part of a task on it that is not itself
+            // console.log("$(trId).children('.bucket-full').children(" + selector + ")")
+            // console.log($(trId).children('.bucket-full').children(selector))
             return true;
         }
     }
@@ -572,23 +591,4 @@ function timeTo24(hour, isPM) {
         newHour += (isPM ? 0 : 12);
     }
     return newHour;
-}
-
-/**
- * Generate a timeblock object
- * @param {*} startTimeStr: a string representing the start time of the timeblock, in hh:mm format
- * @param {*} endTimeStr: a string representing the end time of the timeblock, in hh:mm format
- * @param {*} taskId: the schema id of the associated task
- */
-function createTimeblockObject(startTimeStr, endTimeStr, taskId) {
-    var blockDay = currentDay.toISOString().substr(0, 10);
-    var start = blockDay + "T" + startTimeStr + ":00.000Z";
-    var end = blockDay + "T" + endTimeStr + ":00.000Z";
-    return {
-        owner: currUserId,
-        task: taskId,
-        day: blockDay,
-        startDate: start,
-        endDate: end
-    }
 }

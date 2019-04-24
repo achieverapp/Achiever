@@ -27,6 +27,7 @@ module.exports = function (app) {
     // APP ROUTES
     ////////////////////////////
 
+    app.get('/', Controller.getLogin)
     app.get('/achievements', Controller.getAchievements)
     app.get('/login', Controller.getLogin)
     app.get('/progress', Controller.getProgress)

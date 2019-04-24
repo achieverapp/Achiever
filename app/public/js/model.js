@@ -40,7 +40,8 @@ class Task {
 
 const currUserId = getQueryParam('userId');
 const currTaskId = getQueryParam('taskId');
-const URL = "http://localhost:3000"; //URL of the API server.
+const URL = location.protocol + '//' + location.host; //URL of the API server.
+//console.log(location.protocol + '//' + location.host + location.pathname); //location of the URL
 
 /**
  * Console Logging function for all js files that include model.js
@@ -84,7 +85,7 @@ function getTask(id, callback) {
 }
 
 /**
- * Update the server side copy of the sent task. 
+ * Update the server side copy of the sent task.
  * @param task: a Task object with any properties that you want updated.
  * @param callback: the function to call when the API call completes.
  */
@@ -103,7 +104,7 @@ function updateTask(task, callback) {
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * Add a timeblock to the database 
+ * Add a timeblock to the database
  * @param timeBlock: a Timeblock object to be sent to the server.
  * @param callback: the function to call when the API call completes.
  */
@@ -118,7 +119,7 @@ function addTimeBlock(timeBlock, callback) {
 }
 
 /**
- * Update the server side copy of the sent TimeBLock. 
+ * Update the server side copy of the sent TimeBLock.
  * @param timeBlock: a timeBlock object with any properties that you want updated.
  * @param callback: the function to call when the API call completes.
  */
@@ -133,7 +134,7 @@ function updateTimeBlock(timeBlock, callback) {
 }
 
 /**
- * Get a specific timeblock from the server based off of its task ID and start Date 
+ * Get a specific timeblock from the server based off of its task ID and start Date
  * @param timeBlock: a timeBlock object with only the task ID and start Date to check with the server.
  * @param callback: the function to call when the API call completes.
  */
@@ -169,6 +170,47 @@ function getTimeBlocks(timeBlock, callback) {
         error: errorLog
     });
 }
+///////////////////////////////////////////////////////////////////////////////
+/////////////////// achievements interface functions /////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Get all userAChievement on a certain day for a certain user.
+ * @param userAchievement: Pass a userachievement object with the owner ID and the day that you want to get the tasks for.
+ * @param callback: the function to call when the API call completes.
+ */
+function getUserAchievements(userAchievement, callback)
+{
+    var sendObj={
+        owner:userAchievement.owner,
+        
+    }
+
+    $.ajax({
+        url: URL + "/api/UserAchievement/" + JSON.stringify(sendObj),
+        data: userAchievement,
+        method: 'GET',
+        success: callback,
+        error: errorLog
+    });
+}
+
+/** Get all achievements from a userachievement.
+ * @param Id: Pass a an id for an achievement
+ * @param callback: the function to call when the API call completes.
+ */
+function getAchievement(id,callback)
+{
+$.ajax({
+    url: URL + "/api/achievement/" + id,
+    method: 'GET',
+    success: callback,
+    error: errorLog
+})
+}
+
+
+
 
 
 /**
@@ -189,4 +231,23 @@ function getQueryParam(sParam) {
             return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
         }
     }
-};
+}
+
+/**
+ * Generate a timeblock object
+ * @param {*} startTimeStr: a string representing the start time of the timeblock, in hh:mm format
+ * @param {*} endTimeStr: a string representing the end time of the timeblock, in hh:mm format
+ * @param {*} taskId: the schema id of the associated task
+ */
+function createTimeblockObject(startTimeStr, endTimeStr, taskId) {
+    var blockDay = currentDay.toISOString().substr(0, 10);
+    var start = blockDay + "T" + startTimeStr + ":00.000Z";
+    var end = blockDay + "T" + endTimeStr + ":00.000Z";
+    return {
+        owner: currUserId,
+        task: taskId,
+        day: blockDay,
+        startDate: start,
+        endDate: end
+    }
+}

@@ -20,6 +20,7 @@ $(document).ready(function () {
     generateTableRows(5, 24) //generates tables for the whole 24 hour day
     addTimeblocksToPage() // add timeblocks from the API server
     loadModalDropdown()
+    resizeModal()
 })
 
 $(document.body).on('dragover', 'tr', onTrDragover)
@@ -32,6 +33,7 @@ $(document.body).on("click", ".task-dropdown-item", onTaskDropdownItemClick)
 $(document.body).on("click", ".input-minus", onInputMinusClick)
 $(document.body).on("click", ".input-plus", onInputPlusClick)
 $(document.body).on('click', '#btnSave', onBtnSaveClick)
+$(window).resize(resizeModal)
 
 ////////////////////////////////////////////////////////////////////////////////
 ///////////////////// Event Handlers ///////////////////////////////////////////
@@ -261,6 +263,30 @@ function onTimeblockDropped(event) {
 ////////////////////////////////////////////////////////////////////////////////
 ///////////////////// Document manipulation functions //////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Shows the correct navbar based on screen resolution. Mobile nav is used for screens narrower than 640px, desktop for larger.
+ */
+function resizeModal() {
+    // If the window is scaled to mobile, use the hamburger navbar
+    if ($(window).width() <= 640) {
+        $(".input-plus").hide()
+        $(".input-minus").hide()
+        $('.input-hour').removeClass('input-no-spinner')
+        $('.input-minute').removeClass('input-no-spinner')
+        $('.time-input-group').css('flex-basis', '4em')
+        $('.modal-dialog').css('max-width', '24em')
+    }
+    // Otherwise, use the default nav bar with page tabs
+    else {
+        $(".input-plus").show();
+        $(".input-minus").show();
+        $('.input-hour').addClass('input-no-spinner')
+        $('.input-minute').addClass('input-no-spinner')
+        $('.time-input-group').css('flex-basis', '8em')
+        $('.modal-dialog').css('max-width', '')
+    }
+}
 
 /**
  * Queries the model for all the timeblocks in the current day, and adds them to the schedule.

@@ -145,8 +145,7 @@ class Task {
               console.log(resultObj.statusMsg + ": " + err);
               result(null, resultObj)
             } else {
-              resultObj = ResultObj("priority changed to " + newTask.priority, null, true);
-              console.log(success)
+              resultObj = ResultObj("priority changed to " + newTask.priority, null, true);              
               result(null, resultObj)
             }
           })

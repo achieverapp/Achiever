@@ -331,7 +331,7 @@ function resizeFooter() {
   }
   // Otherwise, use the default layout
   else {
-    $('.date-time-picker').css('float', 'right')
+    $('.date-time-picker').css('float', 'left') //right
     $('.date-time-group').addClass('flex-row').removeClass('flex-column')
   }
 }

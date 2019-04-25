@@ -133,18 +133,34 @@ function updateTimeBlock(timeBlock, callback) {
 }
 
 /**
+ * Delete the serverside copy of the sent timeblock.
+ * @param {*} timeblock: an object with the _id of the timeblock to delete.
+ * @param {Function} callback: the function to call when the API call completes.
+ */
+function deleteTimeblock(timeblock, callback) {
+    $.ajax({
+        url: URL + '/api/timeblocks/' + JSON.stringify(timeblock),
+        data: timeblock,
+        method: 'DELETE',
+        success: callback,
+        error: errorLog,
+    })
+}
+
+/**
  * Get a specific timeblock from the server based off of its task ID and start Date
  * @param timeBlock: a timeBlock object with only the task ID and start Date to check with the server.
  * @param callback: the function to call when the API call completes.
  */
-function getTimeBlock(timeBlock, callback) {
+function getTimeBlock(timeblock, callback) {
     var sendObj = {
-        task: timeBlock.task,
-        startDate: timeBlock.startDate
+        // task: timeBlock.task,
+        // startDate: timeBlock.startDate
+        _id: timeblock._id
     }
     $.ajax({
         url: URL + "/api/timeblocks/" + JSON.stringify(sendObj),
-        data: timeBlock,
+        data: timeblock,
         method: 'GET',
         success: callback,
         error: errorLog

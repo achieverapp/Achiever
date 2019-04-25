@@ -64,8 +64,7 @@ class TimeBlock {
     static getTimeBlock(timeBlockDB, querytimeBlock, result) {
         var resultObj;
         timeBlockDB.find({
-            task: querytimeBlock.task,
-            startDate: querytimeBlock.startDate
+            _id: new ObjectId(querytimeBlock._id)
         }).toArray(function (err, res) {
             if (err) {
                 resultObj = ResultObj("Error when adding timeBlock to database", err);
@@ -137,25 +136,27 @@ class TimeBlock {
      */
     static deleteTimeBlock(timeBlockDB, querytimeBlock, result) {
         var resultObj;
+        console.log(querytimeBlock)
         timeBlockDB.find({
-            task: querytimeBlock.task,
-            startDate: querytimeBlock.startDate
+            _id: new ObjectId(querytimeBlock._id)
         }).toArray(function (err, res) {
             if (err) {
                 resultObj = ResultObj("Error when deleting timeBlock", err);
                 console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
                 result(resultObj);
             } else {
+                console.log('res',res)
                 timeBlockDB.deleteOne({
-                    task: querytimeBlock.task,
-                    startDate: querytimeBlock.startDate
+                    _id: new ObjectId(querytimeBlock._id)
                 }, function (err2) {
                     if (err2) {
                         resultObj = ResultObj("Error when deleting timeblock", err2);
                         console.log(resultObj.statusMsg + ": " + JSON.stringify(err2));
                         result(resultObj);
                     } else {
-                        resultObj = ResultObj("timeBlock was deleted", null, true, null, null);
+                        console.log('err',err)
+                        resultObj = ResultObj("Timeblock was deleted", null, true, null, null);
+                        console.log(resultObj.statusMsg);
                         result(resultObj);
                     }
                 });
@@ -170,7 +171,7 @@ class TimeBlock {
 
 /**
  * Constructor function for a result Object. Allows fast creation of a return object for an API response.
- * 
+ *
  * ResultObj constructor function. Since we need to create a different return object for many different possible scenarios, all this functionality
   can be put in one function.
 
@@ -213,7 +214,7 @@ async function updateDate(timeBlockDB, newTimeBlock, resultObj) {
                     resultObj = ResultObj("Error when attempting to update timeblock!", err);
                     console.log(resultObj.statusMsg + ": " + err);
                     resolve(resultObj);
-                } else { //hole updated successfully!
+                } else { // timeblock updated
                     resultObj = ResultObj("start date changed to " + newTimeBlock.startDate, null, true, null, newTimeBlock);
                     resolve(resultObj);
                 }

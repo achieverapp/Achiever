@@ -25,7 +25,7 @@ $(document).ready(function () {
 })
 
 $(document.body).on('dragover', 'tr', onTrDragover)
-$(document.body).on('dragstart', '.time-block-card', onTimeblockCardDragstart)
+$(document.body).on('dragstart', '.timeblock-card', onTimeblockCardDragstart)
 $(document.body).on("click", ".bucket-empty", onBucketEmptyClick)
 $(document.body).on('click', '#btnNextDay', onBtnNextDayClick)
 $(document.body).on('click', '#btnPrevDay', onBtnPrevDayClick)
@@ -34,6 +34,8 @@ $(document.body).on("click", ".task-dropdown-item", onTaskDropdownItemClick)
 $(document.body).on("click", ".input-minus", onInputMinusClick)
 $(document.body).on("click", ".input-plus", onInputPlusClick)
 $(document.body).on('click', '#btnSave', onBtnSaveClick)
+$(document.body).on('click', '#btnDelete', onBtnDeleteClick)
+$(document.body).on('click', '.timeblock-card', onTimeblockCardClick)
 
 ////////////////////////////////////////////////////////////////////////////////
 ///////////////////// Event Handlers ///////////////////////////////////////////
@@ -59,13 +61,15 @@ function onTrDragover(e) {
  * Click event handler for empty time slot. When an empty time slot in the schedule is clicked, open the timeblock editing modal,
  * and set the times based on the time clicked on.
  */
-function onBucketEmptyClick () {
+function onBucketEmptyClick() {
     var id = $(this).closest('tr')[0].id
     var temp = id.split('-') // empty time block's ids are displayed as times in 24hr format
     var hour24 = parseInt(temp[1])
     var hour = hour24 % 12
     var endHour = hour + 1 // default timeblock length is 1 hour.
     var quarter = parseInt(temp[2])
+
+    $('#btnDelete').hide()
 
     // Showing whether the time selected is AM or PM
     if (hour24 >= 12) {
@@ -168,6 +172,70 @@ function onBtnSaveClick() {
     })
 }
 
+function onTimeblockCardClick() {
+    //$('.timeblock-card');
+    //console.log(this)
+    //console.log($(this).find('.timeblock-card'))
+    //var timeblockId = $(this).find('.timeblock-card').data('timeblockId')
+    var timeblockId = $(this).data('timeblockId');
+    console.log(`timeblockId = ${timeblockId}`)
+    $('#btnDelete').show()
+
+    $('.modal-dialog').data('timeblockId', timeblockId)
+
+    getTimeBlock({ _id: timeblockId }, function (response, status) {
+        if (status == "success") {
+            var startTime = response.data.startDate.split('T')[1].split(':'),
+                endTime = response.data.endDate.split('T')[1].split(':');
+            $("#inputStartHour").val(startTime[0])
+            $("#inputEndHour").val(endTime[0])
+            $("#inputStartMinute").val(startTime[1])
+            $("#inputEndMinute").val(endTime[1])
+
+            if (Number(startTime[0]) >= 12) {
+                $("#optionStartAM").parent().removeClass("active")
+                $("#optionStartPM").parent().addClass("active")
+            } else {
+                $("#optionStartAM").parent().addClass("active")
+                $("#optionStartPM").parent().removeClass("active")
+            }
+
+            // Showing whether the default 1 hour later end time is AM or PM
+            if (endTime[0] + 1 >= 12 && endTime[0] + 1 < 24) {
+                $("#optionEndAM").parent().removeClass("active")
+                $("#optionEndPM").parent().addClass("active")
+            } else {
+                $("#optionEndAM").parent().addClass("active")
+                $("#optionEndPM").parent().removeClass("active")
+            }
+
+            var taskId = response.data.task;
+            $("#taskDropdown").data("taskId", taskId);
+            getTask(taskId, function (response, status) {
+                if (status == 'success') {
+                    task = response.data;
+                    $("#taskDropdown").html(task.title);
+                }
+            })
+
+            $("#timeblockEditModal").modal("show")
+        }
+    })
+}
+
+function onBtnDeleteClick() {
+    var timeblockId = $('.modal-dialog').data('timeblockId');
+    console.log(timeblockId)
+    deleteTimeblock({ _id: timeblockId }, function (response, status) {
+        if ('success' == status) {
+            var timeblockDivId = '#' + timeblockId
+            var timeblockRowId = '#' + $(timeblockDivId).closest('tr')[0].id
+            console.log(timeblockRowId)
+            removeTimeblockFromPage(timeblockRowId)
+        }
+    })
+}
+
 /**
  * Click event handler for number input plus buttons. When plus is clicked, increment the corresponding input value.
  */
@@ -234,14 +302,14 @@ function onTaskDropdownItemClick(e) {
 function onTimeblockDropped(event) {
     event.preventDefault();
     var id = event.originalEvent.dataTransfer.getData("text");
-    var taskId = $(id).children().find('.time-block-card');
+    var taskId = $(id).children().find('.timeblock-card');
     var targetId = $(event.target).closest('tr')[0].id;
-    var timeBlockID = $(id).children().find('.time-block-card')[0].id; //Gets the id of the timeblock which is stored as the div id
+    var timeBlockID = $(id).children().find('.timeblock-card')[0].id; //Gets the id of the timeblock which is stored as the div id
     var temp = targetId.split('-');
     var hour = Number(temp[1]);
     var minute = Number(temp[2]);
-    var nRows = $(id).children().find('.time-block-card').data('nRows');
-    var taskId = $(id).children().find('.time-block-card').data('taskId');
+    var nRows = $(id).children().find('.timeblock-card').data('nRows');
+    var taskId = $(id).children().find('.timeblock-card').data('taskId');
 
     if (!hasOverlaps(hour, minute, nRows)) {
         removeTimeblockFromPage(id);
@@ -362,11 +430,12 @@ function addTimeblockToPage(startHour, startMinute, nRows, taskId, timeblockId) 
         td.addClass("bucket-full");
         td.css('padding', '0px');
         td.html(generateTimeblockDiv(timeblockId, task.title))
-        setPriorityColor(td.children('.time-block-card'), task.priority);
-        var div = (td.children('.time-block-card'))
+        setPriorityColor(td.children('.timeblock-card'), task.priority);
+        var div = (td.children('.timeblock-card'))
         div.height(div.closest('td').height() + 1);
         div.data('nRows', nRows);
         div.data('taskId', taskId);
+        div.data('timeblockId', timeblockId)
         div.data('parentId', trId);
         firstHour = startHour;
         firstMinute = (startMinute + 15) % 60;
@@ -382,7 +451,9 @@ function addTimeblockToPage(startHour, startMinute, nRows, taskId, timeblockId) 
  * @param {*} rowId: the id of the tr containing the timeblock to remove
  */
 function removeTimeblockFromPage(rowId) {
-    var div = $(rowId).children().find('.time-block-card');
+    var div = $(rowId).children().find('.timeblock-card');
+    console.log('div', div)
+    console.log('div', div)
     var td = div.parent('td');
     var nRows = div.data('nRows');
     var taskId = div.data('taskId');
@@ -453,7 +524,7 @@ function addRows(firstHour, firstMinute, nRows) {
 function setPriorityColor(element, priority) {
     switch (Number(priority)) {
         case 0:
-            //$(elementId).children('.time-block-card')[0].addClass("priority-low");
+            //$(elementId).children('.timeblock-card')[0].addClass("priority-low");
             element.addClass("priority-low");
             break;
         case 1:
@@ -512,7 +583,7 @@ function showInvalidTimeToast() {
  * @param {*} taskTitle: the title of the task associated with the timeblock
  */
 function generateTimeblockDiv(timeblockId, taskTitle) {
-    const html = `<div id='${timeblockId}'class='time-block-card' style='height: 100%; width: 100%; display: table;'` +
+    const html = `<div id='${timeblockId}'class='timeblock-card' style='height: 100%; width: 100%; display: table;'` +
         ` draggable='true'><span style='display: table-cell; vertical-align: middle; padding-left: 8px'>${taskTitle}</span></div>`
     return html
 }

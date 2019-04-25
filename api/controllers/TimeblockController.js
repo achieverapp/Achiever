@@ -8,7 +8,7 @@ const TimeBlock = require('../models/TimeBlockModel.js').TimeBlock;
 
 /**
  * Constructor function for a result Object. Allows fast creation of a return object for an API response.
- * 
+ *
  * The most common parameters are closer to the start of the list while the ones that rarely get called are towards the end.
  * @param {string} statusMsg: Message that gives more detail on the result of the call.
  * @param {Object} statusObj: Object containing details about errors if there is an error
@@ -49,13 +49,14 @@ exports.addTimeBlock = function (req, res) {
  * Checks to ensure that all needed properties are included. Will return an error if data is missing
  */
 exports.getTimeBlock = function (req, res) {
-    var taskStartObj = JSON.parse(req.params.taskStartObj);
-    if (taskStartObj.task != null && taskStartObj.startDate != null) {
-        TimeBlock.getTimeBlock(req.app.locals.timeblocks, taskStartObj, function (result) {
+    var queryObj = JSON.parse(req.params.queryObj);
+    //if (queryObj.task != null && queryObj.startDate != null) {
+    if(queryObj._id != null) {
+        TimeBlock.getTimeBlock(req.app.locals.timeblocks, queryObj, function (result) {
             res.json(result);
         });
     } else {
-        res.json(ResultObj("Invalid task-start Time combination. Missing one or more required properties", taskStartObj));
+        res.json(ResultObj("Invalid task-start Time combination. Missing one or more required properties", queryObj));
     }
 }
 
@@ -97,12 +98,12 @@ exports.updateTimeBlock = function (req, res) {
  * Checks to ensure that all needed properties are included. Will return an error if data is missing
  */
 exports.deleteTimeBlock = function (req, res) {
-    var taskStartObj = JSON.parse(req.params.taskStartObj);
-    if (taskStartObj.task != null && taskStartObj.startDate != null) {
-        TimeBlock.deleteTimeBlock(req.app.locals.timeblocks, taskStartObj, function (result) {
+    var queryObj = JSON.parse(req.params.queryObj);
+    if (queryObj._id != null) {
+        TimeBlock.deleteTimeBlock(req.app.locals.timeblocks, queryObj, function (result) {
             res.json(result);
         });
     } else {
-        res.json(ResultObj("Invalid task-start Time combination. Missing one or more required properties", taskStartObj));
+        res.json(ResultObj("Invalid task-start Time combination. Missing one or more required properties", queryObj));
     }
 }

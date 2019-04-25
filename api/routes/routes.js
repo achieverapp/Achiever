@@ -36,7 +36,7 @@ module.exports = function (app) {
         .post(TimeBlock.addTimeBlock)
         .put(TimeBlock.updateTimeBlock);
 
-    app.route('/api/timeblocks/:taskStartObj') //takes an object that contains a task id and a start time
+    app.route('/api/timeblocks/:queryObj') //takes an object that contains a task id and a start time
         .get(TimeBlock.getTimeBlock)
         .delete(TimeBlock.deleteTimeBlock);
 

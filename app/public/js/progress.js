@@ -67,8 +67,18 @@ function onMouseLeave(e) {
  */
 function taskCardClicked(e) {
     var userId = getQueryParam('userId')
-    if ($(e.target).hasClass("task-card-container"))
-        window.location.href = `/taskview?taskId=${e.target.parentElement.id}&userId=${userId}`;
+    if($(e.target).hasClass('task-checkbox')) {
+        return;
+    }
+    var taskCard
+    if (!$(e.target).hasClass('task-card')) {
+        taskCard = $(e.target).closest('.task-card')
+    }
+    else {
+        taskCard = $(e.target)
+    }
+    console.log(taskCard[0].id)
+    window.location.href = `/taskview?taskId=${taskCard[0].id}&userId=${userId}&redirect=progress`;
 }
 
 /**Load event handler for navbar HTML being added to the page */
@@ -119,18 +129,23 @@ function buildTaskList(sortBy) {
         }
 
         var today = new Date();
-        if ($('#ThisWeekSortRadio').parent().hasClass("active")) { // show this week's that the user has checked off            
-            var monday = getMondayOfCurrentWeek(today)
-            var endOfWeek = getOffsetDate(monday, 7)
-            tasks = getTasksInDateRange(tasks, monday, endOfWeek); //gets all tasks for the week
-            var allTasksNum = tasks.length; //saves the number for a calculation later
-            tasks = getCheckedTasks(tasks) //gets only the tasks for the week
-            var completePercent = Math.floor((tasks.length/allTasksNum) * 100) + "%"; //calculate the percentage as a string
-            console.log(allTasksNum, tasks.length, completePercent)
-            $("#weeklyProgress").css('width', completePercent).html(completePercent); //set the HTML element with the new properties
-        } else { //show all tasks that the user has checked off            
-            tasks = getCheckedTasks(tasks)
+        var monday = getMondayOfCurrentWeek(today)
+        var endOfWeek = getOffsetDate(monday, 7)
+        var dueTasks = getTasksInDateRange(tasks, 'due', monday, endOfWeek) //gets all tasks for the week
+        var completedDueTasks = getCheckedTasks(dueTasks)
+        console.log(dueTasks, completedDueTasks)
+        //console.log(tasks.length)
+        var completePercent = Math.floor((completedDueTasks.length / dueTasks.length) * 100) + "%"; //calculate the percentage as a string
+        console.log(completePercent)
+        $("#weeklyProgress").css('width', completePercent).html(completePercent); //set the HTML element with the new properties
+
+        tasks = getCheckedTasks(tasks)
+        if (!$('#ThisWeekSortRadio').parent().hasClass("active")) { // show this week's that the user has checked off    
+            tasks = getTasksInDateRange(tasks, 'completedOn', monday, endOfWeek)
         }
+        // } else { //show all tasks that the user has checked off            
+        //     tasks = getCheckedTasks(tasks)
+        // }
 
         while (completedUL.firstChild) { //clear all the tasks
             completedUL.removeChild(completedUL.firstChild);

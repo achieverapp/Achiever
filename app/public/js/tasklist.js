@@ -52,8 +52,18 @@ $(document).ready(function () {
  */
 function taskCardClicked(e) {
     var userId = getQueryParam('userId')
-    if ($(e.target).hasClass("task-card-container"))
-        window.location.href = `/taskview?taskId=${e.target.parentElement.id}&userId=${userId}`;
+    if($(e.target).hasClass('task-checkbox')) {
+        return;
+    }
+    var taskCard
+    if (!$(e.target).hasClass('task-card')) {
+        taskCard = $(e.target).closest('.task-card')
+    }
+    else {
+        taskCard = $(e.target)
+    }
+    console.log(taskCard[0].id)
+    window.location.href = `/taskview?taskId=${taskCard[0].id}&userId=${userId}&redirect=tasklist`;
 }
 
 /**Load event handler for navbar HTML being added to the page */

@@ -201,7 +201,12 @@ function saveTask() {
 
   // Update the task and then switch to the tasklist page only after the data is sent.
   updateTask(task, function (response, status) {
-    window.location.href = `/tasklist?userId=${currUserId}`; //need to change pages only after the task is updated
+    var redirect = getQueryParam('redirect')
+    var target = `/tasklist?userId=${currUserId}`;
+    if(redirect) {
+      target = `/${redirect}?userId=${currUserId}`
+    }
+    window.location.href = target
   });
 }
 
@@ -297,4 +302,17 @@ function showBlankTitleToast() {
   $("#toastSubtitle").html("");
   $("#toastBody").html("Cannot save tasks without a title. Please enter a description of your task in the title box.");
   $('.toast').toast('show');
+}
+
+/**
+ * Gets the specified query param from the current page url
+ * @param {*} param: the name of the query parameter to get
+ */
+function getQueryParam(param) {
+  var url = window.location.href
+  temp = url.split(`${param}=`)[1]
+  if (typeof temp === 'undefined') {
+      return null
+  }
+  return url.split(`${param}=`)[1].split('&')[0]
 }

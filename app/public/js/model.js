@@ -303,19 +303,40 @@ function getCheckedTasks(tasks) {
 /**
  * Get a list of tasks that falls within a specified date range
  * @param {Array<Task>} tasks an array of tasks to query from
+ * @param {String} dateProp the name of the date property to filter by
  * @param {Date} startDate the oldest date in the date range (inclusive)
  * @param {Date} endDate the most recent date after the range (exclusive)
  * @returns {Array<Task>} an array of tasks in the date range
  */
-function getTasksInDateRange(tasks, startDate, endDate) {
+function getTasksInDateRange(tasks, dateProp, startDate, endDate) {
     var inRangeTasks = [];
     tasks.forEach(function (task) {
-        completedOn = new Date(task.completedOn)
+        completedOn = new Date(task[dateProp])
         if (startDate <= completedOn && completedOn < endDate) {
             inRangeTasks.push(task);
         }
     });
     return inRangeTasks
+}
+
+/**
+ * Find the monday of the same week as a specified date
+ * @param {Date} date the date to find the monday in the same week
+ * @returns {Date} the date of monday in the week of the specified date
+ */
+function getMondayOfCurrentWeek(date) {
+    var day = date.getDay();
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate() + (day == 0 ? -6 : 1) - day);
+}
+
+/**
+ * Get a date an offset number of days from a specific date
+ * @param {Date} date date the starting date used to calculate the offset date
+ * @param {Number} offset the number of days to offset the date by
+ * @returns {Date} the offset date
+ */
+function getOffsetDate(date, offset) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate() + offset)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -374,24 +395,4 @@ function compareTaskByPriorityDescending(lhs, rhs) {
     if (lhs.priority === rhs.priority)
         return compareTaskByDateAscending(lhs, rhs);
     return rhs.priority - lhs.priority;
-}
-
-/**
- * Find the monday of the same week as a specified date
- * @param {Date} date the date to find the monday in the same week
- * @returns {Date} the date of monday in the week of the specified date
- */
-function getMondayOfCurrentWeek(date) {
-    var day = date.getDay();
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate() + (day == 0 ? -6 : 1) - day);
-}
-
-/**
- * Get a date an offset number of days from a specific date
- * @param {Date} date date the starting date used to calculate the offset date
- * @param {Number} offset the number of days to offset the date by
- * @returns {Date} the offset date
- */
-function getOffsetDate(date, offset) {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate() + offset)
 }

@@ -306,3 +306,61 @@ function getTasksInDateRange(tasks, startDate, endDate) {
     });
     return inRangeTasks
 }
+
+////////////////////////////////////////////////////////////////////////////////
+///////////////////// Comparison functions /////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Comparison function for task Dates
+ * @returns negative if the lhs is greater
+ * @returns 0 if they are the same
+ * @returns positive if the rhs is greater
+ * @param {*} lhs: Task to compare
+ * @param {*} rhs: Task to compare on the right side
+ */
+function compareTaskByDateAscending(lhs, rhs) {
+    var lhsDate = new Date(lhs.due),
+        rhsDate = new Date(rhs.due);
+    if (lhs.due === rhs.due)
+        return lhs.priority - rhs.priority;
+    if (lhsDate > rhsDate)
+        return 1;
+    if (lhsDate < rhsDate)
+        return -1;
+    return 0;
+}
+
+/**
+ * Comparison function for task Dates
+ * @returns negative if the rhs is greater
+ * @returns 0 if they are the same
+ * @returns positive if the lhs is greater
+ * @param {*} lhs: Task to compare
+ * @param {*} rhs: Task to compare on the right side
+ */
+function compareTaskByDateDescending(lhs, rhs) {
+    var lhsDate = new Date(lhs.due),
+        rhsDate = new Date(rhs.due);
+    if (lhs.due === rhs.due)
+        return lhs.priority - rhs.priority;
+    if (lhsDate > rhsDate)
+        return -1;
+    if (lhsDate < rhsDate)
+        return 1;
+    return 0;
+}
+
+/**
+ * Comparison function for task priorities
+ * @returns negative if the lhs is greater
+ * @returns 0 if they are the same
+ * @returns positive if the rhs is greater
+ * @param {*} lhs: Task to compare
+ * @param {*} rhs: Task to compare on the right side
+ */
+function compareTaskByPriorityDescending(lhs, rhs) {
+    if (lhs.priority === rhs.priority)
+        return compareTaskByDateAscending(lhs, rhs);
+    return rhs.priority - lhs.priority;
+}

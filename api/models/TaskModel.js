@@ -133,26 +133,27 @@ class Task {
         console.log(resultObj.statusMsg);
         result(null, resultObj);
       } else {
-        console.log('update one...')
+        console.log(result)
         tasksDB.updateOne({
-          _id: new ObjectId(newTask._id)
-        }, {
-            $set: newTask,
-            function(err) {
-              if (err) {
-                resultObj = ResultObj("Error when attempting to change name!", err);
-                console.log(resultObj.statusMsg + ": " + err);
-                result(null, resultObj)
-              } else {
-                resultObj = ResultObj("priority changed to " + newTask.priority, null, true);
-                console.log(success)
-                result(null, resultObj)
-              }
+            _id: new ObjectId(newTask._id)
+          }, {
+            $set: newTask
+          },
+          function (err) {
+            if (err) {
+              resultObj = ResultObj("Error when attempting to change name!", err);
+              console.log(resultObj.statusMsg + ": " + err);
+              result(null, resultObj)
+            } else {
+              resultObj = ResultObj("priority changed to " + newTask.priority, null, true);
+              console.log(success)
+              result(null, resultObj)
             }
           })
       }
-    });
-  }
+    })
+  };
+
 
   /**
    * Deletes a task from the database

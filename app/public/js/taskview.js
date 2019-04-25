@@ -166,6 +166,7 @@ function saveTask() {
   var date = new Date($("#datepicker").val()).toISOString().substr(0, 10); //Grab just the date in ISO format
   var time = $("#timepicker").val(); //Grab the time in ISO format
   var dueDate = new Date(date + "T" + time + ":00.000Z"); //Cobine them into one time in ISO format
+  dueDate = new Date(dueDate.valueOf() + (new Date().getTimezoneOffset() * 60000)) //fix for the time zone difference
 
   var task = { // Task schema with everything that will be changed each time an update is called.
     _id: currTaskId,
@@ -215,7 +216,11 @@ function saveTask() {
  * @param task: Task object that will be loaded into the page
  */
 function setTaskInfo(task) {
-  var date = task.due == null ? new Date().toISOString() : new Date(task.due).toISOString();
+  var DueDate = task.due == null ? new Date() : new Date(task.due);
+  console.log(DueDate.valueOf());
+  DueDate = new Date(DueDate.valueOf() - (new Date().getTimezoneOffset() * 60000))
+  var date = DueDate.toISOString();
+  console.log(date);
   var day = date.substr(0, 10);
   var time = date.substr(11, 5);
 

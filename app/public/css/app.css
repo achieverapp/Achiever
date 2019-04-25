@@ -153,20 +153,18 @@ input[type=number].input-no-spinner {
     margin-top: 0px;
     margin-bottom: 0px;
     display: inline-block;
-    color: white;
 }
 
 .task-checkbox:hover {
-    /* color: #343A40; */
     cursor: pointer;
 }
 
 .check-complete {
-    color: #343A40;
+    color: #343A40 !important;
 }
 
 .check-incomplete {
-    color: white;
+    color: white !important;
 }
 
 .task-card {

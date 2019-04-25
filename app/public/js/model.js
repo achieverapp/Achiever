@@ -308,3 +308,9 @@ function getTasksInDateRange(tasks, startDate, endDate) {
     });
     return inRangeTasks
 }
+
+function getMondayOfCurrentWeek(d)
+{
+    var day = d.getDay();
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate() + (day == 0 ? -6:1) - day );
+}

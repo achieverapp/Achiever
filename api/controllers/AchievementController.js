@@ -34,7 +34,7 @@
     }
     
     /**
-     * Handles getting all Achievements for the userID. Returns an error if there is one.
+     * Handles getting all Achievements for the AchievementsID. Returns an error if there is one.
      */
     exports.getAchievements = function (req, res) {
       Achievement.getAchievements(req.app.locals.achievements, req.params.id, function (err, result) {
@@ -50,31 +50,12 @@
      * Handles updaing Achievements, automatically adds a Achievement instead of updating if the ID is default.
      */
     exports.updateAchievement = function (req, res) {
-      if (req.body._id == "default") { //When we are adding a new Achievement, the ID will be default
-        delete req.body._id; //remove the ID from the Achievement object
-        var newAchievement = new Achievement(req.body); //turn it into a Achievement object
+      var newAchievements = new Achievements(req.body);
+      Achievement.updateAchievements(req.app.locals.achievements, newAchievements, function (result) {
+      res.json(result);
+  });
+}
     
-        if (!newAchievement.category) {
-          newAchievement.category = "none";
-        }
-    
-        Achievement.addAchievement(req.app.locals.achievements, newAchievement, function (err, result) { //call the addAchievement function to deal with the rest.
-          if (err) {
-            res.send(err)
-          } else {
-            res.json(result);
-          }
-        });
-      } else {
-        Achievement.updateAchievement(req.app.locals.achievements, req.body, function (err, result) {
-          if (err) {
-            res.send(err);
-          } else {
-            res.json(result);
-          }
-        });
-      }
-    }
     
     /**
      * Delete Achievement handler, there is no logic needed here. We do not currently want to delete Achievements.

@@ -72,28 +72,40 @@ class Acheievment {
   }
 
   static updateAchievement(achievementsDB, newAchievement, result) {
+    var achievementsId = new ObjectId(newAchievement._id);
+    newachievements._id = achievementsId;
     var resultObj;
     achievementsDB.find({
-      _id: new ObjectId(newAchievement._id)
+      _id: achievementsId
     }).toArray(function (err, res) {
       if (err) { //Unkown error, return to client and display it in the log.
-        resultObj = ResultObj("Error when checking if user with id " + newAchievement._id + " exists in database.", err);
+        resultObj = ResultObj("Error when checking if user with id " + newachievements._id + " exists in database.", err);
         console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
-        result(resultObj);
+        result(null, resultObj);
       } else if (res.length == 0) { //no user with id userId, tell the updater and log it
-        resultObj = ResultObj("achievement not in database. ID:" + newAchievement._id);
+        resultObj = ResultObj("achievements not in database. ID:" + newachievements._id);
         console.log(resultObj.statusMsg);
         result(null, resultObj);
       } else {
-        if (newAchievement.counter != null) {
-          updateAchievementCounter(achievementsDB, newAchievement, result).then(result);
-        }
-        if (newAchievement.completed != null) {
-          updateAchievementcompleted(achievementsDB, newAchievement, result).then(result);
-        }
+        console.log(result)
+        achievementsDB.updateOne({
+            _id: new ObjectId(newAchievements._id)
+          }, {
+            $set: newAchievements
+          },
+          function (err) {
+            if (err) {
+              resultObj = ResultObj("Error when attempting to change name!", err);
+              console.log(resultObj.statusMsg + ": " + err);
+              result(null, resultObj)
+            } else {
+              resultObj = ResultObj("achievement changed to ", null, true);              
+              result(null, resultObj)
+            }
+          })
       }
     })
-  }
+  };
   // maybe not necessary to delete achievements 
   static deleteachievement(achievementsDB, achievementId) {
     var resultObj;
@@ -145,9 +157,8 @@ function ResultObj(statusMsg = "", statusObj = null, success = false, id = null,
   };
   return returnObj;
 }
-// checks to see if the achievement is completed
-function achievementCheck(userId) {
 
-}
+// checks to see if the achievement is completed
+
 
 module.exports = Acheievment;

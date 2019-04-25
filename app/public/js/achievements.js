@@ -27,6 +27,7 @@ function buildAchievementsList() {
 
 var achievementCardNode=document.createElement("li");
 achievementCardNode.id=userAchievement.achievementId;
+achievementsId=achievementCardNode.id;
 getAchievement(achievementId,function(error,result)
 {
 achievements=result.data;

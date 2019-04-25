@@ -149,10 +149,7 @@ function onBtnSaveClick() {
         return
     }
     var nRows = ((endHour - startHour) * 4) - (startMinute / 15) + (endMinute / 15);
-    if (hasOverlaps(startHour, startMinute, nRows, null)) {
-        showOverlapToast()
-        return
-    }
+
     taskId = $("#taskDropdown").data("taskId");
     if (taskId == null || typeof taskId === 'undefined') {
         showNoTaskToast()
@@ -164,19 +161,67 @@ function onBtnSaveClick() {
     startHourStr = Number(startHour) < 10 ? "0" + startHour : startHour
     startMinuteStr = Number(startMinute) < 10 ? "0" + startMinute : startMinute
     startTimeStr = startHourStr + ':' + startMinuteStr
-    var timeBlockObj = createTimeblockObject(startHourStr + ":" + startMinuteStr, endHourStr + ":" + endMinuteStr, taskId)
-    addTimeBlock(timeBlockObj, function (response, status) {
-        console.log(response); //Debug
-        if (response.success)
-            addTimeblockToPage(startHour, startMinute, nRows, taskId, response.data._id)
-    })
+    var timeBlockObj = createTimeblockObject(`${startHourStr}:${startMinuteStr}`, `${endHourStr}:${endMinuteStr}`, taskId)
+
+    var timeblockId = $('.modal-dialog').data('timeblockId')
+    if (null != timeblockId) {
+        var blockOverlaps = false;
+        timeBlockObj._id = timeblockId;
+        getTimeBlocks({
+            day: currentDay.toISOString().substr(0, 10),
+            owner: currUserId
+        }, function (response, status) {
+            if (status == "success") {
+                response.data.forEach(timeblock => {
+                    if (timeBlockObj._id == timeblock._id) {
+                        return
+                    }
+                    var start = new Date(timeblock.startDate)
+                    var end = new Date(timeblock.endDate)
+                    if (timeBlockObj.startDate < end && timeBlockObj.startDate > start) {
+                        blockOverlaps = true;
+                        return;
+                    }
+                    if (timeBlockObj.endDate < end && timeBlockObj.endDate > start) {
+                        blockOverlaps = true;
+                        return;
+                    }
+                })
+                if (!blockOverlaps) {
+                    updateTimeBlock(timeBlockObj, function (response, status) {
+                        if ('success' === status) {
+                            var timeblockDivId = '#' + timeblockId
+                            var timeblockRowId = '#' + $(timeblockDivId).closest('tr')[0].id
+                            removeTimeblockFromPage(timeblockRowId)
+                            addTimeblockToPage(startHour, startMinute, nRows, taskId, response.data._id)
+                        }
+                    })
+                }
+            }
+            else { // there is a time conflict with another block
+                showOverlapToast()
+                return
+            }
+        });
+    }
+    else { // timeblock does not exists...
+        if (hasOverlaps(startHour, startMinute, nRows, null)) {
+            showOverlapToast()
+            return
+        }
+        addTimeBlock(timeBlockObj, function (response, status) {
+            console.log(response); //Debug
+            if (response.success)
+                addTimeblockToPage(startHour, startMinute, nRows, taskId, response.data._id)
+        })
+    }
+}
+
+function saveExistingTimeblock() {
+
 }
 
 function onTimeblockCardClick() {
-    //$('.timeblock-card');
-    //console.log(this)
-    //console.log($(this).find('.timeblock-card'))
-    //var timeblockId = $(this).find('.timeblock-card').data('timeblockId')
     var timeblockId = $(this).data('timeblockId');
     console.log(`timeblockId = ${timeblockId}`)
     $('#btnDelete').show()
@@ -687,4 +732,16 @@ function timeTo24(hour, isPM) {
         newHour += (isPM ? 0 : 12);
     }
     return newHour;
+}
+
+function getHourFromISO(isoDateStr) {
+    var timeStr = isoDateStr.split('T')[1];
+    var hour = Number(timeStr.split(':')[0])
+    return hour;
+}
+
+function getMinuteFromISO(isoDateStr) {
+    var timeStr = isoDateStr.split('T')[1];
+    var minute = Number(timeStr.split(':')[1])
+    return minute;
 }

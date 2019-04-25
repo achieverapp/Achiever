@@ -159,11 +159,27 @@ input[type=number].input-no-spinner {
     cursor: pointer;
 }
 
-.check-complete {
+.task-checkbox-complete {
+    margin-right:8px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    display: inline-block;
     color: #343A40 !important;
 }
 
-.check-incomplete {
+.task-checkbox-incomplete {
+    margin-right:8px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    display: inline-block;
+    color: white !important;
+}
+
+.task-checkbox.check-complete {
+    color: #343A40 !important;
+}
+
+.task-checkbox.check-incomplete {
     color: white !important;
 }
 

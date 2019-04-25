@@ -186,7 +186,7 @@ function buildTaskCard(task) {
     taskCardNode.classList.add(priorityToClassMap[task.priority]);
     taskCardNode.innerHTML =
         "<div class='task-card-container'>" +
-        "<h2 class='fas fa-check-square align-middle task-checkbox task-incomplete'></h2>" +
+        "<h2 class='task-incomplete fas fa-check-square align-middle task-checkbox'></h2>" +
         "<div class='align-middle task-card-content'>" +
         "<h3 class='task-card-title' style='display:block'>" + task.title + "</h3>" +
         "<p class='task-due'>Due:&nbsp;" + formatDateTime(dueDate) + "</p>" +

@@ -288,7 +288,7 @@ function createTimeblockObject(startTimeStr, endTimeStr, taskId) {
 
 /**
  * Get all the unchecked tasks from a array of tasks
- * @param {Array<Task} tasks an array of tasks to query from 
+ * @param {Array<Task} tasks an array of tasks to query from
  * @returns {Array<Task} an array of unchecked tasks
  */
 function getUncheckedTasks(tasks) {
@@ -303,7 +303,7 @@ function getUncheckedTasks(tasks) {
 
 /**
  * Get all the checked tasks from a array of tasks
- * @param {Array<Task>} tasks an array of tasks to query from 
+ * @param {Array<Task>} tasks an array of tasks to query from
  * @returns {Array<Task} an array of checked tasks
  */
 function getCheckedTasks(tasks) {
@@ -391,6 +391,26 @@ function compareTaskByDateDescending(lhs, rhs) {
     var lhsDate = new Date(lhs.due),
         rhsDate = new Date(rhs.due);
     if (lhs.due === rhs.due)
+        return lhs.priority - rhs.priority;
+    if (lhsDate > rhsDate)
+        return -1;
+    if (lhsDate < rhsDate)
+        return 1;
+    return 0;
+}
+
+/**
+ * Comparison function for task Dates
+ * @returns negative if the rhs is greater
+ * @returns 0 if they are the same
+ * @returns positive if the lhs is greater
+ * @param {*} lhs: Task to compare
+ * @param {*} rhs: Task to compare on the right side
+ */
+function compareTaskByCompletionDateDescending(lhs, rhs) {
+    var lhsDate = new Date(lhs.completedOn),
+        rhsDate = new Date(rhs.completedOn);
+    if (lhs.completedOn === rhs.completedOn)
         return lhs.priority - rhs.priority;
     if (lhsDate > rhsDate)
         return -1;

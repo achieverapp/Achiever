@@ -23,8 +23,8 @@ $(document).ready(function () {
     // load the navbar
     $("#navbar").load("/html/navbar.html", onNavBarLoad);
     getUser(showName);
-
-    buildTaskList("sortByDueDate"); //Build the task list, sorting by due date and calling the getTasksInDateRange
+    $(".sortby-dropdown").data("sortBy", 'sortByCompletionDate');
+    buildTaskList(); //Build the task list, sorting by due date and calling the getTasksInDateRange
 
     //load event handler for changing sort method
     $(".sortby-dropdown-item").click(changeSortMethod);
@@ -32,7 +32,7 @@ $(document).ready(function () {
     // Event handler for when a task is clicked on. Should bring the user to the task view page.
     // Adds a new empty row for the task to allow the user to input another task
     $(document).on("click", ".task-card", taskCardClicked);
-    $(document).on("click", ".btn-group-toggle", onChangeSort);
+    $(document).on("click", ".btn-group-toggle", onChangeFilter);
 
     // load event handlers for styling of a checkbox
     $(document).on("mouseover", ".task-checkbox", onMouseEnter);
@@ -105,7 +105,7 @@ function changeSortMethod(e) {
     });
 
     $(".sortby-dropdown").data("sortBy", e.target.id);
-    buildTaskList(e.target.id);
+    buildTaskList();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -117,15 +117,18 @@ function changeSortMethod(e) {
  * Puts them into two categories, overdue tasks and upcoming tasks.
  * @param sortBy: sorting function to compare each task.
  */
-function buildTaskList(sortBy) {
+function buildTaskList() {
     var completedUL = document.getElementById("completed-list");
     var tasks;
+    var sortBy = $(".sortby-dropdown").data("sortBy")
     getTaskList(function (result, error) {
         tasks = result.data
         if (sortBy === "sortByPriority") {
             tasks.sort(compareTaskByPriorityDescending);
         } else if (sortBy === "sortByDueDate") {
             tasks.sort(compareTaskByDateDescending);
+        } else if (sortBy === 'sortByCompletionDate') {
+            tasks.sort(compareTaskByCompletionDateDescending)
         }
 
         var today = new Date();
@@ -140,10 +143,11 @@ function buildTaskList(sortBy) {
         $("#weeklyProgress").css('width', completePercent).html(completePercent); //set the HTML element with the new properties
 
         tasks = getCheckedTasks(tasks)
-        if (!$('#ThisWeekSortRadio').parent().hasClass("active")) { // show this week's that the user has checked off    
+        if ($('#ThisWeekSortRadio').parent().hasClass("active")) { // show this week's that the user has checked off
             tasks = getTasksInDateRange(tasks, 'completedOn', monday, endOfWeek)
         }
-        // } else { //show all tasks that the user has checked off            
+
+        // } else { //show all tasks that the user has checked off
         //     tasks = getCheckedTasks(tasks)
         // }
 
@@ -164,7 +168,7 @@ function buildTaskList(sortBy) {
  * @param {*} task: Task object to add to the page
  */
 function buildTaskCard(task) {
-    var dueDate = new Date(task.due);
+    var completeDate = new Date(task.completedOn);
     var taskCardNode = document.createElement("li");
     taskCardNode.id = task._id;
     taskCardNode.classList.add("card");
@@ -175,7 +179,7 @@ function buildTaskCard(task) {
         "<h2 class='fas fa-check-square align-middle task-checkbox task-complete'></h2>" +
         "<div class='align-middle task-card-content'>" +
         "<h3 class='task-card-title' style='display:block'>" + task.title + "</h3>" +
-        "<p class='task-due'>Due:&nbsp;" + formatDateTime(dueDate) + "</p>" +
+        "<p class='task-due'>Completed:&nbsp;" + formatDateTime(completeDate) + "</p>" +
         "<p class='task-category'>Category:&nbsp;" + task.category + "</p>" +
         "</div>" +
         "</div>";
@@ -196,7 +200,6 @@ function getQueryParam(param) {
     return url.split(`${param}=`)[1].split('&')[0]
 }
 
-function onChangeSort() {
-    console.log("TEST")
-    buildTaskList("sortByDueDate"); //Build the task list, sorting by due date and calling the getTasksInDateRange
+function onChangeFilter() {
+    buildTaskList(); //Build the task list, sorting by due date and calling the getTasksInDateRange
 }

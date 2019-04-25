@@ -26,14 +26,18 @@
 
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"
     integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous">
-    </script>
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
     integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">
-    </script>
+  </script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
     integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous">
-    </script>
+  </script>
 
+  <script src="../js/progress.js"></script>
+
+  <!-- Including the model for the parameter retrieval function -->
+  <script src="../js/model.js"></script>
 </head>
 
 <style>
@@ -102,7 +106,6 @@
     <h2>Recently Completed Achievements</h2>
 
     <ul style="padding:0px">
-
       <li class="card task-card">
         <div class="container">
           <div class="card-content">
@@ -116,17 +119,27 @@
         </div>
       </li>
     </ul>
+
+    <div id="recently-completed-div">
+      <div class='d-flex justify-content-between'>
+        <h1>Recently Completed Tasks:</h1>
+
+        <span class="dropdown" style='margin-top: auto; margin-bottom:auto;'>
+          <button class="btn btn-secondary dropdown-toggle sortby-dropdown" type="button" id="sortByDropdown1"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Sort By
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item sortby-dropdown-item" id="sortByPriority">Priority</a>
+            <a class="dropdown-item sortby-dropdown-item" id="sortByDueDate">Due Date</a>
+          </div>
+        </span>
+      </div>
+
+      <ul style="padding:0px" id="completed-list"></ul>
+    </div>
+
   </div>
 </body>
-
-<script>
-  // Loads in the navbar
-  $(document).ready(function () {
-    $("#navbar").load("/html/navbar.html", function() {
-      $("#nav-progress").addClass("nav-active");
-      resizeNav();
-    });
-  })
-</script>
 
 </html>

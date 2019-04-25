@@ -35,7 +35,7 @@
   </script>
   <link rel="stylesheet" href="../css/app.css">
   <script src="../js/model.js"></script>
-  <script src="../js/achievements.js"></script>
+
 
 </head>
 
@@ -43,8 +43,9 @@
   /* Include CSS here */
 </style>
 <!---->
+
 <body>
-    <nav class="nav bg-primary" id="navbar"></nav>
+  <nav class="nav bg-primary" id="navbar"></nav>
   <!-- basic list of acievements -->
   <div id="achievements" class="container p-2">
     <h1>Achievements</h1>
@@ -100,13 +101,7 @@
   </div>
   </ul>
 </body>
-<script>
-  $(document).ready(function () {
-    $("#navbar").load("/html/navbar.html", function() {
-      $("#nav-achievements").addClass("nav-active");
-      resizeNav();
-    });
-  });
-</script>
+
+<script src="../js/achievements.js"></script>
 
 </html>

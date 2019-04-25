@@ -166,6 +166,7 @@ function saveTask() {
   var date = new Date($("#datepicker").val()).toISOString().substr(0, 10); //Grab just the date in ISO format
   var time = $("#timepicker").val(); //Grab the time in ISO format
   var dueDate = new Date(date + "T" + time + ":00.000Z"); //Cobine them into one time in ISO format
+  dueDate = new Date(dueDate.valueOf() + (new Date().getTimezoneOffset() * 60000)) //fix for the time zone difference
 
   var task = { // Task schema with everything that will be changed each time an update is called.
     _id: currTaskId,
@@ -200,7 +201,12 @@ function saveTask() {
 
   // Update the task and then switch to the tasklist page only after the data is sent.
   updateTask(task, function (response, status) {
-    window.location.href = `/tasklist?userId=${currUserId}`; //need to change pages only after the task is updated
+    var redirect = getQueryParam('redirect')
+    var target = `/tasklist?userId=${currUserId}`;
+    if(redirect) {
+      target = `/${redirect}?userId=${currUserId}`
+    }
+    window.location.href = target
   });
 }
 
@@ -215,7 +221,11 @@ function saveTask() {
  * @param task: Task object that will be loaded into the page
  */
 function setTaskInfo(task) {
-  var date = task.due == null ? new Date().toISOString() : new Date(task.due).toISOString();
+  var DueDate = task.due == null ? new Date() : new Date(task.due);
+  console.log(DueDate.valueOf());
+  DueDate = new Date(DueDate.valueOf() - (new Date().getTimezoneOffset() * 60000))
+  var date = DueDate.toISOString();
+  console.log(date);
   var day = date.substr(0, 10);
   var time = date.substr(11, 5);
 
@@ -292,4 +302,17 @@ function showBlankTitleToast() {
   $("#toastSubtitle").html("");
   $("#toastBody").html("Cannot save tasks without a title. Please enter a description of your task in the title box.");
   $('.toast').toast('show');
+}
+
+/**
+ * Gets the specified query param from the current page url
+ * @param {*} param: the name of the query parameter to get
+ */
+function getQueryParam(param) {
+  var url = window.location.href
+  temp = url.split(`${param}=`)[1]
+  if (typeof temp === 'undefined') {
+      return null
+  }
+  return url.split(`${param}=`)[1].split('&')[0]
 }

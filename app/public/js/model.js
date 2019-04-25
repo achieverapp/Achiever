@@ -26,11 +26,13 @@ class Task {
     constructor(task) {
         this.owner = task.owner == null ? null : task.owner;
         this.title = task.title == null ? null : task.title;
-        this.category = task.category == null ? none : task.category;;
+        this.category = task.category == null ? null : task.category;
         this.priority = task.priority == null ? 0 : task.priority;
         this.subTasks = task.subTasks == null ? [] : task.subTasks;
         this.timeBlocks = task.timeBlocks == null ? [] : task.timeBlocks;
-        this.due = task.due == null ? new Date() : task.due;
+        this.due = task.due == null ? new Date().toISOString() : task.due;
+        this.completedOn = task.completedOn == null ? null : task.completedOn;
+        this.checked = task.checked == null ? false : task.checked;
     }
 }
 
@@ -40,7 +42,8 @@ class Task {
 
 const currUserId = getQueryParam('userId');
 const currTaskId = getQueryParam('taskId');
-const URL = "http://localhost:3000"; //URL of the API server.
+const URL = location.protocol + '//' + location.host; //URL of the API server.
+//console.log(location.protocol + '//' + location.host + location.pathname); //location of the URL
 
 /**
  * Console Logging function for all js files that include model.js
@@ -77,6 +80,16 @@ function getTaskList(callback) {
 function getTask(id, callback) {
     $.ajax({
         url: URL + "/api/tasks/" + id,
+        method: 'GET',
+        success: callback,
+        error: errorLog
+    });
+}
+
+
+function getCheckedTask(id, callback) {
+    $.ajax({
+        url: URL + "/api/tasks/" + id + "?checked=true",
         method: 'GET',
         success: callback,
         error: errorLog
@@ -185,7 +198,54 @@ function getTimeBlocks(timeBlock, callback) {
         error: errorLog
     });
 }
+///////////////////////////////////////////////////////////////////////////////
+/////////////////// achievements interface functions /////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Get all userAChievement on a certain day for a certain user.
+ * @param userAchievement: Pass a userachievement object with the owner ID and the day that you want to get the tasks for.
+ * @param callback: the function to call when the API call completes.
+ */
+function getUserAchievements(userAchievement, callback) {
+    var sendObj = {
+        owner: userAchievement.owner,
+    }
+
+    $.ajax({
+        url: URL + "/api/UserAchievement/" + JSON.stringify(sendObj),
+        data: userAchievement,
+        method: 'GET',
+        success: callback,
+        error: errorLog
+    });
+}
+
+/** Get all achievements from a userachievement.
+ * @param Id: Pass a an id for an achievement
+ * @param callback: the function to call when the API call completes.
+ */
+function getAchievement(id, callback) {
+    $.ajax({
+        url: URL + "/api/achievement/" + id,
+        method: 'GET',
+        success: callback,
+        error: errorLog
+    })
+}
+
+/**
+ * Retrieve a user from the server
+ * @param callback: the function to call when the API call completes.
+ */
+function getUser(callback) {
+    $.ajax({
+        url: URL + "/api/users/" + currUserId,
+        method: 'GET',
+        success: callback,
+        error: errorLog
+    });
+}
 
 /**
  * Retrieves parameters from the URL
@@ -224,4 +284,131 @@ function createTimeblockObject(startTimeStr, endTimeStr, taskId) {
         startDate: start,
         endDate: end
     }
+}
+
+/**
+ * Get all the unchecked tasks from a array of tasks
+ * @param {Array<Task} tasks an array of tasks to query from 
+ * @returns {Array<Task} an array of unchecked tasks
+ */
+function getUncheckedTasks(tasks) {
+    var uncheckedTasks = [];
+    tasks.forEach(function (task) {
+        if (task.checked === "false" || task.checked === false) {
+            uncheckedTasks.push(task);
+        }
+    });
+    return uncheckedTasks;
+}
+
+/**
+ * Get all the checked tasks from a array of tasks
+ * @param {Array<Task>} tasks an array of tasks to query from 
+ * @returns {Array<Task} an array of checked tasks
+ */
+function getCheckedTasks(tasks) {
+    var checkedTasks = [];
+    tasks.forEach(function (task) {
+        if (task.checked === "true" || task.checked === true) {
+            checkedTasks.push(task);
+        }
+    });
+    return checkedTasks;
+}
+
+/**
+ * Get a list of tasks that falls within a specified date range
+ * @param {Array<Task>} tasks an array of tasks to query from
+ * @param {String} dateProp the name of the date property to filter by
+ * @param {Date} startDate the oldest date in the date range (inclusive)
+ * @param {Date} endDate the most recent date after the range (exclusive)
+ * @returns {Array<Task>} an array of tasks in the date range
+ */
+function getTasksInDateRange(tasks, dateProp, startDate, endDate) {
+    var inRangeTasks = [];
+    tasks.forEach(function (task) {
+        completedOn = new Date(task[dateProp])
+        if (startDate <= completedOn && completedOn < endDate) {
+            inRangeTasks.push(task);
+        }
+    });
+    return inRangeTasks
+}
+
+/**
+ * Find the monday of the same week as a specified date
+ * @param {Date} date the date to find the monday in the same week
+ * @returns {Date} the date of monday in the week of the specified date
+ */
+function getMondayOfCurrentWeek(date) {
+    var day = date.getDay();
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate() + (day == 0 ? -6 : 1) - day);
+}
+
+/**
+ * Get a date an offset number of days from a specific date
+ * @param {Date} date date the starting date used to calculate the offset date
+ * @param {Number} offset the number of days to offset the date by
+ * @returns {Date} the offset date
+ */
+function getOffsetDate(date, offset) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate() + offset)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+///////////////////// Comparison functions /////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Comparison function for task Dates
+ * @returns negative if the lhs is greater
+ * @returns 0 if they are the same
+ * @returns positive if the rhs is greater
+ * @param {*} lhs: Task to compare
+ * @param {*} rhs: Task to compare on the right side
+ */
+function compareTaskByDateAscending(lhs, rhs) {
+    var lhsDate = new Date(lhs.due),
+        rhsDate = new Date(rhs.due);
+    if (lhs.due === rhs.due)
+        return lhs.priority - rhs.priority;
+    if (lhsDate > rhsDate)
+        return 1;
+    if (lhsDate < rhsDate)
+        return -1;
+    return 0;
+}
+
+/**
+ * Comparison function for task Dates
+ * @returns negative if the rhs is greater
+ * @returns 0 if they are the same
+ * @returns positive if the lhs is greater
+ * @param {*} lhs: Task to compare
+ * @param {*} rhs: Task to compare on the right side
+ */
+function compareTaskByDateDescending(lhs, rhs) {
+    var lhsDate = new Date(lhs.due),
+        rhsDate = new Date(rhs.due);
+    if (lhs.due === rhs.due)
+        return lhs.priority - rhs.priority;
+    if (lhsDate > rhsDate)
+        return -1;
+    if (lhsDate < rhsDate)
+        return 1;
+    return 0;
+}
+
+/**
+ * Comparison function for task priorities
+ * @returns negative if the lhs is greater
+ * @returns 0 if they are the same
+ * @returns positive if the rhs is greater
+ * @param {*} lhs: Task to compare
+ * @param {*} rhs: Task to compare on the right side
+ */
+function compareTaskByPriorityDescending(lhs, rhs) {
+    if (lhs.priority === rhs.priority)
+        return compareTaskByDateAscending(lhs, rhs);
+    return rhs.priority - lhs.priority;
 }

@@ -20,8 +20,7 @@ $(document).ready(function () {
     generateTableRows(5, 24) //generates tables for the whole 24 hour day
     addTimeblocksToPage() // add timeblocks from the API server
     loadModalDropdown()
-
-
+    resizeModal()
 })
 
 $(document.body).on('dragover', 'tr', onTrDragover)
@@ -36,6 +35,7 @@ $(document.body).on("click", ".input-plus", onInputPlusClick)
 $(document.body).on('click', '#btnSave', onBtnSaveClick)
 $(document.body).on('click', '#btnDelete', onBtnDeleteClick)
 $(document.body).on('click', '.timeblock-card', onTimeblockCardClick)
+$(window).resize(resizeModal)
 
 ////////////////////////////////////////////////////////////////////////////////
 ///////////////////// Event Handlers ///////////////////////////////////////////
@@ -149,7 +149,7 @@ function onBtnSaveClick() {
         return
     }
     var nRows = ((endHour - startHour) * 4) - (startMinute / 15) + (endMinute / 15);
-    if (hasOverlaps(startHour, startMinute, nRows)) {
+    if (hasOverlaps(startHour, startMinute, nRows, null)) {
         showOverlapToast()
         return
     }
@@ -225,12 +225,10 @@ function onTimeblockCardClick() {
 
 function onBtnDeleteClick() {
     var timeblockId = $('.modal-dialog').data('timeblockId');
-    console.log(timeblockId)
     deleteTimeblock({ _id: timeblockId }, function (response, status) {
         if ('success' == status) {
             var timeblockDivId = '#' + timeblockId
             var timeblockRowId = '#' + $(timeblockDivId).closest('tr')[0].id
-            console.log(timeblockRowId)
             removeTimeblockFromPage(timeblockRowId)
         }
     })
@@ -311,7 +309,7 @@ function onTimeblockDropped(event) {
     var nRows = $(id).children().find('.timeblock-card').data('nRows');
     var taskId = $(id).children().find('.timeblock-card').data('taskId');
 
-    if (!hasOverlaps(hour, minute, nRows)) {
+    if (!hasOverlaps(hour, minute, nRows, timeBlockID)) {
         removeTimeblockFromPage(id);
         addTimeblockToPage(hour, minute, nRows, taskId, timeBlockID);
         var endHour = Number(hour) + Math.floor(nRows / 4); //calculate the end times
@@ -331,6 +329,30 @@ function onTimeblockDropped(event) {
 ////////////////////////////////////////////////////////////////////////////////
 ///////////////////// Document manipulation functions //////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Shows the correct navbar based on screen resolution. Mobile nav is used for screens narrower than 640px, desktop for larger.
+ */
+function resizeModal() {
+    // If the window is scaled to mobile, use the hamburger navbar
+    if ($(window).width() <= 640) {
+        $(".input-plus").hide()
+        $(".input-minus").hide()
+        $('.input-hour').removeClass('input-no-spinner')
+        $('.input-minute').removeClass('input-no-spinner')
+        $('.time-input-group').css('flex-basis', '4em')
+        $('.modal-dialog').css('max-width', '24em')
+    }
+    // Otherwise, use the default nav bar with page tabs
+    else {
+        $(".input-plus").show();
+        $(".input-minus").show();
+        $('.input-hour').addClass('input-no-spinner')
+        $('.input-minute').addClass('input-no-spinner')
+        $('.time-input-group').css('flex-basis', '8em')
+        $('.modal-dialog').css('max-width', '')
+    }
+}
 
 /**
  * Queries the model for all the timeblocks in the current day, and adds them to the schedule.
@@ -363,6 +385,7 @@ function loadModalDropdown() {
     getTaskList(function (response, status) {
         if (status) {
             tasks = response.data;
+            tasks = getUncheckedTasks(tasks)
             //First build html elements for each item in the drop
             tasks.forEach(task => {
                 console.log(task._id); //not creating the correct ID
@@ -593,14 +616,20 @@ function generateTimeblockDiv(timeblockId, taskTitle) {
  * @param {NUmber} hour24: the 24 hour start of the range
  * @param {Number} minute: the minute start of the range in 15 minute increments
  * @param {Number} nRows: the number of rows to span (number of 15 minute blocks)
+ * @param {string} timeBlockID: the timeblock ID that can be compared to allow overlap only if it is itself
  * @returns true if overlaps, false otherwise
  */
-function hasOverlaps(hour24, minute, nRows) {
-    var currentHour = hour24,
+function hasOverlaps(hour24, minute, nRows, timeBlockID) {
+    var selector = "",
+        currentHour = hour24,
         currentMinute = minute,
         trId = "#time-" + currentHour + "-" + currentMinute;
 
-    if ($(trId).children('.bucket-full').length > 0) {
+    if (timeBlockID != null) // If there is no timeblock ID passed in.
+        selector = ':not(#' + timeBlockID + ')';
+
+    if ($(trId).children('.bucket-full').children(selector) > 0) { // If the specific location selected has a task that starts on it.
+        //console.log($(trId).children('.bucket-full'));
         return true;
     }
     for (var i = 0; i < nRows - 1; i++) {
@@ -611,7 +640,9 @@ function hasOverlaps(hour24, minute, nRows) {
             currentMinute += 15;
         }
         trId = "#time-" + currentHour + "-" + currentMinute;
-        if ($(trId).children('.bucket-full').length > 0) {
+        if ($(trId).children('.bucket-full').children(selector).length > 0) { // If the row has part of a task on it that is not itself
+            // console.log("$(trId).children('.bucket-full').children(" + selector + ")")
+            // console.log($(trId).children('.bucket-full').children(selector))
             return true;
         }
     }

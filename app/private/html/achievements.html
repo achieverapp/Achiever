@@ -33,20 +33,24 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
     integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous">
   </script>
+  <link rel="stylesheet" href="../css/app.css">
+  <script src="../js/model.js"></script>
+
 
 </head>
 
 <style>
   /* Include CSS here */
 </style>
+<!---->
 
 <body>
-    <nav class="nav bg-primary" id="navbar"></nav>
+  <nav class="nav bg-primary" id="navbar"></nav>
   <!-- basic list of acievements -->
   <div id="achievements" class="container p-2">
     <h1>Achievements</h1>
     <!-- start of a list of achievements-->
-    <ul style="padding:0px">
+    <ul style="padding:0px" id="achievements-list">
       <li class="card">
         <div class="card-header" id="achievemnts-header">
           <header class="container">
@@ -97,13 +101,7 @@
   </div>
   </ul>
 </body>
-<script>
-  $(document).ready(function () {
-    $("#navbar").load("/html/navbar.html", function() {
-      $("#nav-achievements").addClass("nav-active");
-      resizeNav();
-    });
-  });
-</script>
+
+<script src="../js/achievements.js"></script>
 
 </html>

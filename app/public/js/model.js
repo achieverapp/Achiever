@@ -261,7 +261,8 @@ function createTimeblockObject(startTimeStr, endTimeStr, taskId) {
 
 /**
  * Get all the unchecked tasks from a array of tasks
- * @param {Array} tasks: an array of tasks to query from 
+ * @param {Array<Task} tasks an array of tasks to query from 
+ * @returns {Array<Task} an array of unchecked tasks
  */
 function getUncheckedTasks(tasks) {
     var uncheckedTasks = [];
@@ -275,7 +276,8 @@ function getUncheckedTasks(tasks) {
 
 /**
  * Get all the checked tasks from a array of tasks
- * @param {Array} tasks: an array of tasks to query from 
+ * @param {Array<Task>} tasks an array of tasks to query from 
+ * @returns {Array<Task} an array of checked tasks
  */
 function getCheckedTasks(tasks) {
     var checkedTasks = [];
@@ -285,4 +287,22 @@ function getCheckedTasks(tasks) {
         }
     });
     return checkedTasks;
+}
+
+/**
+ * Get a list of tasks that falls within a specified date range
+ * @param {Array<Task>} tasks an array of tasks to query from
+ * @param {Date} startDate the oldest date in the date range (inclusive)
+ * @param {Date} endDate the most recent date after the range (exclusive)
+ * @returns {Array<Task>} an array of tasks in the date range
+ */
+function getTasksInDateRange(tasks, startDate, endDate) {
+    var inRangeTasks = [];
+    tasks.forEach(function (task) {
+        completedOn = new Date(task.completedOn)
+        if (startDate <= completedOn && completedOn < endDate) {
+            inRangeTasks.push(task);
+        }
+    });
+    return inRangeTasks
 }

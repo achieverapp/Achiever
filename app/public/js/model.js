@@ -192,7 +192,6 @@ function getTimeBlocks(timeBlock, callback) {
 function getUserAchievements(userAchievement, callback) {
     var sendObj = {
         owner: userAchievement.owner,
-
     }
 
     $.ajax({
@@ -270,7 +269,6 @@ function getUncheckedTasks(tasks) {
     tasks.forEach(function (task) {
         if (task.checked === "false" || task.checked === false) {
             uncheckedTasks.push(task);
-
         }
     });
     return uncheckedTasks;

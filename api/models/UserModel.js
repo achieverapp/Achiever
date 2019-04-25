@@ -3,16 +3,32 @@
     File: UserModel.js    */
 
 'use strict';
-//var noSql = require('./noSqlDb.js');
 var ObjectId = require('mongodb').ObjectId;
-// var User = require('./SubTask.js/index.js').User;
+
+/**
+ * user class responsible for interfacing with the Users collection from the database. Full CRUD functionality on all properties:
+ - name: User's Name
+ - _id: user ID (key)
+ - savedTasks[]: Array that contains a list of task ID's that the user has saved as templates.
+ */
 class User {
+  /**
+   * Takes an Object and turns it into a User with all the necessary properties.
+   * @param {Object} user 
+   */
   constructor(user) {
     this.name = user.name == null ? null : user.name;
     this._id = user._id == null ? null : user._id;
     this.savedTasks = user.savedTasks == null ? [] : user.savedTasks;
   }
-  // Takes a new User object that contains all data that we want to add.
+
+  /**
+   * inserts a new user into the database
+   * If no user is found, there is no data retuned and a statusMsgs with the reason why there was an error.
+   * @param {Collection} usersDB: MongoDB collection that the function will be run on
+   * @param {string} newUser: User object that you want add to the database.
+   * @param {function} result: Function to call for the server response
+   */
   static addUser(usersDB, newUser, result) {
     var resultObj;
     usersDB.insertOne(newUser, function (err, res) {
@@ -26,13 +42,17 @@ class User {
       }
     });
   }
-  /*
-  GetUser returns the data of the user with the given ID.
-  If no user is found, there is no data retuned and a statusMsg with the reason why there was an error.
-  */
+
+  /**
+   * GetUser returns the data of the user with the given ID.
+   * If no user is found, there is no data retuned and a statusMsg with the reason why there was an error.
+   * @param {Collection} usersDB: MongoDB collection that the function will be run on
+   * @param {string} userId: User id for the user you want to delete
+   * @param {function} result: Function to call for the server response
+   */
   static getUser(usersDB, queryUser, result) {
     var query = queryUser;
-    if(queryUser._id) {
+    if (queryUser._id) {
       query._id = new ObjectId(queryUser._id)
     }
     var resultObj;
@@ -50,13 +70,17 @@ class User {
       }
     });
   }
-  /*
-  updateUser function is responsible for updating anything that may be stored in a user object.
-  As of milestone 2, the user object is only responsible for storing:
-    * Saved tasks
-    * Name
-    * _id
-  */
+
+  /**
+   * updateUser function is responsible for updating anything that may be stored in a user object.
+   * the user object is only responsible for storing:
+   - Saved tasks
+   - Name
+   - _id
+   * @param {Collection} usersDB: MongoDB collection that the function will be run on
+   * @param {User} newUser: User object that contains the new data
+   * @param {function} result: Function that will get called when the update is finished
+   */
   static updateUser(usersDB, newUser, result) {
     var resultObj;
     usersDB.find({
@@ -71,10 +95,6 @@ class User {
         console.log(resultObj.statusMsg);
         result(resultObj);
       } else { //user is in the database!
-        //Three different Cases:
-        //  User adds a new task to save
-        //  User updates their name
-        //  User updates thier other information (Not implemented yet)
         if (newUser.name != null)
           updateName(usersDB, newUser, resultObj).then(result);
         if (newUser.savedTasks.length > 0)
@@ -83,9 +103,13 @@ class User {
     });
   }
 
-  /*delete a user from the database
-  searching for the userId(for now we will find by userId) and remove them from the database
-  */
+  /**
+   * Deletes a user from the database.
+   * searching for the userId(for now we will find by userId) and remove them from the database
+   * @param {Collection} usersDB: MongoDB collection that the function will be run on
+   * @param {string} userId: User id for the user you want to delete
+   * @param {function} result: Function to call for the server response
+   */
   static deleteUser(usersDB, userId, result) {
     var resultObj;
     usersDB.find({
@@ -113,12 +137,23 @@ class User {
   }
 }
 
-/*
-  ResultObj constructor function. Since we need to create a different return object for many different possible scenarios, all this functionality
+////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////// General Use Functions /////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Constructor function for a result Object. Allows fast creation of a return object for an API response.
+ * 
+ * ResultObj constructor function. Since we need to create a different return object for many different possible scenarios, all this functionality
   can be put in one function.
 
   The most common parameters are closer to the start of the list while the ones that rarely get called are towards the end.
-*/
+ * @param {string} statusMsg: Message that gives more detail on the result of the call.
+ * @param {Object} statusObj: Object containing details about errors if there is an error
+ * @param {boolean} success: Status of the API call
+ * @param {string} id: ID of the object affected
+ * @param {Object} data: data that can be read from the reciever
+ */
 function ResultObj(statusMsg = "", statusObj = null, success = false, id = null, data = null) { //what will be returned to the requester when the function completes
   var returnObj = {
     objId: id,
@@ -130,6 +165,12 @@ function ResultObj(statusMsg = "", statusObj = null, success = false, id = null,
   return returnObj;
 }
 
+/**
+ * Updates the name of the user that is passed.
+ * @param {Collection} usersDB: MongoDB collection that the function will be run on
+ * @param {User} newUser: User object that contains the new data
+ * @param {ResultObj} resultObj: JSON object that contains the server response
+ */
 async function updateName(usersDB, newUser, resultObj) {
   return new Promise(function (resolve) {
     usersDB.updateOne({ //find the user to update
@@ -152,15 +193,16 @@ async function updateName(usersDB, newUser, resultObj) {
   });
 }
 
+/**
+ * Updates the list of the users saved tasks with what is contained in the sent User object.
+ * @param {Collection} usersDB: MongoDB collection that the function will be run on
+ * @param {User} newUser: User object that contains the new data
+ * @param {ResultObj} resultObj: JSON object that contains the server response
+ */
 async function updateSavedTasks(usersDB, newUser, resultObj) {
   return new Promise(function (resolve) {
     usersDB.find({
-        _id: new ObjectId(newUser._id),
-        savedTasks: {
-          $elemMatch: { //mongoDB to match anything that also matches the data inside the property
-            taskId: newUser.savedTasks.taskId
-          }
-        }
+        _id: new ObjectId(newUser._id)
       })
       .toArray(function (err, res) {
         if (err) { //Unkown error, return to client and display it in the log.
@@ -192,8 +234,6 @@ async function updateSavedTasks(usersDB, newUser, resultObj) {
       });
   });
 }
-
-
 
 module.exports = {
   User,

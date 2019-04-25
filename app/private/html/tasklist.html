@@ -81,7 +81,12 @@
       </span>
     </div>
 
-    <ul style="padding:0px" id="task-list"></ul>
+    <div class="alert alert-secondary" role="alert" id='noTasksMessage' style='margin-top: 16px; display: none;'>
+      <h3>Looks like you don't have any tasks yet! Click the New Task button below to get started!</h3>
+    </div>
+
+    <ul style="padding:0px" id="task-list">
+    </ul>
 
     <button class='btn btn-primary floating-action-btn' id="btn-newtask" type='submit'
       style='font-family: Verdana,sans-serif'>
@@ -92,8 +97,6 @@
 </body>
 
 <script>
-
-
 </script>
 
 </html>

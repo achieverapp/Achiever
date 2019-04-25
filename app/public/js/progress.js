@@ -22,24 +22,24 @@ var priorityToClassMap = {
 $(document).ready(function () {
     // load the navbar
     $("#navbar").load("/html/navbar.html", onNavBarLoad);
-
-    buildTaskList("sortByDueDate"); //Build the task list, sorting by due date.
-
-    $("#btn-newtask").on("click", loadTaskView); //Load the navbar and add the active class
+    getUser(showName);
+    $(".sortby-dropdown").data("sortBy", 'sortByCompletionDate');
+    buildTaskList(); //Build the task list, sorting by due date and calling the getTasksInDateRange
 
     //load event handler for changing sort method
     $(".sortby-dropdown-item").click(changeSortMethod);
 
-    // load event handlers for styling of a checkbox
-    $(document).on("mouseover", ".task-checkbox", onMouseEnter);
-    $(document).on("mouseleave", ".task-checkbox", onMouseLeave);
-
     // Set up event handler for checking off a task
-    $(document).on("click", ".task-checkbox", onTaskChecked);
+    $(document).on("click", ".task-checkbox", onTaskUnchecked);
 
     // Event handler for when a task is clicked on. Should bring the user to the task view page.
     // Adds a new empty row for the task to allow the user to input another task
     $(document).on("click", ".task-card", taskCardClicked);
+    $(document).on("click", ".sorting-selector", onChangeFilter); //When the filter style is changed
+
+    // load event handlers for styling of a checkbox
+    $(document).on("mouseover", ".task-checkbox", onMouseEnter);
+    $(document).on("mouseleave", ".task-checkbox", onMouseLeave);
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -47,28 +47,66 @@ $(document).ready(function () {
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * Event handler for retrieving a user's name and setting it to the HTML element for the page
+ */
+function showName(result, error) {
+    console.log(result);
+    $("#UserName").html(result.data.name);
+}
+
+/**event handler for when the user mouses over a task checkbox */
+function onMouseEnter(e) {
+    $(e.target).removeClass("check-complete").addClass("check-incomplete");
+}
+
+/**event handler for when the user's mouse focus leaves a task checkbox */
+function onMouseLeave(e) {
+    $(e.target).removeClass("check-incomplete").addClass("check-complete");
+}
+
+/**
  * Event handler for when a task card is clicked. Brings the user to the taskview page for the task they clicked on.
  * @param {*} e: click event object
  */
 function taskCardClicked(e) {
     var userId = getQueryParam('userId')
-    if($(e.target).hasClass('task-checkbox')) {
+    if ($(e.target).hasClass('task-checkbox')) {
         return;
     }
     var taskCard
     if (!$(e.target).hasClass('task-card')) {
         taskCard = $(e.target).closest('.task-card')
-    }
-    else {
+    } else {
         taskCard = $(e.target)
     }
     console.log(taskCard[0].id)
-    window.location.href = `/taskview?taskId=${taskCard[0].id}&userId=${userId}&redirect=tasklist`;
+    window.location.href = `/taskview?taskId=${taskCard[0].id}&userId=${userId}&redirect=progress`;
+}
+
+/**
+ * When the checkbox is clicked, update the database marking the task incomplete
+ * and remove the task from the list.
+ */
+function onTaskUnchecked() {
+    var taskId = $(this).closest('.task-card')[0].id
+    console.log('taskid = ' + taskId)
+    var task = {
+        _id: $(this).closest('.task-card')[0].id,
+        completedOn: null,
+        checked: false
+    }
+    updateTask(task, function (response, status) {
+        console.log('as;lkdfjasl;fkjaslk;fj')
+        var cardId = taskId //'#' + taskId
+        console.log('task card: ' + taskCard);
+        taskCard = document.getElementById(taskId)
+        $(taskCard).remove();
+    });    
 }
 
 /**Load event handler for navbar HTML being added to the page */
 function onNavBarLoad() {
-    $("#nav-tasklist").addClass("nav-active");
+    $("#nav-progress").addClass("nav-active");
 }
 
 /** Click event handler for the new task button.
@@ -77,16 +115,6 @@ function onNavBarLoad() {
 function loadTaskView() {
     var userId = getQueryParam("userId")
     window.location.href = `/taskview?taskId=default&userId=${userId}`;
-}
-
-/**event handler for when the user mouses over a task checkbox */
-function onMouseEnter(e) {
-    $(e.target).removeClass("check-incomplete").addClass("check-complete");
-}
-
-/**event handler for when the user's mouse focus leaves a task checkbox */
-function onMouseLeave(e) {
-    $(e.target).removeClass("check-complete").addClass("check-incomplete");
 }
 
 /**
@@ -100,39 +128,7 @@ function changeSortMethod(e) {
     });
 
     $(".sortby-dropdown").data("sortBy", e.target.id);
-    buildTaskList(e.target.id);
-}
-
-/**
- * Event handler for when a task is clicked to be checked off.
- * Will remove the task from the list and update its checked status on the server
- * TODO: this function needs to update all the subtasks to be checked too (or not??? might not want to do this)
- */
-function onTaskChecked() {
-    var taskId = $(this).closest('.task-card')[0].id
-    console.log('taskid = ' + taskId)
-    var task = {
-        _id: $(this).closest('.task-card')[0].id,
-        completedOn: new Date().toISOString(),
-        checked: true
-    }
-    updateTask(task, function (response, status) {
-        console.log('as;lkdfjasl;fkjaslk;fj')
-        var cardId = taskId //'#' + taskId
-        console.log('task card: ' + taskCard);
-
-    });
-    taskCard = document.getElementById(taskId)
-    $(taskCard).remove();
-    console.log()
-    if(0 == $('#overdue-list').find('li').length) {
-        $('#overdue-div').hide();
-        if(0 == $('#task-list').find('li').length) {
-            $('#noTasksMessage').show();
-        }
-    }
-
-
+    buildTaskList();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -144,49 +140,50 @@ function onTaskChecked() {
  * Puts them into two categories, overdue tasks and upcoming tasks.
  * @param sortBy: sorting function to compare each task.
  */
-function buildTaskList(sortBy) {
-    var upcomingUL = document.getElementById("task-list");
-    var overdueUL = document.getElementById("overdue-list");
+function buildTaskList() {
+    var completedUL = document.getElementById("completed-list");
     var tasks;
+    var sortBy = $(".sortby-dropdown").data("sortBy")
     getTaskList(function (result, error) {
         tasks = result.data
         if (sortBy === "sortByPriority") {
             tasks.sort(compareTaskByPriorityDescending);
         } else if (sortBy === "sortByDueDate") {
-            tasks.sort(compareTaskByDateAscending);
+            tasks.sort(compareTaskByDateDescending);
+        } else if (sortBy === 'sortByCompletionDate') {
+            tasks.sort(compareTaskByCompletionDateDescending)
         }
-        tasks = getUncheckedTasks(tasks)
-        if(tasks.length == 0) {
-            $('#noTasksMessage').show();
+
+        var today = new Date();
+        var monday = getMondayOfCurrentWeek(today)
+        var endOfWeek = getOffsetDate(monday, 7)
+        var dueTasks = getTasksInDateRange(tasks, 'due', monday, endOfWeek) //gets all tasks for the week
+        var completedDueTasks = getCheckedTasks(dueTasks)
+        console.log(dueTasks, completedDueTasks)
+        //console.log(tasks.length)
+        var completePercent = Math.floor((completedDueTasks.length / dueTasks.length) * 100) + "%"; //calculate the percentage as a string
+        console.log(completePercent)
+        $("#weeklyProgress").css('width', completePercent).html(completePercent); //set the HTML element with the new properties
+
+        tasks = getCheckedTasks(tasks)
+        if ($('.week-selector.active:visible').length == 1) { // show this week's that the user has checked off
+            console.log("sorting by week");
+            tasks = getTasksInDateRange(tasks, 'completedOn', monday, endOfWeek)
         }
-        else {
-            $('#noTasksMessage').hide();
+
+        // } else { //show all tasks that the user has checked off
+        //     tasks = getCheckedTasks(tasks)
+        // }
+
+        while (completedUL.firstChild) { //clear all the tasks
+            completedUL.removeChild(completedUL.firstChild);
         }
-        while (upcomingUL.firstChild) {
-            upcomingUL.removeChild(upcomingUL.firstChild);
-        }
-        while (overdueUL.firstChild) {
-            overdueUL.removeChild(overdueUL.firstChild);
-        }
-        var overdue = [];
-        tasks.forEach(task => {
-            if (task.completed == null && task.checked) {
-                var due = new Date(task.due);
-                var today = new Date();
-                if (today > due) {
-                    overdue.push(task);
-                    overdueUL.appendChild(buildTaskCard(task))
-                } else {
-                    upcomingUL.appendChild(buildTaskCard(task));
-                }
+
+        tasks.forEach(task => { //add all the tasks
+            if (task.checked) {
+                completedUL.appendChild(buildTaskCard(task));
             }
         });
-        if (overdue.length == 0) {
-            $("#overdue-div").hide();
-            $("#sortByDropdown2").show();
-        } else {
-            $("#sortByDropdown2").hide();
-        }
     });
 }
 
@@ -195,7 +192,7 @@ function buildTaskList(sortBy) {
  * @param {*} task: Task object to add to the page
  */
 function buildTaskCard(task) {
-    var dueDate = new Date(task.due);
+    var completeDate = new Date(task.completedOn);
     var taskCardNode = document.createElement("li");
     taskCardNode.id = task._id;
     taskCardNode.classList.add("card");
@@ -203,10 +200,10 @@ function buildTaskCard(task) {
     taskCardNode.classList.add(priorityToClassMap[task.priority]);
     taskCardNode.innerHTML =
         "<div class='task-card-container'>" +
-        "<h2 class='check-incomplete fas fa-check-square align-middle task-checkbox'></h2>" +
+        "<h2 class='fas fa-check-square align-middle task-checkbox check-complete'></h2>" +
         "<div class='align-middle task-card-content'>" +
         "<h3 class='task-card-title' style='display:block'>" + task.title + "</h3>" +
-        "<p class='task-due'>Due:&nbsp;" + formatDateTime(dueDate) + "</p>" +
+        "<p class='task-due'>Completed:&nbsp;" + formatDateTime(completeDate) + "</p>" +
         "<p class='task-category'>Category:&nbsp;" + task.category + "</p>" +
         "</div>" +
         "</div>";
@@ -225,4 +222,10 @@ function formatDateTime(date) {
 function getQueryParam(param) {
     var url = window.location.href;
     return url.split(`${param}=`)[1].split('&')[0]
+}
+
+function onChangeFilter() {
+    console.log("resetting filter")
+    $('.sorting-selector:hidden').toggleClass("active", "inactive")
+    buildTaskList(); //Build the task list, sorting by due date and calling the getTasksInDateRange
 }

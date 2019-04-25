@@ -23,17 +23,16 @@
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous">
-    </script>
+        </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
         integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">
-    </script>
+        </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
         integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous">
-    </script>
+        </script>
 
     <link rel="stylesheet" href="../css/app.css">
     <script src="../js/model.js"></script>
-    <script src="../js/schedule.js"></script>
 </head>
 
 <body>
@@ -44,12 +43,12 @@
         <h1 id="selectedDate"></h1>
         <div class='d-flex justify-content-between flex-row' id="scheduleHeader">
 
-            <button type="button" class="btn btn-secondary" id="prevDayBtn"
+            <button type="button" class="btn btn-secondary" id="btnPrevDay"
                 style='margin-top:auto; margin-bottom: auto;'>
                 <i class="fas fa-chevron-left"></i>&nbsp;
                 Prev Day
             </button>
-            <button type="button" class="btn btn-secondary" id="nextDayBtn"
+            <button type="button" class="btn btn-secondary" id="btnNextDay"
                 style='margin-top:auto; margin-bottom: auto;'>
                 Next Day&nbsp;
                 <i class="fas fa-chevron-right"></i>
@@ -66,7 +65,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <center style="width:100%;">
-                                <h3 class="modal-title" id="exampleModalLabel">Add/Edit Timeblock BLAH-DITTY-BLAH</h3>
+                                <h3 class="modal-title" id="exampleModalLabel">Add/Edit Timeblock</h3>
                             </center>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -88,7 +87,7 @@
 
                                     <div class="p-2 flex-grow-1">Start:</div>
 
-                                    <span class="input-group" style="flex-grow: 0; flex-shrink: 0; flex-basis: 8em;">
+                                    <span class="input-group time-input-group" style="flex-grow: 0; flex-shrink: 0; flex-basis: 8em;">
                                         <div class="input-group-prepend">
                                             <button class="btn btn-outline-secondary input-minus" type="button">
                                                 <i class="fas fa-minus"></i>
@@ -106,14 +105,14 @@
 
                                     <center class="p-2">:</center>
 
-                                    <span class="input-group" style="flex-grow: 0; flex-shrink: 0; flex-basis: 8em;">
+                                    <span class="input-group time-input-group" style="flex-grow: 0; flex-shrink: 0; flex-basis: 8em;">
                                         <div class="input-group-prepend">
                                             <button class="btn btn-outline-secondary input-minus" type="button">
                                                 <i class="fas fa-minus"></i>
                                             </button>
                                         </div>
                                         <input type="number" min="0" max="45" step="15" size="2"
-                                            class="form-control input-no-spinner" placeholder="Minute"
+                                            class="form-control input-minute input-no-spinner" placeholder="Minute"
                                             aria-label="Minute" aria-describedby="basic-addon2" value="00"
                                             id="inputStartMinute">
                                         <div class="input-group-append">
@@ -141,7 +140,7 @@
                                 <span class="d-flex flex-row">
                                     <div class="p-2 flex-grow-1">End:</div>
 
-                                    <span class="input-group" style="flex-grow: 0; flex-shrink: 0; flex-basis: 8em;">
+                                    <span class="input-group time-input-group" style="flex-grow: 0; flex-shrink: 0; flex-basis: 8em;">
                                         <div class="input-group-prepend">
                                             <button class="btn btn-outline-secondary input-minus" type="button">
                                                 <i class="fas fa-minus"></i>
@@ -159,14 +158,14 @@
 
                                     <center class="p-2">:</center>
 
-                                    <span class="input-group" style="flex-grow: 0; flex-shrink: 0; flex-basis: 8em;">
+                                    <span class="input-group time-input-group" style="flex-grow: 0; flex-shrink: 0; flex-basis: 8em;">
                                         <div class="input-group-prepend">
                                             <button class="btn btn-outline-secondary input-minus" type="button">
                                                 <i class="fas fa-minus"></i>
                                             </button>
                                         </div>
                                         <input type="number" min="0" max="45" step="15" size="2"
-                                            class="form-control input-no-spinner" placeholder="Minute"
+                                            class="form-control input-minute input-no-spinner" placeholder="Minute"
                                             aria-label="Minute" aria-describedby="basic-addon2" value="00"
                                             id="inputEndMinute">
                                         <div class="input-group-append">
@@ -192,19 +191,22 @@
                                 </span>
                             </form>
 
-                        </div>
+                        </div> <!-- .modal-body -->
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal"
                                 id="btnDiscard">Discard</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                id="btnDelete">Delete</button>
                             <button type="button" input="submit" class="btn btn-primary" id="btnSave"
                                 data-dismiss="modal">Save</button>
                         </div>
                     </div>
-                </div>
+                </div> <!-- .modal-dialog -->
             </div>
-        </div>
+        </div> <!-- .modal -->
 
-        <div class="table-responsive">
+
+        <div class="schedule-table table-responsive">
             <table style="width: 100%; margin-bottom: 64px;" cellpadding="2" class="table-sm">
                 <colgroup width="" valign="middle" span="1" align="center"></colgroup>
                 <colgroup width="" valign="middle" span="1" align="center"></colgroup>
@@ -223,9 +225,12 @@
                     </tr>
                 </tbody>
             </table>
+        </div> <!-- .table-responsive -->
 
-
-
+        <div class='vertical-alignment-helper' style='margin:auto; z-index: 100; position: absolute; top:0;'>
+            <div class='vertical-align-center'>
+                <center class="fas fa-spinner fa-spin" style='font-size: 32pt; width:100%;'></center>
+            </div>
         </div>
 
         <div class="toast toast-error" data-delay="10000">
@@ -246,6 +251,7 @@
             Schedule Timeblock
         </button>
 
+    </div> <!-- .page-container -->
 
-    </div>
+    <script src="../js/schedule.js"></script>
 </body>

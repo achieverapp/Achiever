@@ -11,8 +11,8 @@ const axios = require('axios') // Axios is an HTTP library that we will make use
 const User = require('../models/UserModel.js').User;
 
 // DEPLOYMENT: //
-// const clientID = 'e428572ccd0ee17f18f0'
-// const clientSecret = '6eb4d793045e9248ebb58b7e3fabc5380753abcf'
+// const clientID = '179d6c432ab0b25d3353'
+// const clientSecret = '56d68df48731996e4028edfaf38a0d0b4ef2db95'
 
 // DEVELOPMENT: //
 const clientID = 'd092b106e4dba55e7462' //ID codes for GitHub OAuth

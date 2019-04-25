@@ -4,7 +4,11 @@ $(document).ready(function () {
     });
     buildAchievementsList();
 })
-
+/**
+ * Builds the list of achievements for the page with a given sort function.
+ * 
+ *
+ */
 //build the list of user achievements
 function buildAchievementsList() {
     //not yet in the html file will add in
@@ -24,6 +28,10 @@ function buildAchievementsList() {
         });
     })
 }
+/**
+ * Builds the achivement card
+ * @param userAchievement: pass in a userAchivement object
+ */
 function buildAchievementCard(userAchievement)
 {
 var achievementCardNode = document.createElement("li");

@@ -17,7 +17,12 @@ class Acheievment {
     //this.completed=achievements.completed==null?  false:this.completed;
     this.userAchievement = achievements.userAchievement == null ? [] : this.userAchievement;
   }
-
+   /**
+   * Inserts a single achievement to the database     
+   * @param {Collection} achievementsDB: MongoDB collection that this function will be ran on.
+   * @param {Achievement} achievement: achievement object that you want to add to the database.
+   * @param {function} result: Function to call for the server response
+   */
   static addAchievement(achievementsDB, achievement, result) {
     var resultObj;
     achievementsDB.insertOne(achievement, function (err, res) {
@@ -31,7 +36,12 @@ class Acheievment {
       }
     });
   }
-
+  /**
+   * get a single achievement to the database     
+   * @param {Collection} achievementsDB: MongoDB collection that this function will be ran on.
+   * @param {UserAchievement} achievementId: achievement object that you want to add to the database.
+   * @param {function} result: Function to call for the server response
+   */
   static getAchievement(achievementsDB, achievementId, result) {
     var resultObj, id;
     if (achievementId._id) { // If the id is 'default' then we cannot create an ObjectId with it and mus tjust pass it as a string.
@@ -55,6 +65,12 @@ class Acheievment {
   }
 
   //get all achievementss for a specific user
+  /**
+   * Inserts a single task to the database     
+   * @param {Collection} achievementDB: MongoDB collection that this function will be ran on.
+   * @param {UserAchievement} userId: achievement object that you want to get to the database.
+   * @param {function} result: Function to call for the server response
+   */
   static getAchievements(achievementsDB, userId, result) {
     var resultObj;
     achievementsDB.find({
@@ -70,7 +86,12 @@ class Acheievment {
       }
     });
   }
-
+  /**
+   * update a single task to the database     
+   * @param {Collection} achievementsDB: MongoDB collection that this function will be ran on.
+   * @param {UserAchievement} achievement: Task object that you want to add to the database.
+   * @param {function} result: Function to call for the server response
+   */
   static updateAchievement(achievementsDB, newAchievement, result) {
     var achievementsId = new ObjectId(newAchievement._id);
     newachievements._id = achievementsId;
@@ -106,6 +127,12 @@ class Acheievment {
       }
     })
   };
+  /**
+   * delete a single task to the database     
+   * @param {Collection} achievementDB: MongoDB collection that this function will be ran on.
+   * @param {UserAchievement} achievementId: Task object that you want to add to the database.
+   * 
+   */
   // maybe not necessary to delete achievements 
   static deleteachievement(achievementsDB, achievementId) {
     var resultObj;

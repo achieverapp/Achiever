@@ -35,7 +35,7 @@ $(document).ready(function () {
     // Event handler for when a task is clicked on. Should bring the user to the task view page.
     // Adds a new empty row for the task to allow the user to input another task
     $(document).on("click", ".task-card", taskCardClicked);
-    $(document).on("click", ".btn-group-toggle", onChangeFilter);
+    $(document).on("click", ".sorting-selector", onChangeFilter); //When the filter style is changed
 
     // load event handlers for styling of a checkbox
     $(document).on("mouseover", ".task-checkbox", onMouseEnter);
@@ -70,14 +70,13 @@ function onMouseLeave(e) {
  */
 function taskCardClicked(e) {
     var userId = getQueryParam('userId')
-    if($(e.target).hasClass('task-checkbox')) {
+    if ($(e.target).hasClass('task-checkbox')) {
         return;
     }
     var taskCard
     if (!$(e.target).hasClass('task-card')) {
         taskCard = $(e.target).closest('.task-card')
-    }
-    else {
+    } else {
         taskCard = $(e.target)
     }
     console.log(taskCard[0].id)
@@ -164,7 +163,8 @@ function buildTaskList() {
         $("#weeklyProgress").css('width', completePercent).html(completePercent); //set the HTML element with the new properties
 
         tasks = getCheckedTasks(tasks)
-        if ($('#ThisWeekSortRadio').parent().hasClass("active")) { // show this week's that the user has checked off
+        if ($('.week-selector.active:visible').length == 1) { // show this week's that the user has checked off
+            console.log("sorting by week");
             tasks = getTasksInDateRange(tasks, 'completedOn', monday, endOfWeek)
         }
 
@@ -222,5 +222,7 @@ function getQueryParam(param) {
 }
 
 function onChangeFilter() {
+    console.log("resetting filter")
+    $('.sorting-selector:hidden').toggleClass("active", "inactive")
     buildTaskList(); //Build the task list, sorting by due date and calling the getTasksInDateRange
 }

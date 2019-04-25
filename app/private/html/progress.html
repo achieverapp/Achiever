@@ -126,13 +126,13 @@
         <h1>Recently Completed Tasks:</h1>
 
         <span style='margin-top: auto; margin-bottom:auto;'>
-          <div class="btn-group btn-group-toggle" data-toggle="buttons"
+          <div class="btn-group btn-group-toggle d-none d-lg-inline-flex" data-toggle="buttons"
             style="flex-grow: 0; flex-shrink: 0; flex-basis: 6em; margin-top:auto; margin-bottom:auto;">
-            <label class="btn btn-outline-secondary active flex-nowrap" style="white-space: nowrap">
+            <label class="btn btn-outline-secondary active week-selector sorting-selector" style="white-space: nowrap">
               <input type="radio" name="options" id="ThisWeekSortRadio" autocomplete="off" checked>
               This Week
             </label>
-            <label class="btn btn-outline-secondary" style="white-space: nowrap">
+            <label class="btn btn-outline-secondary sorting-selector" style="white-space: nowrap">
               <input type="radio" name="options" id="AllTimeSortRadio" autocomplete="off">
               All Time
             </label>
@@ -153,8 +153,18 @@
       <ul style="padding:0px" id="completed-list"></ul>
 
       <div class='d-flex justify-content-between'>
-        <h5>Show tasks from: </h5>
-
+        <h5 class='d-md-inline-flex d-lg-none'>Show tasks from: </h5>
+        <div class="btn-group btn-group-toggle d-md-inline-flex d-lg-none" data-toggle="buttons"
+            style="flex-grow: 0; flex-shrink: 0; flex-basis: 6em; margin-top:auto; margin-bottom:auto;">
+            <label class="btn btn-outline-secondary active week-selector sorting-selector" style="white-space: nowrap">
+              <input type="radio" name="options" id="ThisWeekSortRadio" autocomplete="off" checked>
+              This Week
+            </label>
+            <label class="btn btn-outline-secondary sorting-selector" style="white-space: nowrap">
+              <input type="radio" name="options" id="AllTimeSortRadio" autocomplete="off">
+              All Time
+            </label>
+          </div>
       </div>
     </div>
 

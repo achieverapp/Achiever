@@ -227,6 +227,10 @@ input[type=number].input-no-spinner {
     background-color: #99ff99;
 }
 
+.priority-none {
+    background-color: #f9f9f9;
+}
+
 td, th {
     border: 1px solid lightgrey;
 }

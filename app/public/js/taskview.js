@@ -36,7 +36,7 @@ $(document).ready(function () {
 
   $("#categoryDropdown").data("changed", false); // flags to show whether data from a dropdown was changed;
   $("#priorityDropdown").data("changed", false);
-  $(".dropdown").data("prevPriority", "btn-secondary"); //default style for priority dropdown
+  $(".dropdown").data("prevPriority", "priority-none"); //default style for priority dropdown
 
   //load the navbar when the page loads
   $("#navbar").load("/html/navbar.html");
@@ -240,7 +240,9 @@ function setTaskInfo(task) {
   if (task.priority != null) { // If the priority is saved, show it
     $("#priorityDropdown").html(priorityToName[task.priority]);
     //$("#priorityDropdown").addClass(priorityToClassMap[task.priority]);
+    $('.task.card').removeClass('priority-none')
     $('.task.card').addClass(priorityToClassMap[task.priority])
+    $('.task.card').css('color', 'black')
     $(".dropdown").data("prevPriority", priorityToClassMap[task.priority]); //save the previous style
   }
 

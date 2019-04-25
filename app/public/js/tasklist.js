@@ -127,7 +127,12 @@ function onTaskChecked() {
     console.log()
     if(0 == $('#overdue-list').find('li').length) {
         $('#overdue-div').hide();
+        if(0 == $('#task-list').find('li').length) {
+            $('#noTasksMessage').show();
+        }
     }
+
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////

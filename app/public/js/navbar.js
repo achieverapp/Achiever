@@ -1,11 +1,13 @@
 var loggedIn = false; //global flag that signals if the user is signed in
 
+
 /**
  * initialize the page when the document is loaded
  */
 $(document).ready(function () {
     resizeNav()
     setQueryParams()
+    
     var userId = getQueryParam("userId") // store the current userID from the query parameters
     if ("" !== userId && null !== userId && typeof userId !== 'undefined') { //if that userID is actually there, show that the user is logged in.
         loggedIn = true;

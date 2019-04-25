@@ -26,11 +26,13 @@ class Task {
     constructor(task) {
         this.owner = task.owner == null ? null : task.owner;
         this.title = task.title == null ? null : task.title;
-        this.category = task.category == null ? none : task.category;;
+        this.category = task.category == null ? null : task.category;
         this.priority = task.priority == null ? 0 : task.priority;
         this.subTasks = task.subTasks == null ? [] : task.subTasks;
         this.timeBlocks = task.timeBlocks == null ? [] : task.timeBlocks;
-        this.due = task.due == null ? new Date() : task.due;
+        this.due = task.due == null ? new Date().toISOString() : task.due;
+        this.completedOn = task.completedOn == null ? null : task.completedOn;
+        this.checked = task.checked == null ? false : task.checked;
     }
 }
 
@@ -216,10 +218,6 @@ function getAchievement(id, callback) {
     })
 }
 
-
-
-
-
 /**
  * Retrieves parameters from the URL
  * @param sParam: Retrieve the parameter from the URL with this name
@@ -298,8 +296,11 @@ function getCheckedTasks(tasks) {
  */
 function getTasksInDateRange(tasks, startDate, endDate) {
     var inRangeTasks = [];
+    console.log(startDate, endDate);
     tasks.forEach(function (task) {
         completedOn = new Date(task.completedOn)
+        console.log(startDate <= completedOn, completedOn < endDate)
+        console.log(task.completedOn)
         if (startDate <= completedOn && completedOn < endDate) {
             inRangeTasks.push(task);
         }
@@ -372,7 +373,7 @@ function compareTaskByPriorityDescending(lhs, rhs) {
  */
 function getMondayOfCurrentWeek(date) {
     var day = date.getDay();
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate() + (day == 0 ? -6:1) - day );
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate() + (day == 0 ? -6 : 1) - day);
 }
 
 /**
@@ -382,5 +383,5 @@ function getMondayOfCurrentWeek(date) {
  * @returns {Date} the offset date
  */
 function getOffsetDate(date, offset) {
-    return new Date(date.getFullYear(), date.getMonth(), d.getDate() + offset)
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate() + offset)
 }

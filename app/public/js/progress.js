@@ -84,7 +84,8 @@ function taskCardClicked(e) {
 }
 
 /**
- * When the checkbox is clicked, update
+ * When the checkbox is clicked, update the database marking the task incomplete
+ * and remove the task from the list.
  */
 function onTaskUnchecked() {
     var taskId = $(this).closest('.task-card')[0].id
@@ -100,8 +101,7 @@ function onTaskUnchecked() {
         console.log('task card: ' + taskCard);
         taskCard = document.getElementById(taskId)
         $(taskCard).remove();
-    });
-    
+    });    
 }
 
 /**Load event handler for navbar HTML being added to the page */

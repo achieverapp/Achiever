@@ -98,8 +98,8 @@ function onBucketEmptyClick() {
     }
     if (hour < 10) {
         hour = "0" + hour.toString()
-        console.log(hour)
-        console.log(hour % 12)
+        // console.log(hour)
+        // console.log(hour % 12)
     }
     if (endHour < 10) {
         endHour = "0" + endHour.toString()
@@ -166,7 +166,7 @@ function onBtnSaveClick() {
     startTimeStr = startHourStr + ':' + startMinuteStr
     var timeBlockObj = createTimeblockObject(startHourStr + ":" + startMinuteStr, endHourStr + ":" + endMinuteStr, taskId)
     addTimeBlock(timeBlockObj, function (response, status) {
-        console.log(response); //Debug
+        // console.log(response); //Debug
         if (response.success)
             addTimeblockToPage(startHour, startMinute, nRows, taskId, response.data._id)
     })
@@ -178,12 +178,14 @@ function onTimeblockCardClick() {
     //console.log($(this).find('.timeblock-card'))
     //var timeblockId = $(this).find('.timeblock-card').data('timeblockId')
     var timeblockId = $(this).data('timeblockId');
-    console.log(`timeblockId = ${timeblockId}`)
+    // console.log(`timeblockId = ${timeblockId}`)
     $('#btnDelete').show()
 
     $('.modal-dialog').data('timeblockId', timeblockId)
 
-    getTimeBlock({ _id: timeblockId }, function (response, status) {
+    getTimeBlock({
+        _id: timeblockId
+    }, function (response, status) {
         if (status == "success") {
             var startTime = response.data.startDate.split('T')[1].split(':'),
                 endTime = response.data.endDate.split('T')[1].split(':');
@@ -225,7 +227,9 @@ function onTimeblockCardClick() {
 
 function onBtnDeleteClick() {
     var timeblockId = $('.modal-dialog').data('timeblockId');
-    deleteTimeblock({ _id: timeblockId }, function (response, status) {
+    deleteTimeblock({
+        _id: timeblockId
+    }, function (response, status) {
         if ('success' == status) {
             var timeblockDivId = '#' + timeblockId
             var timeblockRowId = '#' + $(timeblockDivId).closest('tr')[0].id
@@ -285,9 +289,9 @@ function onInputMinusClick() {
  * @param {*} e: event object for corresponding click event
  */
 function onTaskDropdownItemClick(e) {
-    console.log('task dropdown item click')
+    // console.log('task dropdown item click')
     // TODO: check still not creating correct Id
-    console.log((e.target.id).split(':')[1]); //not creating the correct ID
+    // console.log((e.target.id).split(':')[1]); //not creating the correct ID
     $("#taskDropdown").html(e.target.innerHTML);
     taskId = (e.target.id).split(':')[1];
     $("#taskDropdown").data("taskId", taskId);
@@ -321,7 +325,7 @@ function onTimeblockDropped(event) {
         var timeBlockObj = createTimeblockObject(startHour + ":" + startMinute, endHour + ":" + endMinute, taskId); //create a new timeBLock with those times
         timeBlockObj._id = timeBlockID; //add the timeBLock ID
         updateTimeBlock(timeBlockObj, function (response, status) { //update it on the server side.
-            console.log(response); //Debug
+            // console.log(response); //Debug
         });
     }
 }
@@ -388,7 +392,7 @@ function loadModalDropdown() {
             tasks = getUncheckedTasks(tasks)
             //First build html elements for each item in the drop
             tasks.forEach(task => {
-                console.log(task._id); //not creating the correct ID
+                // console.log(task._id); //not creating the correct ID
                 taskSelectHTML += "<a class='dropdown-item task-dropdown-item' id='task:" + task._id + "'>" + task.title + "</a>";
             });
             $("#taskDropdownMenu").html(taskSelectHTML);
@@ -475,8 +479,8 @@ function addTimeblockToPage(startHour, startMinute, nRows, taskId, timeblockId) 
  */
 function removeTimeblockFromPage(rowId) {
     var div = $(rowId).children().find('.timeblock-card');
-    console.log('div', div)
-    console.log('div', div)
+    // console.log('div', div)
+    // console.log('div', div)
     var td = div.parent('td');
     var nRows = div.data('nRows');
     var taskId = div.data('taskId');
@@ -640,9 +644,9 @@ function hasOverlaps(hour24, minute, nRows, timeBlockID) {
             currentMinute += 15;
         }
         trId = "#time-" + currentHour + "-" + currentMinute;
-        if ($(trId).children('.bucket-full').children(selector).length > 0) { // If the row has part of a task on it that is not itself
-            // console.log("$(trId).children('.bucket-full').children(" + selector + ")")
-            // console.log($(trId).children('.bucket-full').children(selector))
+        console.log("$(" + trId + ").children('.bucket-full').children(" + selector + ")")
+        console.log($(trId).children('.bucket-full').children(selector))
+        if ($(trId).children('.bucket-full').children(selector).length > 0) { // If the row has part of a task on it that is not itself            
             return true;
         }
     }

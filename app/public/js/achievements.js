@@ -1,39 +1,29 @@
-$(document).ready(function()
-{
-
-    //load the navbar
+$(document).ready(function () {
     $("#navbar").load("/html/navbar.html", function () { //load the navbar at the top of the page
         $("#nav-schedule").addClass("nav-active");
-        resizeNav();
     });
     buildAchievementsList();
-
-    
 })
-//build the list of user achievements
-function buildAchievementsList()
-{
-    //not yet in the html file will add in
-    var achievementsUL=document.getElementById("achievements-list");
-    var userAchievements;
-    getUserAchievements(
-    {
-        owner:currUserId
-    },function(result,error)
-    {   
-    userAchievements=result.data;
-    achievementsId=userAchievements.achievementId
-    var completed=[];
 
-    userAchievements.forEach(userAchievement => 
-            {userAchievements.achievementId
+//build the list of user achievements
+function buildAchievementsList() {
+    //not yet in the html file will add in
+    var achievementsUL = document.getElementById("achievements-list");
+    var userAchievements;
+    getUserAchievements({
+        owner: currUserId
+    }, function (result, error) {
+        userAchievements = result.data;
+        achievementsId = userAchievements.achievementId
+        var completed = [];
+
+        userAchievements.forEach(userAchievement => {
+            userAchievements.achievementId
             completed.push(userAchievement);
             achievementsUL.appendChild(buildAchievementCard(userAchievement));
-            });
+        });
     })
 }
-function buildAchievementsCard(userAchievement,achievementId)
-{
 
 var achievementCardNode=document.createElement("li");
 achievementCardNode.id=userAchievement.achievementId;
@@ -56,4 +46,4 @@ return achievementCardNode;
 }
 )
 
-}
+

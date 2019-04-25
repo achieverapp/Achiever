@@ -40,7 +40,8 @@ class Task {
 
 const currUserId = getQueryParam('userId');
 const currTaskId = getQueryParam('taskId');
-const URL = "http://localhost:3000"; //URL of the API server.
+const URL = location.protocol + '//' + location.host; //URL of the API server.
+//console.log(location.protocol + '//' + location.host + location.pathname); //location of the URL
 
 /**
  * Console Logging function for all js files that include model.js
@@ -77,6 +78,16 @@ function getTaskList(callback) {
 function getTask(id, callback) {
     $.ajax({
         url: URL + "/api/tasks/" + id,
+        method: 'GET',
+        success: callback,
+        error: errorLog
+    });
+}
+
+
+function getCheckedTask(id, callback) {
+    $.ajax({
+        url: URL + "/api/tasks/" + id + "?checked=true",
         method: 'GET',
         success: callback,
         error: errorLog

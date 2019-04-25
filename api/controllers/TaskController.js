@@ -24,7 +24,8 @@ exports.addTask = function (req, res) {
  * Gets a single task from the server based on ID. If there is an error, it will return to the caller.
  */
 exports.getTask = function (req, res) {
-  Task.getTask(req.app.locals.tasks, req.params.id, function (err, result) {
+  var queryTask = {_id:req.params.id }
+  Task.getTask(req.app.locals.tasks, queryTask, function (err, result) {
     if (err) {
       res.send(err);
     } else {
@@ -66,10 +67,14 @@ exports.updateTask = function (req, res) {
       }
     });
   } else {
+    //console.log('else')
     Task.updateTask(req.app.locals.tasks, req.body, function (err, result) {
+      console.log('update task')
       if (err) {
+        console.log('err')
         res.send(err);
       } else {
+        console.log('success')
         res.json(result);
       }
     });

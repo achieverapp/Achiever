@@ -219,6 +219,19 @@ function getAchievement(id, callback) {
 }
 
 /**
+ * Retrieve a user from the server
+ * @param callback: the function to call when the API call completes.
+ */
+function getUser(callback) {
+    $.ajax({
+        url: URL + "/api/users/" + currUserId,
+        method: 'GET',
+        success: callback,
+        error: errorLog
+    });
+}
+
+/**
  * Retrieves parameters from the URL
  * @param sParam: Retrieve the parameter from the URL with this name
  *https://stackoverflow.com/questions/19491336/get-url-parameter-jquery-or-how-to-get-query-string-values-in-js
@@ -296,11 +309,8 @@ function getCheckedTasks(tasks) {
  */
 function getTasksInDateRange(tasks, startDate, endDate) {
     var inRangeTasks = [];
-    console.log(startDate, endDate);
     tasks.forEach(function (task) {
         completedOn = new Date(task.completedOn)
-        console.log(startDate <= completedOn, completedOn < endDate)
-        console.log(task.completedOn)
         if (startDate <= completedOn && completedOn < endDate) {
             inRangeTasks.push(task);
         }

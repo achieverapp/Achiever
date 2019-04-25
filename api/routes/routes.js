@@ -8,7 +8,7 @@ module.exports = function (app) {
     var User = require('../controllers/UserController')
     var Task = require('../controllers/TaskController')
     var Auth = require('../controllers/AuthController')
-    var TimeBlock = require('../controllers/TimeBlockController')
+    var TimeBlock = require('../controllers/TimeblockController') // !important -- 'block' in TimeblockController must be lowercase 'b' -- !important //
     var Achievement=require('../controllers/AchievementController')
     var UserAchievement=require('../controllers/UserAchievementController')
 

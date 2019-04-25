@@ -83,6 +83,9 @@ function taskCardClicked(e) {
     window.location.href = `/taskview?taskId=${taskCard[0].id}&userId=${userId}&redirect=progress`;
 }
 
+/**
+ * When the checkbox is clicked, update
+ */
 function onTaskUnchecked() {
     var taskId = $(this).closest('.task-card')[0].id
     console.log('taskid = ' + taskId)
@@ -95,10 +98,10 @@ function onTaskUnchecked() {
         console.log('as;lkdfjasl;fkjaslk;fj')
         var cardId = taskId //'#' + taskId
         console.log('task card: ' + taskCard);
-
+        taskCard = document.getElementById(taskId)
+        $(taskCard).remove();
     });
-    taskCard = document.getElementById(taskId)
-    $(taskCard).remove();
+    
 }
 
 /**Load event handler for navbar HTML being added to the page */

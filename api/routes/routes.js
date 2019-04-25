@@ -8,7 +8,7 @@ module.exports = function (app) {
     var User = require('../controllers/UserController')
     var Task = require('../controllers/TaskController')
     var Auth = require('../controllers/AuthController')
-    var TimeBlock = require('../controllers/TimeBlockController')
+    var TimeBlock = require('../controllers/TimeblockController')
 
     //  User Routes
     app.route('/api/users')

@@ -17,11 +17,11 @@ class UserAchievement {
     var resultObj;
     userAchievementsDB.insertOne(userAchievement, function (err, res) {
       if (err) { //Unkown error, return to client and display it in the log.
-        resultObj = ResultObj("Error when adding new useruseruserachievements to database", err);
+        resultObj = ResultObj("Error when adding new useruserachievements to database", err);
         console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
         result(null, resultObj);
       } else {
-        resultObj = ResultObj("Added useruseruserachievements " + userAchievement.title, null, true, userAchievement._id, userAchievement);
+        resultObj = ResultObj("Added useruserachievements " + userAchievement.title, null, true, userAchievement._id, userAchievement);
         result(null, resultObj);
       }
     });

@@ -1,3 +1,6 @@
+# Custom defined ignore
+*.zip
+
 # Logs
 
 logs

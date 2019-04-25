@@ -189,11 +189,10 @@ function getTimeBlocks(timeBlock, callback) {
  * @param userAchievement: Pass a userachievement object with the owner ID and the day that you want to get the tasks for.
  * @param callback: the function to call when the API call completes.
  */
-function getUserAchievements(userAchievement, callback)
-{
-    var sendObj={
-        owner:userAchievement.owner,
-        
+function getUserAchievements(userAchievement, callback) {
+    var sendObj = {
+        owner: userAchievement.owner,
+
     }
 
     $.ajax({
@@ -209,14 +208,13 @@ function getUserAchievements(userAchievement, callback)
  * @param Id: Pass a an id for an achievement
  * @param callback: the function to call when the API call completes.
  */
-function getAchievement(id,callback)
-{
-$.ajax({
-    url: URL + "/api/achievement/" + id,
-    method: 'GET',
-    success: callback,
-    error: errorLog
-})
+function getAchievement(id, callback) {
+    $.ajax({
+        url: URL + "/api/achievement/" + id,
+        method: 'GET',
+        success: callback,
+        error: errorLog
+    })
 }
 
 
@@ -260,4 +258,33 @@ function createTimeblockObject(startTimeStr, endTimeStr, taskId) {
         startDate: start,
         endDate: end
     }
+}
+
+/**
+ * Get all the unchecked tasks from a array of tasks
+ * @param {Array} tasks: an array of tasks to query from 
+ */
+function getUncheckedTasks(tasks) {
+    var uncheckedTasks = [];
+    tasks.forEach(function (task) {
+        if (task.checked === "false" || task.checked === false) {
+            uncheckedTasks.push(task);
+
+        }
+    });
+    return uncheckedTasks;
+}
+
+/**
+ * Get all the checked tasks from a array of tasks
+ * @param {Array} tasks: an array of tasks to query from 
+ */
+function getCheckedTasks(tasks) {
+    var checkedTasks = [];
+    tasks.forEach(function (task) {
+        if (task.checked === "true" || task.checked === true) {
+            checkedTasks.push(task);
+        }
+    });
+    return checkedTasks;
 }

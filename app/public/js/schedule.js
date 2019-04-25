@@ -319,6 +319,7 @@ function loadModalDropdown() {
     getTaskList(function (response, status) {
         if (status) {
             tasks = response.data;
+            tasks = getUncheckedTasks(tasks)
             //First build html elements for each item in the drop
             tasks.forEach(task => {
                 console.log(task._id); //not creating the correct ID

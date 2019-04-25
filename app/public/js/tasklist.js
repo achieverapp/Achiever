@@ -141,14 +141,8 @@ function buildTaskList(sortBy) {
         } else if (sortBy === "sortByDueDate") {
             tasks.sort(compareTaskByDateAscending);
         }
-        var checkedTasks = [];
-        tasks.forEach(function (task) {
-            if (task.checked === "false") {
-                checkedTasks.push(task);
-
-            }
-        });
-        tasks = checkedTasks;
+        
+        tasks = getUncheckedTasks(tasks)
         var overdue = [];
 
         while (upcomingUL.firstChild) {

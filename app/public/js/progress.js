@@ -25,17 +25,8 @@ $(document).ready(function () {
 
     buildTaskList("sortByDueDate"); //Build the task list, sorting by due date.
 
-    $("#btn-newtask").on("click", loadTaskView); //Load the navbar and add the active class
-
     //load event handler for changing sort method
     $(".sortby-dropdown-item").click(changeSortMethod);
-
-    // load event handlers for styling of a checkbox
-    $(document).on("mouseover", ".task-checkbox", onMouseEnter);
-    $(document).on("mouseleave", ".task-checkbox", onMouseLeave);
-
-    // Set up event handler for checking off a task
-    $(document).on("click", ".task-checkbox", onTaskChecked);
 
     // Event handler for when a task is clicked on. Should bring the user to the task view page.
     // Adds a new empty row for the task to allow the user to input another task
@@ -69,16 +60,6 @@ function loadTaskView() {
     window.location.href = `/taskview?taskId=default&userId=${userId}`;
 }
 
-/**event handler for when the user mouses over a task checkbox */
-function onMouseEnter(e) {
-    $(e.target).removeClass("check-incomplete").addClass("check-complete");
-}
-
-/**event handler for when the user's mouse focus leaves a task checkbox */
-function onMouseLeave(e) {
-    $(e.target).removeClass("check-complete").addClass("check-incomplete");
-}
-
 /**
  * Event handler for when the sort method is changed.
  * @param {*} e: click event arguments
@@ -93,34 +74,6 @@ function changeSortMethod(e) {
     buildTaskList(e.target.id);
 }
 
-/**
- * Event handler for when a task is clicked to be checked off.
- * Will remove the task from the list and update its checked status on the server
- * TODO: this function needs to update all the subtasks to be checked too (or not??? might not want to do this)
- */
-function onTaskChecked() {
-    var taskId = $(this).closest('.task-card')[0].id
-    console.log('taskid = ' + taskId)
-    var task = {
-        _id: $(this).closest('.task-card')[0].id,
-        completedOn: new Date().toISOString(),
-        checked: true
-    }
-    updateTask(task, function (response, status) {
-        console.log('as;lkdfjasl;fkjaslk;fj')
-        var cardId = taskId //'#' + taskId
-        console.log('task card: ' + taskCard);
-        
-    });
-    taskCard = document.getElementById(taskId)
-    $(taskCard).remove();
-    console.log()
-    if(0 == $('#overdue-list').find('li').length) {
-        $('#overdue-div').hide();
-    }
-
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 ///////////////////// General Use functions ////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -131,45 +84,27 @@ function onTaskChecked() {
  * @param sortBy: sorting function to compare each task.
  */
 function buildTaskList(sortBy) {
-    var upcomingUL = document.getElementById("task-list");
-    var overdueUL = document.getElementById("overdue-list");
+    var completedUL = document.getElementById("completed-list");
     var tasks;
     getTaskList(function (result, error) {
         tasks = result.data
         if (sortBy === "sortByPriority") {
             tasks.sort(compareTaskByPriorityDescending);
         } else if (sortBy === "sortByDueDate") {
-            tasks.sort(compareTaskByDateAscending);
+            tasks.sort(compareTaskByDateDescending);
         }
         
-        tasks = getUncheckedTasks(tasks)
-        var overdue = [];
+        tasks = getCheckedTasks(tasks)
 
-        while (upcomingUL.firstChild) {
-            upcomingUL.removeChild(upcomingUL.firstChild);
-        }
-        while (overdueUL.firstChild) {
-            overdueUL.removeChild(overdueUL.firstChild);
+        while (completedUL.firstChild) {
+            completedUL.removeChild(completedUL.firstChild);
         }
 
         tasks.forEach(task => {
-            if (task.completed == null && task.checked) {
-                var due = new Date(task.due);
-                var today = new Date();
-                if (today > due) {
-                    overdue.push(task);
-                    overdueUL.appendChild(buildTaskCard(task))
-                } else {
-                    upcomingUL.appendChild(buildTaskCard(task));
-                }
+            if (task.completed == null && task.checked) {             
+                completedUL.appendChild(buildTaskCard(task));                
             }
         });
-        if (overdue.length == 0) {
-            $("#overdue-div").hide();
-            $("#sortByDropdown2").show();
-        } else {
-            $("#sortByDropdown2").hide();
-        }
     });
 }
 

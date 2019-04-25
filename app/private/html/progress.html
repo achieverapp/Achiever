@@ -47,10 +47,10 @@
   <nav class="nav bg-primary" id="navbar"></nav>
 
   <div id="tasks" class="container p-2">
-    <h1>Username</h1>
-    <h2>Badge Progress</h2>
+    <h1 id="UserName"></h1>
+    <h2 hidden>Badge Progress</h2>
 
-    <ul style="padding:0px">
+    <ul style="padding:0px" hidden>
 
       <li class="card task-card">
         <div class="container">
@@ -80,10 +80,10 @@
               <h3 style="margin-bottom: 10px">Weekly tasks</h3>
             </div>
             <div class="progress" style="margin-bottom:5px">
-              <div class="progress-bar" role="progressbar" style="width: 56%;" aria-valuenow="50" aria-valuemin="0"
-                aria-valuemax="100">50%</div>
+              <div id="weeklyProgress" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="50" aria-valuemin="0"
+                aria-valuemax="100">0%</div>
             </div>
-            <form>
+            <form hidden>
               <div class="form-inline">
                 <span class="fab fa-angellist"></span>
                 <input class="form-control" type="text" value="task1" style="border-color: white; width: 90%"></input>
@@ -103,9 +103,9 @@
       </li>
     </ul>
 
-    <h2>Recently Completed Achievements</h2>
+    <h2 hidden>Recently Completed Achievements</h2>
 
-    <ul style="padding:0px">
+    <ul style="padding:0px" hidden>
       <li class="card task-card">
         <div class="container">
           <div class="card-content">
@@ -135,7 +135,6 @@
           </div>
         </span>
       </div>
-
 
       <ul style="padding:0px" id="completed-list"></ul>
 

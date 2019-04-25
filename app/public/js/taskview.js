@@ -64,7 +64,7 @@ $(document).ready(function () {
   $(document.body).on("click", ".subtask-checkbox", checkSubTask); //call the checkSubTask function when a checkbox is clicked.
 
   // WHen you defocus on the textarea of a subtask, if there text is blank we need to remove the subtask from the list.
-  $(document.body).on('blur', '.task-textbox', function(e) {
+  $(document.body).on('blur', '.subtask-textbox', function(e) {
     if($(e.target).val() === '' && $(e.currentTarget.parentElement).next().length) {
       console.log($(e.currentTarget.parentElement).next())
       e.currentTarget.parentElement.remove()
@@ -270,7 +270,7 @@ function addSubTasks(tasks) {
       .append( // add a new empty task to the end of the current list
         "<div class=\"form-inline subtask-display\">" +
         "   <h3 class=\"far fa-" + (t.checked == "true" ? "check-" : "") + "square subtask-checkbox\" id=\"checkbox" + curId + "\"></h3>" +
-        `   <textarea class='form-control task-textbox input-hidden border-0' id='textbox${curId}'` +
+        `   <textarea class='form-control subtask-textbox task-textbox input-hidden border-0' id='textbox${curId}'` +
         `       type='text' rows='1' placeholder='Add a subtask here...'>${t.title}</textarea>` +
 
         "</div>"
@@ -292,7 +292,7 @@ function addEndTask(curId) {
     .append( // add a new empty task to the end of the current list
       "<div class=\"form-inline subtask-display\">" +
       `   <h3 class='far fa-square' id='checkbox${curId}' style='margin-right: 8px'></h3>` +
-      `   <textarea class='form-control task-textbox input-hidden border-0 empty-task' id='textbox${curId}'` +
+      `   <textarea class='form-control subtask-textbox task-textbox input-hidden border-0 empty-task' id='textbox${curId}'` +
       `       type='text' rows='1' placeholder='Add a subtask here...'></textarea>` +
       "</div>"
     );

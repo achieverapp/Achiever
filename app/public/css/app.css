@@ -59,6 +59,18 @@ input[type=number].input-no-spinner {
     -moz-appearance:textfield;
 }
 
+.input-hidden {
+    background-color: rgba(0,0,0,0);
+}
+
+.input-hidden::-webkit-inner-spin-button,
+.input-hidden::-webkit-outer-spin-button {
+    background-color: rgba(0,0,0,0);
+    -webkit-appearance: none;
+}
+
+.input-hidden::-webkit-calendar-picker-indicator { background: rgba(0,0,0,0); }
+
 .floating-action-btn {
     font-size:16pt;
     position: fixed;
@@ -159,27 +171,11 @@ input[type=number].input-no-spinner {
     cursor: pointer;
 }
 
-.task-checkbox-complete {
-    margin-right:8px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    display: inline-block;
+.check-complete {
     color: #343A40 !important;
 }
 
-.task-checkbox-incomplete {
-    margin-right:8px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    display: inline-block;
-    color: white !important;
-}
-
-.task-checkbox.check-complete {
-    color: #343A40 !important;
-}
-
-.task-checkbox.check-incomplete {
+.check-incomplete {
     color: white !important;
 }
 
@@ -261,7 +257,7 @@ td, th {
 .achievements-title
 {
     display: 'inline';
-} 
+}
 .achievements-card-container
 {
     padding:0px;

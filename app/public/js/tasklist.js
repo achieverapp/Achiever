@@ -120,7 +120,7 @@ function onTaskChecked() {
         console.log('as;lkdfjasl;fkjaslk;fj')
         var cardId = taskId //'#' + taskId
         console.log('task card: ' + taskCard);
-        
+
     });
     taskCard = document.getElementById(taskId)
     $(taskCard).remove();
@@ -128,7 +128,6 @@ function onTaskChecked() {
     if(0 == $('#overdue-list').find('li').length) {
         $('#overdue-div').hide();
     }
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -151,7 +150,7 @@ function buildTaskList(sortBy) {
         } else if (sortBy === "sortByDueDate") {
             tasks.sort(compareTaskByDateAscending);
         }
-        
+
         tasks = getUncheckedTasks(tasks)
         var overdue = [];
 
@@ -196,7 +195,7 @@ function buildTaskCard(task) {
     taskCardNode.classList.add(priorityToClassMap[task.priority]);
     taskCardNode.innerHTML =
         "<div class='task-card-container'>" +
-        "<h2 class='task-incomplete fas fa-check-square align-middle task-checkbox'></h2>" +
+        "<h2 class='check-incomplete fas fa-check-square align-middle task-checkbox'></h2>" +
         "<div class='align-middle task-card-content'>" +
         "<h3 class='task-card-title' style='display:block'>" + task.title + "</h3>" +
         "<p class='task-due'>Due:&nbsp;" + formatDateTime(dueDate) + "</p>" +

@@ -29,6 +29,9 @@ $(document).ready(function () {
     //load event handler for changing sort method
     $(".sortby-dropdown-item").click(changeSortMethod);
 
+    // Set up event handler for checking off a task
+    $(document).on("click", ".task-checkbox", onTaskUnchecked);
+
     // Event handler for when a task is clicked on. Should bring the user to the task view page.
     // Adds a new empty row for the task to allow the user to input another task
     $(document).on("click", ".task-card", taskCardClicked);
@@ -79,6 +82,24 @@ function taskCardClicked(e) {
     }
     console.log(taskCard[0].id)
     window.location.href = `/taskview?taskId=${taskCard[0].id}&userId=${userId}&redirect=progress`;
+}
+
+function onTaskUnchecked() {
+    var taskId = $(this).closest('.task-card')[0].id
+    console.log('taskid = ' + taskId)
+    var task = {
+        _id: $(this).closest('.task-card')[0].id,
+        completedOn: null,
+        checked: false
+    }
+    updateTask(task, function (response, status) {
+        console.log('as;lkdfjasl;fkjaslk;fj')
+        var cardId = taskId //'#' + taskId
+        console.log('task card: ' + taskCard);
+
+    });
+    taskCard = document.getElementById(taskId)
+    $(taskCard).remove();
 }
 
 /**Load event handler for navbar HTML being added to the page */
@@ -176,7 +197,7 @@ function buildTaskCard(task) {
     taskCardNode.classList.add(priorityToClassMap[task.priority]);
     taskCardNode.innerHTML =
         "<div class='task-card-container'>" +
-        "<h2 class='fas fa-check-square align-middle task-checkbox task-complete'></h2>" +
+        "<h2 class='fas fa-check-square align-middle task-checkbox check-complete'></h2>" +
         "<div class='align-middle task-card-content'>" +
         "<h3 class='task-card-title' style='display:block'>" + task.title + "</h3>" +
         "<p class='task-due'>Completed:&nbsp;" + formatDateTime(completeDate) + "</p>" +

@@ -331,7 +331,7 @@ function onTimeblockDropped(event) {
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Shows the correct navbar based on screen resolution. Mobile nav is used for screens narrower than 640px, desktop for larger.
+ * Shows the correct modal based on screen resolution. Mobile modal is used for screens narrower than 640px, desktop for larger.
  */
 function resizeModal() {
     // If the window is scaled to mobile, use the hamburger navbar

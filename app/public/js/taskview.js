@@ -24,6 +24,8 @@ var nameToPriority = {
   "High": 2
 }
 
+$(window).resize(resizeFooter)
+
 /**When the document finished loading, retrieve task information from the server and load all event handlers */
 $(document).ready(function () {
   //updates the task information from the database.
@@ -38,6 +40,7 @@ $(document).ready(function () {
 
   //load the navbar when the page loads
   $("#navbar").load("/html/navbar.html");
+  resizeFooter();
 
   // When the save task button is clicked, save the task and send it to the server.
   $("#saveTaskBtn").click(saveTask); //call the saveTask function
@@ -60,11 +63,13 @@ $(document).ready(function () {
   //toggles the checkboxes when a user clicks them
   $(document.body).on("click", ".subtask-checkbox", checkSubTask); //call the checkSubTask function when a checkbox is clicked.
 
-  // WHen you click on the delete button of a subtask, we need to remove it from the list.
-  // In the future there should be some form of confirmation to delete a subtask, (or maybe an undo button?)
-  $(document.body).on("click", ".fa-trash-alt", function (e) {
-    e.currentTarget.parentElement.remove(); //traverses the tree and removes the parent html from the document.
-  });
+  // WHen you defocus on the textarea of a subtask, if there text is blank we need to remove the subtask from the list.
+  $(document.body).on('blur', '.task-textbox', function(e) {
+    if($(e.target).val() === '' && $(e.currentTarget.parentElement).next().length) {
+      console.log($(e.currentTarget.parentElement).next())
+      e.currentTarget.parentElement.remove()
+    }
+  })
 });
 
 ////////////////////////////////////////////////////////////////
@@ -89,7 +94,7 @@ function categoryDropdownItemChanged(e) {
 function priorityDropdownItemChanged(e) {
   $("#priorityDropdown").html(e.target.innerText) //set the title of the button to the dropdown that was selected.
 
-  $("#priorityDropdown").toggleClass($(".dropdown").data("prevPriority") + " " + e.target.id); //set the style so it matches the priority
+  $(".task.card").toggleClass($(".dropdown").data("prevPriority") + " " + e.target.id); //set the style so it matches the priority
   $(".dropdown").data("prevPriority", e.target.id); //save the previous style
 
   $("#priorityDropdown").data("changed", true);
@@ -122,9 +127,6 @@ function onTypeInEmptySubTask(e) {
     //regex to find only the number at the end of the id
     var curId = parseInt($(".empty-task").attr("id").match(/\d+/)[0]) + 1;
 
-    $(".empty-task").after("<span class=\"far fa-trash-alt subtask-checkbox\" id=\"trash" + (curId -
-      1) + "style=\"float: right\"></span>");
-
     $(".empty-task").parent().children(".fa-square").addClass("subtask-checkbox");
 
     $(".empty-task").removeClass("empty-task"); //first remove the empty-task class from the old task
@@ -135,17 +137,17 @@ function onTypeInEmptySubTask(e) {
 }
 
 /**
- * Function to handle a click event on a subtask checkbox. 
+ * Function to handle a click event on a subtask checkbox.
  * Toggles the subtask checkbox as well as the task title checkbox if all subtasks are checked
  * @param {*} e: event variable from a click event.
  */
 function checkSubTask(e) {
   this.classList.toggle("fa-square");
   this.classList.toggle("fa-check-square");
-  if (!$(".subtask-checkbox.fa-square")[0]) { //if there are not any boxes that are unchecked            
+  if (!$(".subtask-checkbox.fa-square")[0]) { //if there are not any boxes that are unchecked
     $("#taskCheckBox").addClass("fa-check-square"); //add the check to the title
     $("#taskCheckBox").removeClass("fa-square");
-  } else { //There are some unchecked boxes            
+  } else { //There are some unchecked boxes
     $("#taskCheckBox").removeClass("fa-check-square"); //remove the check from the title
     $("#taskCheckBox").addClass("fa-square");
   }
@@ -193,7 +195,7 @@ function saveTask() {
   $(".subtask-display").each(function () { //Load all the subtasks from the webpage
     if ($(this).children("textarea").val() != "") { // Only load them if there is a task with text in it
       task.subTasks.push(new SubTask({ //add each subtask to the array
-        checked: $(this).children("span.far").hasClass("fa-check-square"),
+        checked: $(this).children("h3.far").hasClass("fa-check-square"),
         title: $(this).children("textarea").val()
       }));
     }
@@ -237,7 +239,8 @@ function setTaskInfo(task) {
     $("#categoryDropdown").html(task.category);
   if (task.priority != null) { // If the priority is saved, show it
     $("#priorityDropdown").html(priorityToName[task.priority]);
-    $("#priorityDropdown").addClass(priorityToClassMap[task.priority]);
+    //$("#priorityDropdown").addClass(priorityToClassMap[task.priority]);
+    $('.task.card').addClass(priorityToClassMap[task.priority])
     $(".dropdown").data("prevPriority", priorityToClassMap[task.priority]); //save the previous style
   }
 
@@ -264,10 +267,10 @@ function addSubTasks(tasks) {
     $(".task").children(".card-body").children(".subtask-list")
       .append( // add a new empty task to the end of the current list
         "<div class=\"form-inline subtask-display\">" +
-        "   <span class=\"far fa-" + (t.checked == "true" ? "check-" : "") + "square subtask-checkbox\" id=\"checkbox" + curId + "\"></span>" +
-        `   <textarea class='form-control task-textbox border-0' id='textbox${curId}'` +
+        "   <h3 class=\"far fa-" + (t.checked == "true" ? "check-" : "") + "square subtask-checkbox\" id=\"checkbox" + curId + "\"></h3>" +
+        `   <textarea class='form-control task-textbox input-hidden border-0' id='textbox${curId}'` +
         `       type='text' rows='1' placeholder='Add a subtask here...'>${t.title}</textarea>` +
-        "   <span class=\"far fa-trash-alt\" id=\"trash" + curId + "\" style=\"float: right\"></span>" +
+
         "</div>"
       );
     curId++; //increment the id for each new task that we will add
@@ -286,8 +289,8 @@ function addEndTask(curId) {
   $(".task").children(".card-body").children(".subtask-list")
     .append( // add a new empty task to the end of the current list
       "<div class=\"form-inline subtask-display\">" +
-      `   <span class='far fa-square' id='checkbox${curId}'></span>` +
-      `   <textarea class='form-control task-textbox border-0 empty-task' id='textbox${curId}'` +
+      `   <h3 class='far fa-square' id='checkbox${curId}' style='margin-right: 8px'></h3>` +
+      `   <textarea class='form-control task-textbox input-hidden border-0 empty-task' id='textbox${curId}'` +
       `       type='text' rows='1' placeholder='Add a subtask here...'></textarea>` +
       "</div>"
     );
@@ -315,4 +318,20 @@ function getQueryParam(param) {
       return null
   }
   return url.split(`${param}=`)[1].split('&')[0]
+}
+
+/**
+ * Shows the correct modal based on screen resolution. Mobile modal is used for screens narrower than 640px, desktop for larger.
+ */
+function resizeFooter() {
+  // If screenresolution is low, use mobile layout
+  if ($(window).width() < 576) {
+      $('.date-time-picker').css('float', 'left')
+      $('.date-time-group').removeClass('flex-row').addClass('flex-column')
+  }
+  // Otherwise, use the default layout
+  else {
+    $('.date-time-picker').css('float', 'right')
+    $('.date-time-group').addClass('flex-row').removeClass('flex-column')
+  }
 }

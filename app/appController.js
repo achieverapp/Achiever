@@ -14,6 +14,10 @@ exports.getLogin = function (req, res) {
   res.sendFile(path.resolve('app/public/html/login.html'));
 };
 
+exports.getPrivacy = function (req, res) {
+  res.sendFile(path.resolve('app/public/html/privacy.html'))
+}
+
 exports.getProgress = function (req, res) {
   res.sendFile(path.resolve('app/private/html/progress.html'));
 };

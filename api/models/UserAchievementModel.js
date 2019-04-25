@@ -21,7 +21,7 @@ class UserAchievement {
         console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
         result(null, resultObj);
       } else {
-        resultObj = ResultObj("Added useruserachievements " + userAchievement.title, null, true, userAchievement._id, userAchievement);
+        resultObj = ResultObj("Added userachievements " + userAchievement.title, null, true, userAchievement._id, userAchievement);
         result(null, resultObj);
       }
     });
@@ -66,36 +66,70 @@ class UserAchievement {
   }
 
   static updateUserAchievement(userAchievementsDB, userAchievement, result) {
+    var userAchievementsId = new ObjectId(userAchievement._id);
+    userAchievement._id = userAchievementssId;
     var resultObj;
-    userAchievementsDB.find({
-      _id: new ObjectId(userAchievement._id)
+    userAchievementssDB.find({
+      _id: userAchievementssId
     }).toArray(function (err, res) {
       if (err) { //Unkown error, return to client and display it in the log.
         resultObj = ResultObj("Error when checking if user with id " + userAchievement._id + " exists in database.", err);
         console.log(resultObj.statusMsg + ": " + JSON.stringify(err));
-        result(resultObj);
+        result(null, resultObj);
       } else if (res.length == 0) { //no user with id userId, tell the updater and log it
-        resultObj = ResultObj("achievement not in database. ID:" + userAchievement._id);
+        resultObj = ResultObj("userAchievements not in database. ID:" + userAchievements._id);
         console.log(resultObj.statusMsg);
         result(null, resultObj);
       } else {
-        if (userAchievement.datesAchieved != null) {
-          updateAchievementdateAchieved(userAchievementsDB, userAchievement, result).then(result);
-        }
-        if (userAchievement.recent != null) {
-          updateAchievementrecent(userAchievementsDB, userAchievement, result).then(result);
-        }
+        console.log(result)
+        userAchievementssDB.updateOne({
+            _id: new ObjectId(userAchievement._id)
+          }, {
+            $set: userAchievement
+          },
+          function (err) {
+            if (err) {
+              resultObj = ResultObj("Error when attempting to change name!", err);
+              console.log(resultObj.statusMsg + ": " + err);
+              result(null, resultObj)
+            } else {
+              resultObj = ResultObj("achievement changed to ", null, true);              
+              result(null, resultObj)
+            }
+          })
       }
     })
-  }
+  };
 
-}
-/* 
-    static deleteUserAchievement(useruseruseruserAchievementsDB, userachievement, result) 
+    static deleteUserAchievement(userAchievementsDB, userAchievement, result) 
     {
+    var resultObj;
+    userAchievementsDB.find({
+      _id: new ObjectId(userAchievement)
+    }).toArray(function (err) {
+      if (err) {
+        resultObj = ResultObj("Error when attempting to delete achievement!", err);
+        console.log(resultObj.statusMsg + ": " + err);
+        resolve(resultObj);
+      } else {
+        userAchievementDB.deleteOne({
+          _id: new ObjectId(userAchievement)
+        }).toArray(function (err2) {
+          if (err2) {
+            resultObj = ResultObj("Error when attempting to delete achievement!", err);
+            console.log(resultObj.statusMsg + ": " + err);
+            resolve(resultObj);
+          } else {
+            resultObj = ResultObj("user with" + userAchievement.owner + "deleted");
+            resultObj(resultObj);
+          }
+        });
+      }
+    });
+  }
+}
+    
 
-    }
-*/
 
 /*
   ResultObj constructor function. Since we need to create a different return object for many different possible scenarios, all this functionality

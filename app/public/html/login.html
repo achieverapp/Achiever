@@ -45,9 +45,6 @@
                     <hr>
                     <h4 style='margin-bottom: 32px;'>Login or register using Github:</h4>
                     <p>
-<!-- <<<<<<< HEAD
-                        <a href="https://github.com/login/oauth/authorize?client_id=e428572ccd0ee17f18f0&scope=user&redirect_uri=http://achieverapp.net/api/oauth/redirect"
-======= -->
                         <a href="https://github.com/login/oauth/authorize?client_id=d092b106e4dba55e7462&scope=user&redirect_uri=http://localhost:3000/api/oauth/redirect"
                             class='btn btn-block github' id='btnLogin'>
                             <i class="fab fa-github"></i>
@@ -69,11 +66,11 @@
     });
 
     function generateAuthUrl() {
-        var clientId = d092b106e4dba55e7462;
+        var clientId = 'd092b106e4dba55e7462';
         var hostname = window.location.host;
         if (hostname.includes('achieverapp.net'))
         {
-            clientId = e428572ccd0ee17f18f0;
+            clientId = 'e428572ccd0ee17f18f0';
         }
         console.log(hostname);
         var authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=user&redirect_uri=http://${hostname}/api/oauth/redirect`

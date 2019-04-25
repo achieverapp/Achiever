@@ -150,17 +150,20 @@ function buildTaskList(sortBy) {
         } else if (sortBy === "sortByDueDate") {
             tasks.sort(compareTaskByDateAscending);
         }
-
         tasks = getUncheckedTasks(tasks)
-        var overdue = [];
-
+        if(tasks.length == 0) {
+            $('#noTasksMessage').show();
+        }
+        else {
+            $('#noTasksMessage').hide();
+        }
         while (upcomingUL.firstChild) {
             upcomingUL.removeChild(upcomingUL.firstChild);
         }
         while (overdueUL.firstChild) {
             overdueUL.removeChild(overdueUL.firstChild);
         }
-
+        var overdue = [];
         tasks.forEach(task => {
             if (task.completed == null && task.checked) {
                 var due = new Date(task.due);

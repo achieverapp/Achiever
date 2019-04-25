@@ -136,7 +136,23 @@
         </span>
       </div>
 
+
       <ul style="padding:0px" id="completed-list"></ul>
+
+      <div class='d-flex justify-content-between'>
+        <h5>Show tasks from: </h5>
+        <div class="btn-group btn-group-toggle" data-toggle="buttons"
+          style="flex-grow: 0; flex-shrink: 0; flex-basis: 6em;">
+          <label class="btn btn-outline-secondary active flex-nowrap" style="white-space: nowrap">
+            <input type="radio" name="options" id="ThisWeekSortRadio" autocomplete="off" checked>
+            This Week
+          </label>
+          <label class="btn btn-outline-secondary" style="white-space: nowrap">
+            <input type="radio" name="options" id="AllTimeSortRadio" autocomplete="off">
+            All Time
+          </label>
+        </div>
+      </div>
     </div>
 
   </div>

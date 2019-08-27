@@ -25,8 +25,8 @@ routes(app); //Register routes with the app
 var appRoutes = require('./app/appRoutes')
 appRoutes(app);
 
-const uri = "mongodb+srv://Achiever:HEAIj6ZA0Wvsx7X5@achiever-7tkct.mongodb.net/test?retryWrites=true";
-const client = new MongoClient(uri, {
+const secrets = require('./secrets')
+const client = new MongoClient(secrets.mongoUri, {
     useNewUrlParser: true
 });
 client.connect(err => {

@@ -153,4 +153,10 @@ typings/
 
 .fusebox/
 
+# Visual Studio Code
 .vscode
+
+# git-secret
+.gitsecret/keys/random_seed
+.achiever.gpg
+secrets.js

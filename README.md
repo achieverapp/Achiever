@@ -11,3 +11,6 @@ https://docs.google.com/spreadsheets/d/19rEi348XXGV8b93TQ35ikhCGfpnFvfyntP3f8SuV
 
 Deployed Website URL as of milestone 4:
 http://www.achieverapp.net/
+
+
+## authentication details encrypted using git-secret

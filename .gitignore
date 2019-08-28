@@ -158,5 +158,5 @@ typings/
 
 # git-secret
 .gitsecret/keys/random_seed
-.achiever.gpg
+*.gpg
 secrets.js

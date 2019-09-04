@@ -70,7 +70,9 @@
         var hostname = window.location.host;
         if (hostname.includes('achieverapp.net'))
         {
-            clientId = 'e428572ccd0ee17f18f0';
+            //clientId = 'e428572ccd0ee17f18f0';
+            clientId = '179d6c432ab0b25d3353'
+            
         }
         console.log(hostname);
         var authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=user&redirect_uri=http://${hostname}/api/oauth/redirect`

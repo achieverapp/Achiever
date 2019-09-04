@@ -12,12 +12,12 @@ const User = require('../models/UserModel.js').User;
 const secrets = require('../../secrets')
 
 // DEPLOYMENT: //
-// const clientID = '179d6c432ab0b25d3353'
-// const clientSecret = secrets.clientSecretProd
+const clientID = '179d6c432ab0b25d3353'
+const clientSecret = secrets.clientSecretProd
 
 // DEVELOPMENT: //
-const clientID = 'd092b106e4dba55e7462' //ID codes for GitHub OAuth
-const clientSecret = secrets.clientSecretDev 
+// const clientID = 'd092b106e4dba55e7462' //ID codes for GitHub OAuth
+// const clientSecret = secrets.clientSecretDev 
 
 /**
  * Authentication handler for GitHub, handles requests made from the GitHub API.

@@ -9,14 +9,15 @@
 const axios = require('axios') // Axios is an HTTP library that we will make use of
 
 const User = require('../models/UserModel.js').User;
+const secrets = require('../../secrets')
 
 // DEPLOYMENT: //
 // const clientID = '179d6c432ab0b25d3353'
-// const clientSecret = '56d68df48731996e4028edfaf38a0d0b4ef2db95'
+// const clientSecret = secrets.clientSecretProd
 
 // DEVELOPMENT: //
 const clientID = 'd092b106e4dba55e7462' //ID codes for GitHub OAuth
-const clientSecret = '350e93a79aa2801a4a0a57e5b83516c7d02c92f3'
+const clientSecret = secrets.clientSecretDev 
 
 /**
  * Authentication handler for GitHub, handles requests made from the GitHub API.
